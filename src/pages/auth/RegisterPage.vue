@@ -54,6 +54,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
+import { http } from '../../shared/api/http'
 
 const router = useRouter()
 
@@ -68,28 +69,17 @@ const handleRegister = async () => {
   try {
     const endpoint =
         role.value === 'mentor'
-            ? 'http://localhost:8080/api/auth/register/mentor'
-            : 'http://localhost:8080/api/auth/register/student'
+            ? '/api/auth/register/mentor'
+            : '/api/auth/register/student'
 
-    const response = await fetch(endpoint, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        email: email.value,
-        password: password.value,
-      }),
+    await http.post(endpoint, {
+      email: email.value,
+      password: password.value,
     })
-
-    if (!response.ok) {
-      const errorBody = await response.json()
-      throw new Error(errorBody.error || 'Ошибка регистрации')
-    }
 
     await router.push('/login')
   } catch (error: any) {
-    errorMessage.value = error.message || 'Не удалось выполнить регистрацию'
+    errorMessage.value = error?.response?.data?.error || 'Не удалось выполнить регистрацию'
   }
 }
 </script>
