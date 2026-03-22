@@ -1,51 +1,107 @@
 <template>
   <PublicLayout>
-    <div class="flex min-h-[calc(100vh-73px)] items-center justify-center px-4 py-10">
-      <div class="w-full max-w-md rounded-3xl bg-white p-6 shadow-sm ring-1 ring-slate-200 sm:p-8">
-        <h1 class="text-3xl font-bold text-slate-900">Вход</h1>
-        <p class="mt-2 text-sm text-slate-600">Войдите, чтобы управлять профилем и занятиями.</p>
+    <section class="mx-auto flex min-h-[calc(100vh-73px)] max-w-7xl items-center px-4 py-10 sm:px-6">
+      <div class="grid w-full gap-8 lg:grid-cols-2 lg:items-center">
+        <div class="hidden lg:block">
+          <p class="inline-flex rounded-full bg-slate-200 px-4 py-2 text-sm font-medium text-slate-700">
+            Добро пожаловать в MentorHub
+          </p>
 
-        <form class="mt-8 space-y-4" @submit.prevent="handleLogin">
-          <div>
-            <label class="mb-2 block text-sm font-medium text-slate-700">Email</label>
-            <input
-                v-model="email"
-                type="email"
-                class="w-full rounded-2xl border px-4 py-3 outline-none transition"
-                :class="fieldClass(emailError)"
-                placeholder="you@example.com"
-            />
-            <p v-if="emailError" class="mt-2 text-sm text-red-600">{{ emailError }}</p>
+          <h1 class="mt-5 max-w-xl text-5xl font-bold leading-tight text-slate-900">
+            Войдите и продолжайте обучение или менторство
+          </h1>
+
+          <p class="mt-6 max-w-lg text-lg leading-8 text-slate-600">
+            Управляйте профилем, бронированиями, слотами и занятиями в одном месте.
+          </p>
+
+          <div class="mt-8 grid max-w-xl gap-4">
+            <div class="rounded-3xl bg-white p-5 shadow-sm ring-1 ring-slate-200">
+              <h3 class="text-lg font-semibold text-slate-900">Для учеников</h3>
+              <p class="mt-2 text-sm leading-7 text-slate-600">
+                Следите за записями, обновляйте профиль и быстрее находите подходящих менторов.
+              </p>
+            </div>
+
+            <div class="rounded-3xl bg-white p-5 shadow-sm ring-1 ring-slate-200">
+              <h3 class="text-lg font-semibold text-slate-900">Для менторов</h3>
+              <p class="mt-2 text-sm leading-7 text-slate-600">
+                Управляйте профилем, слотами, заявками учеников и развивайте личный бренд.
+              </p>
+            </div>
           </div>
+        </div>
 
-          <div>
-            <label class="mb-2 block text-sm font-medium text-slate-700">Пароль</label>
-            <input
-                v-model="password"
-                type="password"
-                class="w-full rounded-2xl border px-4 py-3 outline-none transition"
-                :class="fieldClass(passwordError)"
-                placeholder="Введите пароль"
+        <div class="w-full max-w-md justify-self-center rounded-3xl bg-white p-6 shadow-sm ring-1 ring-slate-200 sm:p-8">
+          <h1 class="text-3xl font-bold text-slate-900">Вход</h1>
+          <p class="mt-2 text-sm text-slate-600">
+            Войдите, чтобы управлять профилем, занятиями и записями.
+          </p>
+
+          <form class="mt-8 space-y-5" @submit.prevent="handleLogin">
+            <div>
+              <label class="mb-2 block text-sm font-medium text-slate-700">Email</label>
+              <input
+                  v-model.trim="email"
+                  type="email"
+                  autocomplete="email"
+                  class="w-full rounded-2xl border px-4 py-3 outline-none transition"
+                  :class="fieldClass(showValidation && !!emailError)"
+                  placeholder="you@example.com"
+              />
+              <p v-if="showValidation && emailError" class="mt-2 text-sm text-red-600">
+                {{ emailError }}
+              </p>
+            </div>
+
+            <div>
+              <label class="mb-2 block text-sm font-medium text-slate-700">Пароль</label>
+              <div class="relative">
+                <input
+                    v-model="password"
+                    :type="showPassword ? 'text' : 'password'"
+                    autocomplete="current-password"
+                    class="w-full rounded-2xl border px-4 py-3 pr-24 outline-none transition"
+                    :class="fieldClass(showValidation && !!passwordError)"
+                    placeholder="Введите пароль"
+                />
+                <button
+                    type="button"
+                    class="absolute right-3 top-1/2 -translate-y-1/2 rounded-xl px-3 py-1.5 text-sm font-medium text-slate-600 transition hover:bg-slate-100 hover:text-slate-900"
+                    @click="showPassword = !showPassword"
+                >
+                  {{ showPassword ? 'Скрыть' : 'Показать' }}
+                </button>
+              </div>
+              <p v-if="showValidation && passwordError" class="mt-2 text-sm text-red-600">
+                {{ passwordError }}
+              </p>
+            </div>
+
+            <AppErrorState
+                v-if="errorMessage"
+                title="Не удалось войти"
+                :description="errorMessage"
             />
-            <p v-if="passwordError" class="mt-2 text-sm text-red-600">{{ passwordError }}</p>
-          </div>
 
-          <AppErrorState
-              v-if="errorMessage"
-              title="Не удалось войти"
-              :description="errorMessage"
-          />
+            <button
+                type="submit"
+                class="w-full rounded-2xl bg-slate-900 px-4 py-3 font-semibold text-white transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50"
+                :disabled="loading"
+            >
+              {{ loading ? 'Вход...' : 'Войти' }}
+            </button>
 
-          <button
-              type="submit"
-              class="w-full rounded-2xl bg-slate-900 px-4 py-3 font-semibold text-white transition hover:opacity-90 disabled:opacity-50"
-              :disabled="loading"
-          >
-            {{ loading ? 'Вход...' : 'Войти' }}
-          </button>
-        </form>
+            <div class="text-center text-sm text-slate-600">
+              Ещё нет аккаунта?
+              <RouterLink to="/register" class="font-semibold text-slate-900 transition hover:opacity-70">
+                Зарегистрироваться
+              </RouterLink>
+            </div>
+          </form>
+        </div>
       </div>
-    </div>
+    </section>
   </PublicLayout>
 </template>
 
@@ -64,6 +120,8 @@ const email = ref('')
 const password = ref('')
 const errorMessage = ref('')
 const loading = ref(false)
+const showValidation = ref(false)
+const showPassword = ref(false)
 
 const emailError = computed(() => {
   if (!email.value) return 'Введите email'
@@ -76,10 +134,13 @@ const passwordError = computed(() => {
   return password.value.length >= 8 ? '' : 'Пароль должен содержать минимум 8 символов'
 })
 
-const fieldClass = (hasError: string) =>
-    hasError ? 'border-red-300 focus:border-red-500' : 'border-slate-300 focus:border-slate-900'
+const fieldClass = (hasError: boolean) =>
+    hasError
+        ? 'border-red-300 focus:border-red-500'
+        : 'border-slate-300 focus:border-slate-900'
 
 const handleLogin = async () => {
+  showValidation.value = true
   errorMessage.value = ''
 
   if (emailError.value || passwordError.value) {
@@ -113,7 +174,8 @@ const handleLogin = async () => {
 
     await router.push('/')
   } catch (error: any) {
-    errorMessage.value = error?.response?.data?.error || 'Проверьте email и пароль'
+    errorMessage.value =
+        error?.response?.data?.error || 'Проверьте email и пароль и попробуйте снова.'
   } finally {
     loading.value = false
   }
