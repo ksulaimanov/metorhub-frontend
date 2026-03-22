@@ -1,12 +1,11 @@
 <template>
-  <div class="min-h-screen bg-slate-50">
-    <PrivateHeader />
-    <div class="mx-auto max-w-4xl px-6 py-10">
-      <div class="rounded-3xl bg-white p-8 shadow-sm ring-1 ring-slate-200">
-        <h1 class="text-3xl font-bold text-slate-900">Профиль ученика</h1>
-        <div class="mt-6 rounded-2xl bg-slate-50 p-5 text-slate-600">
-          Заполненный профиль помогает быстрее и удобнее записываться на занятия и поддерживать связь с ментором.
-        </div>
+  <PrivateLayout>
+    <div class="mx-auto max-w-4xl">
+      <AppCard>
+        <AppSectionTitle
+            title="Профиль ученика"
+            description="Заполненный профиль помогает быстрее и удобнее записываться на занятия и поддерживать связь с ментором."
+        />
 
         <form class="mt-8 grid gap-4 md:grid-cols-2" @submit.prevent="saveProfile">
           <input v-model="form.firstName" class="rounded-2xl border border-slate-300 px-4 py-3" placeholder="Имя" />
@@ -25,15 +24,17 @@
         </form>
 
         <p v-if="successMessage" class="mt-4 text-sm font-medium text-emerald-600">{{ successMessage }}</p>
-      </div>
+      </AppCard>
     </div>
-  </div>
+  </PrivateLayout>
 </template>
 
 <script setup lang="ts">
 import { onMounted, reactive, ref } from 'vue'
 import { http } from '../../shared/api/http'
-import PrivateHeader from '../../widgets/header/PrivateHeader.vue'
+import PrivateLayout from '../../widgets/layout/PrivateLayout.vue'
+import AppCard from '../../shared/ui/AppCard.vue'
+import AppSectionTitle from '../../shared/ui/AppSectionTitle.vue'
 
 const successMessage = ref('')
 
