@@ -79,6 +79,16 @@ router.beforeEach((to, _from, next) => {
     }
 
     if (role && !hasRole(role)) {
+        if (hasRole('ROLE_MENTOR')) {
+            next('/mentor/profile')
+            return
+        }
+
+        if (hasRole('ROLE_STUDENT')) {
+            next('/student/profile')
+            return
+        }
+
         next('/')
         return
     }

@@ -1,20 +1,19 @@
 <template>
-  <div class="min-h-screen bg-slate-50">
-    <PrivateHeader />
-    <div class="mx-auto max-w-6xl px-6 py-10">
-      <div class="flex items-center justify-between gap-4">
-        <div>
-          <h1 class="text-3xl font-bold text-slate-900">Мои занятия</h1>
-          <p class="mt-2 text-slate-600">Следите за статусом записей и оставляйте отзывы после завершённых занятий.</p>
-        </div>
-      </div>
+  <PrivateLayout>
+    <div class="space-y-8">
+      <AppSectionTitle
+          title="Мои занятия"
+          description="Следите за статусом записей и оставляйте отзывы после завершённых занятий."
+      />
 
-      <div class="mt-8 grid gap-4">
-        <div
-            v-for="booking in bookings"
-            :key="booking.id"
-            class="rounded-3xl bg-white p-6 shadow-sm ring-1 ring-slate-200"
-        >
+      <AppEmptyState
+          v-if="bookings.length === 0"
+          title="У вас пока нет записей"
+          description="Когда вы запишетесь к ментору, занятия появятся здесь."
+      />
+
+      <div v-else class="grid gap-4">
+        <AppCard v-for="booking in bookings" :key="booking.id">
           <div class="flex flex-col gap-5">
             <div class="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
               <div>
@@ -23,16 +22,10 @@
                 </p>
 
                 <div class="mt-3 flex flex-wrap items-center gap-3">
-                  <span class="rounded-full bg-slate-100 px-3 py-1 text-sm font-medium text-slate-700">
-                    {{ formatLessonFormat(booking.lessonFormat) }}
-                  </span>
-
-                  <span
-                      class="rounded-full px-3 py-1 text-sm font-medium"
-                      :class="statusClass(booking.status)"
-                  >
+                  <AppBadge>{{ formatLessonFormat(booking.lessonFormat) }}</AppBadge>
+                  <AppBadge :variant="statusVariant(booking.status)">
                     {{ formatStatus(booking.status) }}
-                  </span>
+                  </AppBadge>
                 </div>
 
                 <p v-if="booking.studentNote" class="mt-3 text-slate-600">
@@ -86,41 +79,32 @@
                     {{ reviewLoadingId === booking.id ? 'Отправка...' : 'Отправить отзыв' }}
                   </button>
 
-                  <p
-                      v-if="reviewMessages[booking.id]"
-                      class="text-sm font-medium text-emerald-600"
-                  >
+                  <p v-if="reviewMessages[booking.id]" class="text-sm font-medium text-emerald-600">
                     {{ reviewMessages[booking.id] }}
                   </p>
 
-                  <p
-                      v-if="reviewErrors[booking.id]"
-                      class="text-sm font-medium text-red-600"
-                  >
+                  <p v-if="reviewErrors[booking.id]" class="text-sm font-medium text-red-600">
                     {{ reviewErrors[booking.id] }}
                   </p>
                 </div>
               </div>
             </div>
           </div>
-        </div>
-
-        <div
-            v-if="bookings.length === 0"
-            class="rounded-3xl bg-white p-10 text-center text-slate-500 shadow-sm ring-1 ring-slate-200"
-        >
-          У вас пока нет записей на занятия.
-        </div>
+        </AppCard>
       </div>
     </div>
-  </div>
+  </PrivateLayout>
 </template>
 
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
 import { http } from '../../shared/api/http'
 import { createStudentReview } from '../../shared/api/reviewApi'
-import PrivateHeader from '../../widgets/header/PrivateHeader.vue'
+import PrivateLayout from '../../widgets/layout/PrivateLayout.vue'
+import AppSectionTitle from '../../shared/ui/AppSectionTitle.vue'
+import AppEmptyState from '../../shared/ui/AppEmptyState.vue'
+import AppCard from '../../shared/ui/AppCard.vue'
+import AppBadge from '../../shared/ui/AppBadge.vue'
 
 interface Booking {
   id: number
@@ -189,9 +173,7 @@ const submitReview = async (bookingId: number) => {
   }
 }
 
-const formatDateTime = (value: string) => {
-  return new Date(value).toLocaleString('ru-RU')
-}
+const formatDateTime = (value: string) => new Date(value).toLocaleString('ru-RU')
 
 const formatLessonFormat = (value: string) => {
   const map: Record<string, string> = {
@@ -199,7 +181,6 @@ const formatLessonFormat = (value: string) => {
     OFFLINE: 'Офлайн',
     HYBRID: 'Гибрид',
   }
-
   return map[value] || value
 }
 
@@ -211,20 +192,18 @@ const formatStatus = (value: string) => {
     CANCELLED_BY_MENTOR: 'Отменено ментором',
     COMPLETED: 'Завершено',
   }
-
   return map[value] || value
 }
 
-const statusClass = (value: string) => {
-  const map: Record<string, string> = {
-    PENDING: 'bg-amber-100 text-amber-700',
-    CONFIRMED: 'bg-emerald-100 text-emerald-700',
-    CANCELLED_BY_STUDENT: 'bg-red-100 text-red-700',
-    CANCELLED_BY_MENTOR: 'bg-red-100 text-red-700',
-    COMPLETED: 'bg-blue-100 text-blue-700',
+const statusVariant = (value: string): 'default' | 'success' | 'warning' | 'danger' | 'info' => {
+  const map: Record<string, 'default' | 'success' | 'warning' | 'danger' | 'info'> = {
+    PENDING: 'warning',
+    CONFIRMED: 'success',
+    CANCELLED_BY_STUDENT: 'danger',
+    CANCELLED_BY_MENTOR: 'danger',
+    COMPLETED: 'info',
   }
-
-  return map[value] || 'bg-slate-100 text-slate-700'
+  return map[value] || 'default'
 }
 
 onMounted(loadBookings)
