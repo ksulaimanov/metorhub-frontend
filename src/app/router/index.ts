@@ -2,7 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import HomePage from '../../pages/public/HomePage.vue'
 import LoginPage from '../../pages/auth/LoginPage.vue'
 import RegisterPage from '../../pages/auth/RegisterPage.vue'
-import MentorDirectoryPage from '../../pages/public/MentorDirectoryPage.vue.vue'
+import MentorDirectoryPage from '../../pages/public/MentorDirectoryPage.vue'
 import PublicMentorProfilePage from '../../pages/public/PublicMentorProfilePage.vue'
 
 const router = createRouter({
