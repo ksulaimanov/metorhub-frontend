@@ -13,7 +13,7 @@
           <div class="flex flex-col gap-4">
             <div>
               <p class="text-lg font-semibold text-slate-900">{{ booking.startAt }} — {{ booking.endAt }}</p>
-              <p class="mt-1 text-slate-600">Статус: {{ booking.status }}</p>
+              <p class="mt-1 text-slate-600">Статус: {{ formatStatus(booking.status) }}</p>
               <p v-if="booking.studentNote" class="mt-1 text-slate-600">Комментарий ученика: {{ booking.studentNote }}</p>
             </div>
 
@@ -57,6 +57,18 @@ interface Booking {
   endAt: string
   status: string
   studentNote: string | null
+}
+
+const formatStatus = (value: string) => {
+  const map: Record<string, string> = {
+    PENDING: 'Ожидает подтверждения',
+    CONFIRMED: 'Подтверждено',
+    CANCELLED_BY_STUDENT: 'Отменено учеником',
+    CANCELLED_BY_MENTOR: 'Отменено ментором',
+    COMPLETED: 'Завершено',
+  }
+
+  return map[value] || value
 }
 
 const bookings = ref<Booking[]>([])

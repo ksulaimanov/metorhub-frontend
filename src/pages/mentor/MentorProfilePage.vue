@@ -5,6 +5,32 @@
       <div class="rounded-3xl bg-white p-8 shadow-sm ring-1 ring-slate-200">
         <h1 class="text-3xl font-bold text-slate-900">Профиль ментора</h1>
 
+        <div class="mt-6 grid gap-4 md:grid-cols-4">
+          <div class="rounded-2xl bg-slate-50 p-4">
+            <p class="text-sm text-slate-500">Рейтинг</p>
+            <p class="mt-2 text-2xl font-bold text-slate-900">{{ form.averageRating || 0 }}</p>
+          </div>
+
+          <div class="rounded-2xl bg-slate-50 p-4">
+            <p class="text-sm text-slate-500">Проведено занятий</p>
+            <p class="mt-2 text-2xl font-bold text-slate-900">{{ form.lessonsCompleted || 0 }}</p>
+          </div>
+
+          <div class="rounded-2xl bg-slate-50 p-4">
+            <p class="text-sm text-slate-500">Публичность</p>
+            <p class="mt-2 text-lg font-semibold text-slate-900">
+              {{ form.public ? 'Публичный профиль' : 'Скрытый профиль' }}
+            </p>
+          </div>
+
+          <div class="rounded-2xl bg-slate-50 p-4">
+            <p class="text-sm text-slate-500">Статус</p>
+            <p class="mt-2 text-lg font-semibold" :class="form.verified ? 'text-emerald-600' : 'text-slate-700'">
+              {{ form.verified ? 'Проверен' : 'Обычный профиль' }}
+            </p>
+          </div>
+        </div>
+
         <form class="mt-8 grid gap-4 md:grid-cols-2" @submit.prevent="saveProfile">
           <input v-model="form.firstName" class="rounded-2xl border border-slate-300 px-4 py-3" placeholder="Имя" />
           <input v-model="form.lastName" class="rounded-2xl border border-slate-300 px-4 py-3" placeholder="Фамилия" />
@@ -41,7 +67,7 @@
               placeholder="Расскажите о себе, опыте и формате обучения"
           />
 
-          <button class="rounded-2xl bg-slate-900 px-4 py-3 font-semibold text-white md:col-span-2">
+          <button type="submit" class="rounded-2xl bg-slate-900 px-4 py-3 font-semibold text-white md:col-span-2">
             Сохранить изменения
           </button>
         </form>
@@ -75,16 +101,28 @@ const form = reactive({
   meetingLink: '',
   pricePerHour: 0,
   public: true,
+  averageRating: 0,
+  lessonsCompleted: 0,
+  verified: false
 })
 
 const loadProfile = async () => {
-  const { data } = await http.get('/api/mentor/profile')
-  Object.assign(form, data)
+  try {
+    const { data } = await http.get('/api/mentor/profile')
+    Object.assign(form, data)
+  } catch (error) {
+    console.error('Ошибка загрузки профиля:', error)
+  }
 }
 
 const saveProfile = async () => {
-  await http.put('/api/mentor/profile', form)
-  successMessage.value = 'Профиль ментора успешно обновлён'
+  try {
+    await http.put('/api/mentor/profile', form)
+    successMessage.value = 'Профиль ментора успешно обновлён'
+    setTimeout(() => { successMessage.value = '' }, 3000)
+  } catch (error) {
+    console.error('Ошибка сохранения профиля:', error)
+  }
 }
 
 onMounted(loadProfile)
