@@ -1,0 +1,29 @@
+# Директории зависимостей
+node_modules/
+dist/
+dist-ssr/
+*.local
+
+# Логи
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Редактор и IDE (VS Code, WebStorm)
+.vscode/*
+!.vscode/extensions.json
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Переменные окружения (важно для безопасности)
+.env
+.env.local
+.env.*.local
+
+# TypeScript
+*.tsbuildinfo
