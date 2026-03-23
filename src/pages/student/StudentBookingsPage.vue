@@ -3,11 +3,19 @@
     <div class="space-y-8">
       <AppSectionTitle
           title="Мои занятия"
-          description="Следите за статусом записей и оставляйте отзывы после завершённых занятий."
+          description="Следите за статусом записей, отменяйте занятия при необходимости и оставляйте отзывы после завершённых уроков."
+      />
+
+      <AppLoadingState v-if="loading" text="Загружаем ваши записи..." />
+
+      <AppErrorState
+          v-else-if="pageError"
+          title="Не удалось загрузить записи"
+          :description="pageError"
       />
 
       <AppEmptyState
-          v-if="bookings.length === 0"
+          v-else-if="bookings.length === 0"
           title="У вас пока нет записей"
           description="Когда вы запишетесь к ментору, занятия появятся здесь."
       />
@@ -16,41 +24,64 @@
         <AppCard v-for="booking in bookings" :key="booking.id">
           <div class="flex flex-col gap-5">
             <div class="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
-              <div>
+              <div class="space-y-3">
                 <p class="text-lg font-semibold text-slate-900">
                   {{ formatDateTime(booking.startAt) }} — {{ formatDateTime(booking.endAt) }}
                 </p>
 
-                <div class="mt-3 flex flex-wrap items-center gap-3">
+                <div class="flex flex-wrap items-center gap-3">
                   <AppBadge>{{ formatLessonFormat(booking.lessonFormat) }}</AppBadge>
                   <AppBadge :variant="statusVariant(booking.status)">
                     {{ formatStatus(booking.status) }}
                   </AppBadge>
                 </div>
 
-                <p v-if="booking.studentNote" class="mt-3 text-slate-600">
-                  Ваш комментарий: {{ booking.studentNote }}
-                </p>
+                <div class="grid gap-2 text-sm text-slate-600 sm:grid-cols-2">
+                  <p>
+                    <span class="font-medium text-slate-800">Начало:</span>
+                    {{ formatDateTime(booking.startAt) }}
+                  </p>
+                  <p>
+                    <span class="font-medium text-slate-800">Окончание:</span>
+                    {{ formatDateTime(booking.endAt) }}
+                  </p>
+                </div>
 
-                <p v-if="booking.mentorNote" class="mt-1 text-slate-600">
-                  Комментарий ментора: {{ booking.mentorNote }}
-                </p>
+                <div
+                    v-if="booking.studentNote"
+                    class="rounded-2xl bg-slate-50 px-4 py-3 text-sm text-slate-700 ring-1 ring-slate-200"
+                >
+                  <span class="font-medium text-slate-900">Ваш комментарий:</span>
+                  {{ booking.studentNote }}
+                </div>
+
+                <div
+                    v-if="booking.mentorNote"
+                    class="rounded-2xl bg-slate-50 px-4 py-3 text-sm text-slate-700 ring-1 ring-slate-200"
+                >
+                  <span class="font-medium text-slate-900">Комментарий ментора:</span>
+                  {{ booking.mentorNote }}
+                </div>
               </div>
 
               <button
-                  v-if="booking.status === 'PENDING' || booking.status === 'CONFIRMED'"
-                  class="rounded-2xl border border-red-300 px-4 py-2 text-red-600 transition hover:bg-red-50"
+                  v-if="canCancel(booking.status)"
+                  class="rounded-2xl border border-red-300 px-4 py-2 text-red-600 transition hover:bg-red-50 disabled:cursor-not-allowed disabled:opacity-50"
+                  :disabled="cancelLoadingId === booking.id"
                   @click="cancelBooking(booking.id)"
               >
-                Отменить запись
+                {{ cancelLoadingId === booking.id ? 'Отмена...' : 'Отменить запись' }}
               </button>
             </div>
 
             <div
-                v-if="booking.status === 'COMPLETED'"
+                v-if="booking.status === 'COMPLETED' && !reviewSubmitted[booking.id]"
                 class="rounded-2xl border border-slate-200 bg-slate-50 p-5"
             >
               <h2 class="text-lg font-semibold text-slate-900">Оставить отзыв</h2>
+              <p class="mt-2 text-sm text-slate-600">
+                Поделитесь впечатлением о занятии — это поможет другим ученикам.
+              </p>
 
               <div class="mt-4 grid gap-4">
                 <select
@@ -89,6 +120,16 @@
                 </div>
               </div>
             </div>
+
+            <div
+                v-else-if="booking.status === 'COMPLETED' && reviewSubmitted[booking.id]"
+                class="rounded-2xl border border-emerald-200 bg-emerald-50 p-5"
+            >
+              <p class="font-semibold text-emerald-700">Спасибо, отзыв отправлен.</p>
+              <p class="mt-2 text-sm text-emerald-700">
+                Ваше мнение помогает улучшать качество занятий на платформе.
+              </p>
+            </div>
           </div>
         </AppCard>
       </div>
@@ -105,6 +146,8 @@ import AppSectionTitle from '../../shared/ui/AppSectionTitle.vue'
 import AppEmptyState from '../../shared/ui/AppEmptyState.vue'
 import AppCard from '../../shared/ui/AppCard.vue'
 import AppBadge from '../../shared/ui/AppBadge.vue'
+import AppLoadingState from '../../shared/ui/AppLoadingState.vue'
+import AppErrorState from '../../shared/ui/AppErrorState.vue'
 
 interface Booking {
   id: number
@@ -122,10 +165,15 @@ interface ReviewForm {
 }
 
 const bookings = ref<Booking[]>([])
+const loading = ref(false)
+const pageError = ref('')
+const cancelLoadingId = ref<number | null>(null)
 const reviewLoadingId = ref<number | null>(null)
+
 const reviewForms = ref<Record<number, ReviewForm>>({})
 const reviewMessages = ref<Record<number, string>>({})
 const reviewErrors = ref<Record<number, string>>({})
+const reviewSubmitted = ref<Record<number, boolean>>({})
 
 const ensureReviewForm = (bookingId: number) => {
   if (!reviewForms.value[bookingId]) {
@@ -137,17 +185,38 @@ const ensureReviewForm = (bookingId: number) => {
 }
 
 const loadBookings = async () => {
-  const { data } = await http.get('/api/student/bookings')
-  bookings.value = data
+  loading.value = true
+  pageError.value = ''
 
-  for (const booking of bookings.value) {
-    ensureReviewForm(booking.id)
+  try {
+    const { data } = await http.get('/api/student/bookings')
+    bookings.value = data
+
+    for (const booking of bookings.value) {
+      ensureReviewForm(booking.id)
+    }
+  } catch (error) {
+    console.error('Ошибка загрузки записей ученика:', error)
+    pageError.value = 'Попробуйте обновить страницу чуть позже.'
+  } finally {
+    loading.value = false
   }
 }
 
+const canCancel = (status: string) => status === 'PENDING' || status === 'CONFIRMED'
+
 const cancelBooking = async (bookingId: number) => {
-  await http.patch(`/api/student/bookings/${bookingId}/cancel`)
-  await loadBookings()
+  cancelLoadingId.value = bookingId
+
+  try {
+    await http.patch(`/api/student/bookings/${bookingId}/cancel`)
+    await loadBookings()
+  } catch (error) {
+    console.error('Ошибка отмены записи:', error)
+    pageError.value = 'Не удалось отменить запись.'
+  } finally {
+    cancelLoadingId.value = null
+  }
 }
 
 const submitReview = async (bookingId: number) => {
@@ -164,16 +233,23 @@ const submitReview = async (bookingId: number) => {
       comment: form.comment,
     })
 
-    reviewMessages.value[bookingId] = 'Отзыв успешно отправлен'
+    reviewMessages.value[bookingId] = 'Отзыв успешно отправлен.'
+    reviewSubmitted.value[bookingId] = true
   } catch (error: any) {
     reviewErrors.value[bookingId] =
-        error?.response?.data?.error || 'Не удалось отправить отзыв'
+        error?.response?.data?.message ||
+        error?.response?.data?.error ||
+        'Не удалось отправить отзыв.'
   } finally {
     reviewLoadingId.value = null
   }
 }
 
-const formatDateTime = (value: string) => new Date(value).toLocaleString('ru-RU')
+const formatDateTime = (value: string) =>
+    new Date(value).toLocaleString('ru-RU', {
+      dateStyle: 'medium',
+      timeStyle: 'short',
+    })
 
 const formatLessonFormat = (value: string) => {
   const map: Record<string, string> = {
