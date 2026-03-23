@@ -9,6 +9,7 @@ import StudentBookingsPage from '../../pages/student/StudentBookingsPage.vue'
 import MentorProfilePage from '../../pages/mentor/MentorProfilePage.vue'
 import MentorSlotsPage from '../../pages/mentor/MentorSlotsPage.vue'
 import MentorBookingsPage from '../../pages/mentor/MentorBookingsPage.vue'
+import VerifyEmailPage from '../../pages/auth/VerifyEmailPage.vue'
 
 const getRoles = (): string[] => {
     try {
@@ -27,6 +28,7 @@ const router = createRouter({
         { path: '/', name: 'home', component: HomePage },
         { path: '/login', name: 'login', component: LoginPage },
         { path: '/register', name: 'register', component: RegisterPage },
+        { path: '/verify-email', name: 'verify-email', component: VerifyEmailPage },
         { path: '/mentors', name: 'mentor-directory', component: MentorDirectoryPage },
         {
             path: '/mentors/:id',

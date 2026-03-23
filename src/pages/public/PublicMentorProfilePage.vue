@@ -1,421 +1,384 @@
 <template>
-  <PrivateLayout>
-    <div class="space-y-8">
-      <AppSectionTitle
-          title="Профиль ментора"
-          description="Заполненный и публичный профиль помогает ученикам быстрее выбрать вас, понять ваш опыт и записаться на занятие."
-      />
-
-      <AppLoadingState v-if="loading" text="Загружаем профиль..." />
+  <PublicLayout>
+    <section class="mx-auto max-w-7xl px-6 py-12">
+      <AppLoadingState v-if="loading" text="Загружаем профиль ментора..." />
 
       <AppErrorState
-          v-else-if="pageError"
-          title="Не удалось загрузить профиль"
-          :description="pageError"
+          v-else-if="error"
+          title="Не удалось загрузить профиль ментора"
+          :description="error"
       />
 
-      <template v-else>
-        <div class="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-          <AppCard>
-            <p class="text-sm text-slate-500">Рейтинг</p>
-            <p class="mt-2 text-2xl font-bold text-slate-900">
-              {{ form.averageRating || 0 }}
-            </p>
-          </AppCard>
-
-          <AppCard>
-            <p class="text-sm text-slate-500">Проведено занятий</p>
-            <p class="mt-2 text-2xl font-bold text-slate-900">
-              {{ form.lessonsCompleted || 0 }}
-            </p>
-          </AppCard>
-
-          <AppCard>
-            <p class="text-sm text-slate-500">Публичность</p>
-            <div class="mt-3">
-              <AppBadge :variant="form.public ? 'success' : 'default'">
-                {{ form.public ? 'Публичный профиль' : 'Скрытый профиль' }}
-              </AppBadge>
-            </div>
-          </AppCard>
-
-          <AppCard>
-            <p class="text-sm text-slate-500">Статус</p>
-            <div class="mt-3">
-              <AppBadge :variant="form.verified ? 'success' : 'info'">
-                {{ form.verified ? 'Проверен' : 'Обычный профиль' }}
-              </AppBadge>
-            </div>
-          </AppCard>
-        </div>
-
-        <form class="space-y-6" @submit.prevent="saveProfile">
-          <AppCard>
-            <div class="space-y-6">
-              <div>
-                <h2 class="text-xl font-semibold text-slate-900">Основная информация</h2>
-                <p class="mt-1 text-sm text-slate-600">
-                  Эти данные отображаются в вашем профиле и помогают ученикам быстрее понять, чем вы полезны.
-                </p>
-              </div>
-
-              <div class="grid gap-4 md:grid-cols-2">
-                <div>
-                  <label class="mb-2 block text-sm font-medium text-slate-700">Имя</label>
-                  <input
-                      v-model.trim="form.firstName"
-                      class="w-full rounded-2xl border border-slate-300 px-4 py-3 outline-none transition focus:border-slate-900"
-                      placeholder="Введите имя"
+      <template v-else-if="mentor">
+        <div class="grid gap-8 lg:grid-cols-[1.15fr_0.85fr]">
+          <div class="space-y-6">
+            <div class="rounded-[2rem] bg-white p-6 shadow-sm ring-1 ring-slate-200 md:p-8">
+              <div class="flex flex-col gap-6 md:flex-row md:items-start">
+                <div class="flex h-28 w-28 shrink-0 items-center justify-center overflow-hidden rounded-full bg-slate-200 text-3xl font-bold text-slate-600">
+                  <img
+                      v-if="mentor.avatarUrl"
+                      :src="mentor.avatarUrl"
+                      :alt="mentorName"
+                      class="h-full w-full object-cover"
                   />
-                  <p v-if="fieldErrors.firstName" class="mt-2 text-sm text-red-600">
-                    {{ fieldErrors.firstName }}
+                  <span v-else>{{ mentorInitials }}</span>
+                </div>
+
+                <div class="min-w-0 flex-1">
+                  <div class="flex flex-wrap items-center gap-3">
+                    <h1 class="text-3xl font-bold tracking-tight text-slate-900 md:text-4xl">
+                      {{ mentorName }}
+                    </h1>
+
+                    <AppBadge v-if="mentor.verified" variant="success">
+                      Проверен
+                    </AppBadge>
+                  </div>
+
+                  <p class="mt-3 text-lg text-slate-600">
+                    {{ mentor.headline || 'Ментор MentorHub' }}
                   </p>
-                </div>
 
-                <div>
-                  <label class="mb-2 block text-sm font-medium text-slate-700">Фамилия</label>
-                  <input
-                      v-model.trim="form.lastName"
-                      class="w-full rounded-2xl border border-slate-300 px-4 py-3 outline-none transition focus:border-slate-900"
-                      placeholder="Введите фамилию"
-                  />
-                  <p v-if="fieldErrors.lastName" class="mt-2 text-sm text-red-600">
-                    {{ fieldErrors.lastName }}
-                  </p>
-                </div>
+                  <div class="mt-5 flex flex-wrap gap-2">
+                    <AppBadge v-if="mentor.lessonFormatOnline">Онлайн</AppBadge>
+                    <AppBadge v-if="mentor.lessonFormatOffline">Офлайн</AppBadge>
+                    <AppBadge v-if="mentor.lessonFormatHybrid">Гибрид</AppBadge>
+                  </div>
 
-                <div class="md:col-span-2">
-                  <label class="mb-2 block text-sm font-medium text-slate-700">
-                    Заголовок профиля
-                  </label>
-                  <input
-                      v-model.trim="form.headline"
-                      class="w-full rounded-2xl border border-slate-300 px-4 py-3 outline-none transition focus:border-slate-900"
-                      placeholder="Например: Java-ментор, помогаю подготовиться к собеседованиям"
-                  />
-                  <p class="mt-2 text-xs text-slate-500">
-                    Коротко опишите, в чём ваша сила как ментора.
-                  </p>
-                </div>
+                  <div class="mt-6 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+                    <div class="rounded-2xl bg-slate-50 p-4">
+                      <p class="text-sm text-slate-500">Специализация</p>
+                      <p class="mt-1 font-semibold text-slate-900">
+                        {{ mentor.specialization || 'Не указана' }}
+                      </p>
+                    </div>
 
-                <div>
-                  <label class="mb-2 block text-sm font-medium text-slate-700">Специализация</label>
-                  <input
-                      v-model.trim="form.specialization"
-                      class="w-full rounded-2xl border border-slate-300 px-4 py-3 outline-none transition focus:border-slate-900"
-                      placeholder="Например: Frontend, Java, Data Science"
-                  />
-                  <p v-if="fieldErrors.specialization" class="mt-2 text-sm text-red-600">
-                    {{ fieldErrors.specialization }}
-                  </p>
-                </div>
+                    <div class="rounded-2xl bg-slate-50 p-4">
+                      <p class="text-sm text-slate-500">Опыт</p>
+                      <p class="mt-1 font-semibold text-slate-900">
+                        {{ mentor.yearsExperience ?? 0 }} лет
+                      </p>
+                    </div>
 
-                <div>
-                  <label class="mb-2 block text-sm font-medium text-slate-700">Город</label>
-                  <input
-                      v-model.trim="form.city"
-                      class="w-full rounded-2xl border border-slate-300 px-4 py-3 outline-none transition focus:border-slate-900"
-                      placeholder="Например: Бишкек"
-                  />
-                </div>
+                    <div class="rounded-2xl bg-slate-50 p-4">
+                      <p class="text-sm text-slate-500">Рейтинг</p>
+                      <p class="mt-1 font-semibold text-slate-900">
+                        {{ mentor.averageRating ?? 0 }}
+                      </p>
+                    </div>
 
-                <div>
-                  <label class="mb-2 block text-sm font-medium text-slate-700">
-                    Опыт работы (лет)
-                  </label>
-                  <input
-                      v-model.number="form.yearsExperience"
-                      type="number"
-                      min="0"
-                      class="w-full rounded-2xl border border-slate-300 px-4 py-3 outline-none transition focus:border-slate-900"
-                      placeholder="Например: 5"
-                  />
-                </div>
-
-                <div>
-                  <label class="mb-2 block text-sm font-medium text-slate-700">
-                    Стоимость за час
-                  </label>
-                  <input
-                      v-model.number="form.pricePerHour"
-                      type="number"
-                      min="0"
-                      class="w-full rounded-2xl border border-slate-300 px-4 py-3 outline-none transition focus:border-slate-900"
-                      placeholder="Например: 1500"
-                  />
+                    <div class="rounded-2xl bg-slate-50 p-4">
+                      <p class="text-sm text-slate-500">Проведено занятий</p>
+                      <p class="mt-1 font-semibold text-slate-900">
+                        {{ mentor.lessonsCompleted ?? 0 }}
+                      </p>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
-          </AppCard>
 
-          <AppCard>
-            <div class="space-y-6">
-              <div>
-                <h2 class="text-xl font-semibold text-slate-900">Формат занятий</h2>
-                <p class="mt-1 text-sm text-slate-600">
-                  Выберите, в каком формате вы готовы проводить занятия.
-                </p>
-              </div>
-
-              <div class="grid gap-3 md:grid-cols-2 xl:grid-cols-4">
-                <label class="flex cursor-pointer items-start gap-3 rounded-2xl border border-slate-200 p-4 transition hover:border-slate-300">
-                  <input v-model="form.lessonFormatOnline" type="checkbox" class="mt-1 h-4 w-4" />
-                  <div>
-                    <p class="font-medium text-slate-900">Онлайн</p>
-                    <p class="text-sm text-slate-600">Видеозвонки и дистанционные занятия</p>
-                  </div>
-                </label>
-
-                <label class="flex cursor-pointer items-start gap-3 rounded-2xl border border-slate-200 p-4 transition hover:border-slate-300">
-                  <input v-model="form.lessonFormatOffline" type="checkbox" class="mt-1 h-4 w-4" />
-                  <div>
-                    <p class="font-medium text-slate-900">Офлайн</p>
-                    <p class="text-sm text-slate-600">Личные встречи по адресу</p>
-                  </div>
-                </label>
-
-                <label class="flex cursor-pointer items-start gap-3 rounded-2xl border border-slate-200 p-4 transition hover:border-slate-300">
-                  <input v-model="form.lessonFormatHybrid" type="checkbox" class="mt-1 h-4 w-4" />
-                  <div>
-                    <p class="font-medium text-slate-900">Гибрид</p>
-                    <p class="text-sm text-slate-600">Можно и онлайн, и офлайн</p>
-                  </div>
-                </label>
-
-                <label class="flex cursor-pointer items-start gap-3 rounded-2xl border border-slate-200 p-4 transition hover:border-slate-300">
-                  <input v-model="form.public" type="checkbox" class="mt-1 h-4 w-4" />
-                  <div>
-                    <p class="font-medium text-slate-900">Публичный профиль</p>
-                    <p class="text-sm text-slate-600">Показывать вас в каталоге MentorHub</p>
-                  </div>
-                </label>
-              </div>
-
-              <p v-if="formatError" class="text-sm font-medium text-red-600">
-                {{ formatError }}
+            <AppCard>
+              <h2 class="text-xl font-semibold text-slate-900">О менторе</h2>
+              <p class="mt-4 whitespace-pre-line leading-8 text-slate-600">
+                {{ mentor.bio || 'Описание пока не добавлено.' }}
               </p>
-            </div>
-          </AppCard>
+            </AppCard>
 
-          <AppCard>
-            <div class="space-y-6">
-              <div>
-                <h2 class="text-xl font-semibold text-slate-900">Контакты и проведение занятий</h2>
-                <p class="mt-1 text-sm text-slate-600">
-                  Укажите адрес и ссылку, если используете офлайн или онлайн формат.
-                </p>
-              </div>
+            <AppCard>
+              <h2 class="text-xl font-semibold text-slate-900">Детали занятий</h2>
 
-              <div class="grid gap-4 md:grid-cols-2">
-                <div class="md:col-span-2">
-                  <label class="mb-2 block text-sm font-medium text-slate-700">Адрес</label>
-                  <input
-                      v-model.trim="form.addressText"
-                      class="w-full rounded-2xl border border-slate-300 px-4 py-3 outline-none transition focus:border-slate-900"
-                      placeholder="Например: Бишкек, ул. Исанова 42"
-                  />
+              <div class="mt-5 grid gap-4 md:grid-cols-2">
+                <div>
+                  <p class="text-sm text-slate-500">Город</p>
+                  <p class="mt-1 font-medium text-slate-900">
+                    {{ mentor.city || 'Не указан' }}
+                  </p>
                 </div>
 
-                <div class="md:col-span-2">
-                  <label class="mb-2 block text-sm font-medium text-slate-700">
-                    Ссылка на встречу
-                  </label>
-                  <input
-                      v-model.trim="form.meetingLink"
-                      class="w-full rounded-2xl border border-slate-300 px-4 py-3 outline-none transition focus:border-slate-900"
-                      placeholder="Например: Zoom / Google Meet ссылка"
-                  />
+                <div>
+                  <p class="text-sm text-slate-500">Стоимость</p>
+                  <p class="mt-1 font-medium text-slate-900">
+                    {{ mentor.pricePerHour ? `${mentor.pricePerHour} сом/час` : 'Не указана' }}
+                  </p>
+                </div>
+
+                <div v-if="mentor.addressText">
+                  <p class="text-sm text-slate-500">Адрес</p>
+                  <p class="mt-1 font-medium text-slate-900">
+                    {{ mentor.addressText }}
+                  </p>
+                </div>
+
+                <div v-if="mentor.meetingLink">
+                  <p class="text-sm text-slate-500">Ссылка на встречу</p>
+                  <a
+                      :href="mentor.meetingLink"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      class="mt-1 inline-block break-all font-medium text-slate-900 underline underline-offset-4"
+                  >
+                    {{ mentor.meetingLink }}
+                  </a>
                 </div>
               </div>
-            </div>
-          </AppCard>
-
-          <AppCard>
-            <div class="space-y-6">
-              <div>
-                <h2 class="text-xl font-semibold text-slate-900">О себе</h2>
-                <p class="mt-1 text-sm text-slate-600">
-                  Расскажите об опыте, подходе к обучению и о том, с какими запросами вы работаете.
-                </p>
-              </div>
-
-              <div>
-                <label class="mb-2 block text-sm font-medium text-slate-700">Описание профиля</label>
-                <textarea
-                    v-model.trim="form.bio"
-                    class="min-h-40 w-full rounded-2xl border border-slate-300 px-4 py-3 outline-none transition focus:border-slate-900"
-                    placeholder="Расскажите о себе, опыте, подходе к обучению и том, чем вы можете быть полезны ученикам."
-                />
-                <p v-if="fieldErrors.bio" class="mt-2 text-sm text-red-600">
-                  {{ fieldErrors.bio }}
-                </p>
-              </div>
-            </div>
-          </AppCard>
-
-          <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-            <div class="min-h-[24px]">
-              <p v-if="successMessage" class="text-sm font-medium text-emerald-600">
-                {{ successMessage }}
-              </p>
-              <p v-else-if="saveError" class="text-sm font-medium text-red-600">
-                {{ saveError }}
-              </p>
-            </div>
-
-            <button
-                type="submit"
-                class="inline-flex items-center justify-center rounded-2xl bg-slate-900 px-5 py-3 text-sm font-semibold text-white transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-60"
-                :disabled="saving"
-            >
-              {{ saving ? 'Сохранение...' : 'Сохранить изменения' }}
-            </button>
+            </AppCard>
           </div>
-        </form>
+
+          <div class="space-y-6">
+            <AppCard>
+              <h2 class="text-xl font-semibold text-slate-900">Запись на занятие</h2>
+              <p class="mt-3 text-slate-600">
+                Выберите доступный слот и отправьте заявку на занятие с этим ментором.
+              </p>
+
+              <div class="mt-6 rounded-2xl bg-slate-50 p-4 ring-1 ring-slate-200">
+                <p class="text-sm text-slate-500">Форматы занятий</p>
+                <div class="mt-3 flex flex-wrap gap-2">
+                  <AppBadge v-if="mentor.lessonFormatOnline">Онлайн</AppBadge>
+                  <AppBadge v-if="mentor.lessonFormatOffline">Офлайн</AppBadge>
+                  <AppBadge v-if="mentor.lessonFormatHybrid">Гибрид</AppBadge>
+                </div>
+              </div>
+
+              <button
+                  type="button"
+                  class="mt-6 w-full rounded-2xl bg-slate-900 px-5 py-3 text-sm font-semibold text-white transition hover:opacity-90"
+                  @click="scrollToSlots"
+              >
+                Посмотреть доступные слоты
+              </button>
+            </AppCard>
+
+            <AppCard id="slots">
+              <h2 class="text-xl font-semibold text-slate-900">Доступные слоты</h2>
+
+              <AppLoadingState
+                  v-if="slotsLoading"
+                  text="Загружаем доступные слоты..."
+              />
+
+              <AppErrorState
+                  v-else-if="slotsError"
+                  title="Не удалось загрузить слоты"
+                  :description="slotsError"
+              />
+
+              <AppEmptyState
+                  v-else-if="slots.length === 0"
+                  title="Свободных слотов пока нет"
+                  description="Попробуйте зайти позже или выбрать другого ментора."
+              />
+
+              <div v-else class="mt-5 grid gap-4">
+                <AppCard
+                    v-for="slot in slots"
+                    :key="slot.id"
+                >
+                  <div class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+                    <div>
+                      <p class="text-lg font-semibold text-slate-900">
+                        {{ formatDateTime(slot.startAt) }} — {{ formatDateTime(slot.endAt) }}
+                      </p>
+
+                      <div class="mt-3 flex flex-wrap gap-2">
+                        <AppBadge>{{ formatLessonFormat(slot.lessonFormat) }}</AppBadge>
+                        <AppBadge :variant="slot.active ? 'success' : 'danger'">
+                          {{ slot.active ? 'Доступен' : 'Недоступен' }}
+                        </AppBadge>
+                      </div>
+                    </div>
+
+                    <button
+                        type="button"
+                        class="rounded-2xl bg-slate-900 px-4 py-2.5 text-sm font-semibold text-white transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50"
+                        :disabled="bookingLoadingId === slot.id || !slot.active"
+                        @click="bookSlot(slot.id)"
+                    >
+                      {{
+                        bookingLoadingId === slot.id
+                            ? 'Отправка...'
+                            : slot.active
+                                ? 'Записаться'
+                                : 'Недоступно'
+                      }}
+                    </button>
+                  </div>
+                </AppCard>
+              </div>
+
+              <p v-if="bookingMessage" class="mt-4 text-sm font-medium text-emerald-600">
+                {{ bookingMessage }}
+              </p>
+              <p v-if="bookingError" class="mt-4 text-sm font-medium text-red-600">
+                {{ bookingError }}
+              </p>
+            </AppCard>
+          </div>
+        </div>
       </template>
-    </div>
-  </PrivateLayout>
+    </section>
+  </PublicLayout>
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, reactive, ref } from 'vue'
+import { onMounted, ref, computed } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 import { http } from '../../shared/api/http'
-import PrivateLayout from '../../widgets/layout/PrivateLayout.vue'
+import PublicLayout from '../../widgets/layout/PublicLayout.vue'
 import AppCard from '../../shared/ui/AppCard.vue'
 import AppBadge from '../../shared/ui/AppBadge.vue'
-import AppSectionTitle from '../../shared/ui/AppSectionTitle.vue'
 import AppLoadingState from '../../shared/ui/AppLoadingState.vue'
 import AppErrorState from '../../shared/ui/AppErrorState.vue'
+import AppEmptyState from '../../shared/ui/AppEmptyState.vue'
 
-const loading = ref(false)
-const saving = ref(false)
-const pageError = ref('')
-const saveError = ref('')
-const successMessage = ref('')
-
-const form = reactive({
-  firstName: '',
-  lastName: '',
-  avatarKey: '',
-  headline: '',
-  bio: '',
-  specialization: '',
-  yearsExperience: 0,
-  lessonFormatOnline: false,
-  lessonFormatOffline: false,
-  lessonFormatHybrid: false,
-  city: '',
-  addressText: '',
-  meetingLink: '',
-  pricePerHour: 0,
-  public: true,
-  averageRating: 0,
-  lessonsCompleted: 0,
-  verified: false,
-})
-
-const fieldErrors = reactive({
-  firstName: '',
-  lastName: '',
-  specialization: '',
-  bio: '',
-})
-
-const formatError = computed(() => {
-  if (!form.lessonFormatOnline && !form.lessonFormatOffline && !form.lessonFormatHybrid) {
-    return 'Выберите хотя бы один формат занятий: онлайн, офлайн или гибрид.'
-  }
-
-  return ''
-})
-
-const validate = () => {
-  fieldErrors.firstName = ''
-  fieldErrors.lastName = ''
-  fieldErrors.specialization = ''
-  fieldErrors.bio = ''
-
-  let isValid = true
-
-  if (!form.firstName.trim()) {
-    fieldErrors.firstName = 'Введите имя'
-    isValid = false
-  }
-
-  if (!form.lastName.trim()) {
-    fieldErrors.lastName = 'Введите фамилию'
-    isValid = false
-  }
-
-  if (!form.specialization.trim()) {
-    fieldErrors.specialization = 'Укажите специализацию'
-    isValid = false
-  }
-
-  if (!form.bio.trim()) {
-    fieldErrors.bio = 'Добавьте описание профиля'
-    isValid = false
-  }
-
-  if (form.pricePerHour < 0) {
-    saveError.value = 'Стоимость не может быть отрицательной.'
-    isValid = false
-  }
-
-  if (form.yearsExperience < 0) {
-    saveError.value = 'Опыт не может быть отрицательным.'
-    isValid = false
-  }
-
-  return isValid
+interface MentorProfile {
+  id: number
+  userId: number
+  firstName: string | null
+  lastName: string | null
+  avatarKey?: string | null
+  avatarUrl?: string | null
+  headline: string | null
+  bio: string | null
+  specialization: string | null
+  yearsExperience: number | null
+  lessonFormatOnline: boolean
+  lessonFormatOffline: boolean
+  lessonFormatHybrid: boolean
+  city: string | null
+  addressText: string | null
+  meetingLink: string | null
+  pricePerHour: number | null
+  averageRating: number | null
+  lessonsCompleted: number | null
+  verified: boolean
 }
 
-const loadProfile = async () => {
+interface Slot {
+  id: number
+  mentorId: number
+  startAt: string
+  endAt: string
+  timezone: string
+  lessonFormat: string
+  meetingLink: string | null
+  addressText: string | null
+  active: boolean
+}
+
+const route = useRoute()
+const router = useRouter()
+
+const mentor = ref<MentorProfile | null>(null)
+const loading = ref(false)
+const error = ref('')
+
+const slots = ref<Slot[]>([])
+const slotsLoading = ref(false)
+const slotsError = ref('')
+
+const bookingLoadingId = ref<number | null>(null)
+const bookingMessage = ref('')
+const bookingError = ref('')
+
+const mentorId = Number(route.params.id)
+
+const mentorName = computed(() => {
+  if (!mentor.value) return 'Ментор'
+  const full = `${mentor.value.firstName || ''} ${mentor.value.lastName || ''}`.trim()
+  return full || 'Без имени'
+})
+
+const mentorInitials = computed(() => {
+  if (!mentor.value) return 'M'
+  const first = mentor.value.firstName?.trim()?.[0] || ''
+  const last = mentor.value.lastName?.trim()?.[0] || ''
+  return (first + last).toUpperCase() || 'M'
+})
+
+const loadMentor = async () => {
   loading.value = true
-  pageError.value = ''
+  error.value = ''
 
   try {
-    const { data } = await http.get('/api/mentor/profile')
-    Object.assign(form, data)
-  } catch (error) {
-    console.error('Ошибка загрузки профиля ментора:', error)
-    pageError.value = 'Попробуйте обновить страницу чуть позже.'
+    const { data } = await http.get(`/api/public/mentors/${mentorId}`)
+    mentor.value = data
+  } catch (e) {
+    console.error(e)
+    error.value = 'Попробуйте обновить страницу чуть позже.'
   } finally {
     loading.value = false
   }
 }
 
-const saveProfile = async () => {
-  successMessage.value = ''
-  saveError.value = ''
-
-  if (formatError.value) {
-    saveError.value = formatError.value
-    return
-  }
-
-  if (!validate()) {
-    if (!saveError.value) {
-      saveError.value = 'Проверьте заполнение обязательных полей.'
-    }
-    return
-  }
-
-  saving.value = true
+const loadSlots = async () => {
+  slotsLoading.value = true
+  slotsError.value = ''
 
   try {
-    await http.put('/api/mentor/profile', form)
-    successMessage.value = 'Профиль ментора успешно обновлён.'
-    setTimeout(() => {
-      successMessage.value = ''
-    }, 3000)
-  } catch (error) {
-    console.error('Ошибка сохранения профиля ментора:', error)
-    saveError.value = 'Не удалось сохранить изменения. Попробуйте ещё раз.'
+    const { data } = await http.get(`/api/public/mentors/${mentorId}/slots`)
+    slots.value = data
+  } catch (e) {
+    console.error(e)
+    slotsError.value = 'Не удалось загрузить доступные слоты.'
   } finally {
-    saving.value = false
+    slotsLoading.value = false
   }
 }
 
-onMounted(loadProfile)
+const bookSlot = async (slotId: number) => {
+  bookingLoadingId.value = slotId
+  bookingError.value = ''
+  bookingMessage.value = ''
+
+  try {
+    await http.post('/api/student/bookings', {
+      availabilitySlotId: slotId,
+      studentNote: '',
+    })
+
+    bookingMessage.value = 'Заявка на занятие успешно отправлена.'
+    await loadSlots()
+  } catch (e: any) {
+    console.error(e)
+
+    const status = e?.response?.status
+    if (status === 401 || status === 403) {
+      await router.push('/login')
+      return
+    }
+
+    bookingError.value =
+        e?.response?.data?.message ||
+        e?.response?.data?.error ||
+        'Не удалось записаться на слот.'
+  } finally {
+    bookingLoadingId.value = null
+  }
+}
+
+const formatDateTime = (value: string) =>
+    new Date(value).toLocaleString('ru-RU', {
+      dateStyle: 'medium',
+      timeStyle: 'short',
+    })
+
+const formatLessonFormat = (value: string) => {
+  const map: Record<string, string> = {
+    ONLINE: 'Онлайн',
+    OFFLINE: 'Офлайн',
+    HYBRID: 'Гибрид',
+  }
+  return map[value] || value
+}
+
+const scrollToSlots = () => {
+  document.getElementById('slots')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+}
+
+onMounted(async () => {
+  await loadMentor()
+  await loadSlots()
+})
 </script>

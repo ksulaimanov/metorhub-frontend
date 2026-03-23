@@ -15,6 +15,61 @@
       />
 
       <template v-else>
+        <AppCard>
+          <div class="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
+            <div class="flex items-center gap-4">
+              <div class="flex h-24 w-24 items-center justify-center overflow-hidden rounded-full bg-slate-200 text-2xl font-bold text-slate-600">
+                <img
+                    v-if="form.avatarUrl"
+                    :src="form.avatarUrl"
+                    alt="Аватар ментора"
+                    class="h-full w-full object-cover"
+                />
+                <span v-else>{{ avatarInitials }}</span>
+              </div>
+
+              <div>
+                <h2 class="text-xl font-semibold text-slate-900">{{ mentorName }}</h2>
+                <p class="mt-1 text-sm text-slate-600">
+                  Добавьте фото, чтобы профиль выглядел профессиональнее и вызывал больше доверия.
+                </p>
+              </div>
+            </div>
+
+            <div class="flex flex-col gap-3 sm:flex-row">
+              <label
+                  class="inline-flex cursor-pointer items-center justify-center rounded-2xl border border-slate-300 px-4 py-3 text-sm font-semibold text-slate-700 transition hover:bg-slate-100"
+              >
+                <input
+                    type="file"
+                    class="hidden"
+                    accept="image/png,image/jpeg,image/webp"
+                    :disabled="avatarUploading"
+                    @change="handleAvatarUpload"
+                />
+                {{ avatarUploading ? 'Загрузка...' : 'Загрузить фото' }}
+              </label>
+
+              <button
+                  v-if="form.avatarUrl"
+                  type="button"
+                  class="inline-flex items-center justify-center rounded-2xl bg-red-600 px-4 py-3 text-sm font-semibold text-white transition hover:bg-red-700 disabled:cursor-not-allowed disabled:opacity-50"
+                  :disabled="avatarDeleting"
+                  @click="handleAvatarDelete"
+              >
+                {{ avatarDeleting ? 'Удаление...' : 'Удалить фото' }}
+              </button>
+            </div>
+          </div>
+
+          <p v-if="avatarMessage" class="mt-4 text-sm font-medium text-emerald-600">
+            {{ avatarMessage }}
+          </p>
+          <p v-if="avatarError" class="mt-4 text-sm font-medium text-red-600">
+            {{ avatarError }}
+          </p>
+        </AppCard>
+
         <div class="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
           <AppCard>
             <p class="text-sm text-slate-500">Рейтинг</p>
@@ -156,9 +211,7 @@
               </div>
 
               <div class="grid gap-3 md:grid-cols-2 xl:grid-cols-4">
-                <label
-                    class="flex cursor-pointer items-start gap-3 rounded-2xl border border-slate-200 p-4 transition hover:border-slate-300"
-                >
+                <label class="flex cursor-pointer items-start gap-3 rounded-2xl border border-slate-200 p-4 transition hover:border-slate-300">
                   <input v-model="form.lessonFormatOnline" type="checkbox" class="mt-1 h-4 w-4" />
                   <div>
                     <p class="font-medium text-slate-900">Онлайн</p>
@@ -166,9 +219,7 @@
                   </div>
                 </label>
 
-                <label
-                    class="flex cursor-pointer items-start gap-3 rounded-2xl border border-slate-200 p-4 transition hover:border-slate-300"
-                >
+                <label class="flex cursor-pointer items-start gap-3 rounded-2xl border border-slate-200 p-4 transition hover:border-slate-300">
                   <input v-model="form.lessonFormatOffline" type="checkbox" class="mt-1 h-4 w-4" />
                   <div>
                     <p class="font-medium text-slate-900">Офлайн</p>
@@ -176,9 +227,7 @@
                   </div>
                 </label>
 
-                <label
-                    class="flex cursor-pointer items-start gap-3 rounded-2xl border border-slate-200 p-4 transition hover:border-slate-300"
-                >
+                <label class="flex cursor-pointer items-start gap-3 rounded-2xl border border-slate-200 p-4 transition hover:border-slate-300">
                   <input v-model="form.lessonFormatHybrid" type="checkbox" class="mt-1 h-4 w-4" />
                   <div>
                     <p class="font-medium text-slate-900">Гибрид</p>
@@ -186,9 +235,7 @@
                   </div>
                 </label>
 
-                <label
-                    class="flex cursor-pointer items-start gap-3 rounded-2xl border border-slate-200 p-4 transition hover:border-slate-300"
-                >
+                <label class="flex cursor-pointer items-start gap-3 rounded-2xl border border-slate-200 p-4 transition hover:border-slate-300">
                   <input v-model="form.public" type="checkbox" class="mt-1 h-4 w-4" />
                   <div>
                     <p class="font-medium text-slate-900">Публичный профиль</p>
@@ -197,10 +244,7 @@
                 </label>
               </div>
 
-              <p
-                  v-if="formatError"
-                  class="text-sm font-medium text-red-600"
-              >
+              <p v-if="formatError" class="text-sm font-medium text-red-600">
                 {{ formatError }}
               </p>
             </div>
@@ -297,14 +341,20 @@ import AppErrorState from '../../shared/ui/AppErrorState.vue'
 
 const loading = ref(false)
 const saving = ref(false)
+const avatarUploading = ref(false)
+const avatarDeleting = ref(false)
+
 const pageError = ref('')
 const saveError = ref('')
 const successMessage = ref('')
+const avatarMessage = ref('')
+const avatarError = ref('')
 
 const form = reactive({
   firstName: '',
   lastName: '',
   avatarKey: '',
+  avatarUrl: '',
   headline: '',
   bio: '',
   specialization: '',
@@ -322,12 +372,19 @@ const form = reactive({
   verified: false,
 })
 
+const mentorName = computed(() => {
+  const full = `${form.firstName} ${form.lastName}`.trim()
+  return full || 'Профиль ментора'
+})
+
+const avatarInitials = computed(() => {
+  const first = form.firstName?.trim()?.[0] || ''
+  const last = form.lastName?.trim()?.[0] || ''
+  return (first + last).toUpperCase() || 'M'
+})
+
 const formatError = computed(() => {
-  if (
-      !form.lessonFormatOnline &&
-      !form.lessonFormatOffline &&
-      !form.lessonFormatHybrid
-  ) {
+  if (!form.lessonFormatOnline && !form.lessonFormatOffline && !form.lessonFormatHybrid) {
     return 'Выберите хотя бы один формат занятий: онлайн, офлайн или гибрид.'
   }
 
@@ -371,6 +428,66 @@ const saveProfile = async () => {
     saveError.value = 'Не удалось сохранить изменения. Попробуйте ещё раз.'
   } finally {
     saving.value = false
+  }
+}
+
+const handleAvatarUpload = async (event: Event) => {
+  avatarError.value = ''
+  avatarMessage.value = ''
+
+  const input = event.target as HTMLInputElement
+  const file = input.files?.[0]
+
+  if (!file) {
+    return
+  }
+
+  const formData = new FormData()
+  formData.append('file', file)
+
+  avatarUploading.value = true
+
+  try {
+    const { data } = await http.post('/api/mentor/profile/avatar', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    })
+
+    form.avatarKey = data.avatarKey
+    form.avatarUrl = data.avatarUrl
+    avatarMessage.value = 'Фото профиля успешно обновлено.'
+  } catch (error: any) {
+    console.error('Ошибка загрузки аватара ментора:', error)
+    avatarError.value =
+        error?.response?.data?.message ||
+        error?.response?.data?.error ||
+        'Не удалось загрузить фото.'
+  } finally {
+    avatarUploading.value = false
+    input.value = ''
+  }
+}
+
+const handleAvatarDelete = async () => {
+  avatarError.value = ''
+  avatarMessage.value = ''
+
+  avatarDeleting.value = true
+
+  try {
+    await http.delete('/api/mentor/profile/avatar')
+    form.avatarKey = ''
+    form.avatarUrl = ''
+    avatarMessage.value = 'Фото профиля удалено.'
+  } catch (error: any) {
+    console.error('Ошибка удаления аватара ментора:', error)
+    avatarError.value =
+        error?.response?.data?.message ||
+        error?.response?.data?.error ||
+        'Не удалось удалить фото.'
+  } finally {
+    avatarDeleting.value = false
   }
 }
 

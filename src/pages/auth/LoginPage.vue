@@ -84,6 +84,22 @@
                 :description="errorMessage"
             />
 
+            <div
+                v-if="errorMessage && errorMessage.includes('Email ещё не подтверждён')"
+                class="rounded-2xl bg-slate-50 p-4 text-sm text-slate-700 ring-1 ring-slate-200"
+            >
+              <p class="font-medium text-slate-900">Нужно подтвердить email</p>
+              <p class="mt-1">
+                Завершите подтверждение, чтобы войти в аккаунт.
+              </p>
+              <RouterLink
+                  class="mt-3 inline-flex rounded-xl bg-slate-900 px-4 py-2 font-semibold text-white transition hover:opacity-90"
+                  :to="{ path: '/verify-email', query: { email } }"
+              >
+                Перейти к подтверждению
+              </RouterLink>
+            </div>
+
             <button
                 type="submit"
                 class="w-full rounded-2xl bg-slate-900 px-4 py-3 font-semibold text-white transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50"
@@ -174,8 +190,18 @@ const handleLogin = async () => {
 
     await router.push('/')
   } catch (error: any) {
-    errorMessage.value =
-        error?.response?.data?.error || 'Проверьте email и пароль и попробуйте снова.'
+    const backendMessage =
+        error?.response?.data?.message || error?.response?.data?.error || ''
+
+    if (
+        typeof backendMessage === 'string' &&
+        backendMessage.toLowerCase().includes('email')
+    ) {
+      errorMessage.value = 'Email ещё не подтверждён. Сначала введите код подтверждения.'
+      return
+    }
+
+    errorMessage.value = backendMessage || 'Проверьте email и пароль и попробуйте снова.'
   } finally {
     loading.value = false
   }

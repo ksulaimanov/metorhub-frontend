@@ -3,21 +3,62 @@
     <div class="space-y-8">
       <AppSectionTitle
           title="Слоты ментора"
-          description="Управляйте доступным временем для записи учеников."
+          description="Управляйте доступным временем для записи учеников. Можно создавать как индивидуальные, так и мини-групповые занятия."
       />
 
       <AppCard>
         <form class="grid gap-4 md:grid-cols-2" @submit.prevent="createSlot">
-          <input v-model="form.startAt" type="datetime-local" class="rounded-2xl border border-slate-300 px-4 py-3" />
-          <input v-model="form.endAt" type="datetime-local" class="rounded-2xl border border-slate-300 px-4 py-3" />
-          <input v-model="form.timezone" class="rounded-2xl border border-slate-300 px-4 py-3" placeholder="Часовой пояс" />
-          <select v-model="form.lessonFormat" class="rounded-2xl border border-slate-300 px-4 py-3">
+          <input
+              v-model="form.startAt"
+              type="datetime-local"
+              class="rounded-2xl border border-slate-300 px-4 py-3"
+          />
+
+          <input
+              v-model="form.endAt"
+              type="datetime-local"
+              class="rounded-2xl border border-slate-300 px-4 py-3"
+          />
+
+          <input
+              v-model="form.timezone"
+              class="rounded-2xl border border-slate-300 px-4 py-3"
+              placeholder="Часовой пояс"
+          />
+
+          <select
+              v-model="form.lessonFormat"
+              class="rounded-2xl border border-slate-300 px-4 py-3"
+          >
             <option value="ONLINE">Онлайн</option>
             <option value="OFFLINE">Офлайн</option>
             <option value="HYBRID">Гибрид</option>
           </select>
-          <input v-model="form.meetingLink" class="rounded-2xl border border-slate-300 px-4 py-3 md:col-span-2" placeholder="Ссылка на встречу" />
-          <input v-model="form.addressText" class="rounded-2xl border border-slate-300 px-4 py-3 md:col-span-2" placeholder="Адрес" />
+
+          <input
+              v-model.number="form.capacity"
+              type="number"
+              min="1"
+              class="rounded-2xl border border-slate-300 px-4 py-3"
+              placeholder="Количество мест"
+          />
+
+          <div class="rounded-2xl bg-slate-50 px-4 py-3 text-sm text-slate-600 ring-1 ring-slate-200">
+            Укажите 1 для индивидуального занятия или больше 1 для мини-группы.
+          </div>
+
+          <input
+              v-model="form.meetingLink"
+              class="rounded-2xl border border-slate-300 px-4 py-3 md:col-span-2"
+              placeholder="Ссылка на встречу"
+          />
+
+          <input
+              v-model="form.addressText"
+              class="rounded-2xl border border-slate-300 px-4 py-3 md:col-span-2"
+              placeholder="Адрес"
+          />
+
           <button class="rounded-2xl bg-slate-900 px-4 py-3 font-semibold text-white md:col-span-2">
             Создать слот
           </button>
@@ -34,11 +75,27 @@
         <AppCard v-for="slot in slots" :key="slot.id">
           <div class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
             <div>
-              <p class="text-lg font-semibold text-slate-900">{{ formatDateTime(slot.startAt) }} — {{ formatDateTime(slot.endAt) }}</p>
+              <p class="text-lg font-semibold text-slate-900">
+                {{ formatDateTime(slot.startAt) }} — {{ formatDateTime(slot.endAt) }}
+              </p>
+
               <div class="mt-3 flex flex-wrap gap-3">
                 <AppBadge>{{ formatLessonFormat(slot.lessonFormat) }}</AppBadge>
+
                 <AppBadge :variant="slot.active ? 'success' : 'danger'">
                   {{ slot.active ? 'Активен' : 'Неактивен' }}
+                </AppBadge>
+
+                <AppBadge variant="info">
+                  Мест: {{ slot.capacity }}
+                </AppBadge>
+
+                <AppBadge variant="warning">
+                  Занято: {{ slot.bookedCount }}
+                </AppBadge>
+
+                <AppBadge variant="success">
+                  Свободно: {{ slot.availableSeats }}
                 </AppBadge>
               </div>
             </div>
@@ -71,6 +128,9 @@ interface Slot {
   startAt: string
   endAt: string
   lessonFormat: string
+  capacity: number
+  bookedCount: number
+  availableSeats: number
   active: boolean
 }
 
@@ -81,6 +141,7 @@ const form = reactive({
   endAt: '',
   timezone: 'Asia/Bishkek',
   lessonFormat: 'ONLINE',
+  capacity: 1,
   meetingLink: '',
   addressText: '',
 })
@@ -94,6 +155,7 @@ const createSlot = async () => {
   await http.post('/api/mentor/availability-slots', form)
   form.startAt = ''
   form.endAt = ''
+  form.capacity = 1
   form.meetingLink = ''
   form.addressText = ''
   await loadSlots()

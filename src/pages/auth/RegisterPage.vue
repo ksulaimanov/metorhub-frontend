@@ -215,19 +215,25 @@ const handleRegister = async () => {
             ? '/api/auth/register/mentor'
             : '/api/auth/register/student'
 
-    await http.post(endpoint, {
+    const { data } = await http.post(endpoint, {
       email: email.value,
       password: password.value,
     })
 
-    successMessage.value = 'Регистрация прошла успешно. Перенаправляем на страницу входа...'
+    successMessage.value =
+        data?.message || 'Код подтверждения отправлен на email. Перенаправляем...'
 
     setTimeout(async () => {
-      await router.push('/login')
-    }, 1000)
+      await router.push({
+        path: '/verify-email',
+        query: { email: email.value },
+      })
+    }, 900)
   } catch (error: any) {
     errorMessage.value =
-        error?.response?.data?.error || 'Не удалось выполнить регистрацию. Попробуйте снова.'
+        error?.response?.data?.message ||
+        error?.response?.data?.error ||
+        'Не удалось выполнить регистрацию. Попробуйте снова.'
   } finally {
     loading.value = false
   }

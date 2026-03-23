@@ -107,19 +107,33 @@
               :to="`/mentors/${mentor.id}`"
               class="rounded-3xl bg-white p-6 shadow-sm ring-1 ring-slate-200 transition hover:-translate-y-0.5 hover:shadow-md"
           >
-            <div class="flex items-start justify-between gap-4">
-              <div class="min-w-0">
-                <h3 class="truncate text-xl font-semibold text-slate-900">
-                  {{ mentorName(mentor) }}
-                </h3>
-                <p class="mt-1 text-sm text-slate-500">
-                  {{ mentor.headline || 'Ментор MentorHub' }}
-                </p>
+            <div class="flex items-start gap-4">
+              <div class="flex h-16 w-16 shrink-0 items-center justify-center overflow-hidden rounded-full bg-slate-200 text-lg font-bold text-slate-600">
+                <img
+                    v-if="mentor.avatarUrl"
+                    :src="mentor.avatarUrl"
+                    :alt="mentorName(mentor)"
+                    class="h-full w-full object-cover"
+                />
+                <span v-else>{{ mentorInitials(mentor) }}</span>
               </div>
 
-              <AppBadge v-if="mentor.verified" variant="success">
-                Проверен
-              </AppBadge>
+              <div class="min-w-0 flex-1">
+                <div class="flex items-start justify-between gap-4">
+                  <div class="min-w-0">
+                    <h3 class="truncate text-xl font-semibold text-slate-900">
+                      {{ mentorName(mentor) }}
+                    </h3>
+                    <p class="mt-1 text-sm text-slate-500">
+                      {{ mentor.headline || 'Ментор MentorHub' }}
+                    </p>
+                  </div>
+
+                  <AppBadge v-if="mentor.verified" variant="success">
+                    Проверен
+                  </AppBadge>
+                </div>
+              </div>
             </div>
 
             <p class="mt-4 line-clamp-2 text-sm text-slate-600">
@@ -176,7 +190,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, ref, watch } from 'vue'
+import { onMounted, ref, watch } from 'vue'
 import { http } from '../../shared/api/http'
 import PublicLayout from '../../widgets/layout/PublicLayout.vue'
 import AppSectionTitle from '../../shared/ui/AppSectionTitle.vue'
@@ -189,6 +203,8 @@ interface MentorDirectoryItem {
   id: number
   firstName: string | null
   lastName: string | null
+  avatarKey?: string | null
+  avatarUrl?: string | null
   headline: string | null
   specialization: string | null
   city: string | null
@@ -218,6 +234,12 @@ let searchTimer: number | undefined
 const mentorName = (mentor: MentorDirectoryItem) => {
   const fullName = `${mentor.firstName || ''} ${mentor.lastName || ''}`.trim()
   return fullName || 'Без имени'
+}
+
+const mentorInitials = (mentor: MentorDirectoryItem) => {
+  const first = mentor.firstName?.trim()?.[0] || ''
+  const last = mentor.lastName?.trim()?.[0] || ''
+  return (first + last).toUpperCase() || 'M'
 }
 
 const resetFilters = () => {
