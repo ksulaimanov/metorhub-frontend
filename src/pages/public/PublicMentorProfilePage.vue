@@ -175,34 +175,100 @@
                     v-for="slot in slots"
                     :key="slot.id"
                 >
-                  <div class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-                    <div>
-                      <p class="text-lg font-semibold text-slate-900">
-                        {{ formatDateTime(slot.startAt) }} — {{ formatDateTime(slot.endAt) }}
-                      </p>
+                  <div class="space-y-4">
+                    <div class="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
+                      <div>
+                        <p class="text-lg font-semibold text-slate-900">
+                          {{ formatDateTime(slot.startAt) }} — {{ formatDateTime(slot.endAt) }}
+                        </p>
 
-                      <div class="mt-3 flex flex-wrap gap-2">
-                        <AppBadge>{{ formatLessonFormat(slot.lessonFormat) }}</AppBadge>
-                        <AppBadge :variant="slot.active ? 'success' : 'danger'">
-                          {{ slot.active ? 'Доступен' : 'Недоступен' }}
-                        </AppBadge>
+                        <div class="mt-3 flex flex-wrap gap-2">
+                          <AppBadge>{{ formatLessonFormat(slot.lessonFormat) }}</AppBadge>
+
+                          <AppBadge :variant="slot.active ? 'success' : 'danger'">
+                            {{ slot.active ? 'Доступен' : 'Недоступен' }}
+                          </AppBadge>
+
+                          <AppBadge variant="info">
+                            Мест: {{ slot.capacity }}
+                          </AppBadge>
+
+                          <AppBadge variant="warning">
+                            Занято: {{ slot.bookedCount }}
+                          </AppBadge>
+
+                          <AppBadge :variant="slot.availableSeats > 0 ? 'success' : 'danger'">
+                            Свободно: {{ slot.availableSeats }}
+                          </AppBadge>
+                        </div>
+
+                        <p
+                            v-if="slot.availableSeats > 1"
+                            class="mt-3 text-sm text-slate-600"
+                        >
+                          Можно записаться в мини-группу.
+                        </p>
+
+                        <p
+                            v-else-if="slot.availableSeats === 1"
+                            class="mt-3 text-sm text-slate-600"
+                        >
+                          Осталось последнее место.
+                        </p>
+
+                        <p
+                            v-else
+                            class="mt-3 text-sm font-medium text-red-600"
+                        >
+                          Свободных мест больше нет.
+                        </p>
                       </div>
+
+                      <button
+                          type="button"
+                          class="rounded-2xl bg-slate-900 px-4 py-2.5 text-sm font-semibold text-white transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50"
+                          :disabled="bookingLoadingId === slot.id || !slot.active || slot.availableSeats < 1"
+                          @click="toggleBookingForm(slot.id)"
+                      >
+                        {{
+                          activeBookingFormId === slot.id
+                              ? 'Скрыть форму'
+                              : slot.availableSeats < 1 || !slot.active
+                                  ? 'Мест нет'
+                                  : 'Записаться'
+                        }}
+                      </button>
                     </div>
 
-                    <button
-                        type="button"
-                        class="rounded-2xl bg-slate-900 px-4 py-2.5 text-sm font-semibold text-white transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50"
-                        :disabled="bookingLoadingId === slot.id || !slot.active"
-                        @click="bookSlot(slot.id)"
+                    <div
+                        v-if="activeBookingFormId === slot.id && slot.active && slot.availableSeats > 0"
+                        class="rounded-2xl border border-slate-200 bg-slate-50 p-4"
                     >
-                      {{
-                        bookingLoadingId === slot.id
-                            ? 'Отправка...'
-                            : slot.active
-                                ? 'Записаться'
-                                : 'Недоступно'
-                      }}
-                    </button>
+                      <label class="mb-2 block text-sm font-medium text-slate-700">
+                        Комментарий для ментора
+                      </label>
+
+                      <textarea
+                          v-model.trim="studentNotes[slot.id]"
+                          class="min-h-28 w-full rounded-2xl border border-slate-300 bg-white px-4 py-3 outline-none transition focus:border-slate-900"
+                          placeholder="Например: хочу подготовиться к собеседованию, разобрать конкретную тему или обсудить цель занятия"
+                      />
+
+                      <div class="mt-4 flex flex-col gap-3 sm:flex-row sm:items-center">
+                        <button
+                            type="button"
+                            class="rounded-2xl bg-slate-900 px-5 py-3 text-sm font-semibold text-white transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50"
+                            :disabled="bookingLoadingId === slot.id"
+                            @click="bookSlot(slot.id)"
+                        >
+                          {{ bookingLoadingId === slot.id ? 'Отправка...' : 'Подтвердить запись' }}
+                        </button>
+
+                        <p class="text-sm text-slate-500">
+                          После отправки заявка появится в кабинете ментора.
+                        </p>
+                      </div>
+                    </div>
                   </div>
                 </AppCard>
               </div>
@@ -222,7 +288,7 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref, computed } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { http } from '../../shared/api/http'
 import PublicLayout from '../../widgets/layout/PublicLayout.vue'
@@ -264,6 +330,9 @@ interface Slot {
   lessonFormat: string
   meetingLink: string | null
   addressText: string | null
+  capacity: number
+  bookedCount: number
+  availableSeats: number
   active: boolean
 }
 
@@ -281,6 +350,8 @@ const slotsError = ref('')
 const bookingLoadingId = ref<number | null>(null)
 const bookingMessage = ref('')
 const bookingError = ref('')
+const activeBookingFormId = ref<number | null>(null)
+const studentNotes = ref<Record<number, string>>({})
 
 const mentorId = Number(route.params.id)
 
@@ -327,6 +398,22 @@ const loadSlots = async () => {
   }
 }
 
+const toggleBookingForm = (slotId: number) => {
+  bookingError.value = ''
+  bookingMessage.value = ''
+
+  if (activeBookingFormId.value === slotId) {
+    activeBookingFormId.value = null
+    return
+  }
+
+  activeBookingFormId.value = slotId
+
+  if (studentNotes.value[slotId] === undefined) {
+    studentNotes.value[slotId] = ''
+  }
+}
+
 const bookSlot = async (slotId: number) => {
   bookingLoadingId.value = slotId
   bookingError.value = ''
@@ -335,10 +422,12 @@ const bookSlot = async (slotId: number) => {
   try {
     await http.post('/api/student/bookings', {
       availabilitySlotId: slotId,
-      studentNote: '',
+      studentNote: studentNotes.value[slotId] || '',
     })
 
     bookingMessage.value = 'Заявка на занятие успешно отправлена.'
+    activeBookingFormId.value = null
+    studentNotes.value[slotId] = ''
     await loadSlots()
   } catch (e: any) {
     console.error(e)
