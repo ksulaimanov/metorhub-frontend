@@ -10,6 +10,8 @@ import MentorProfilePage from '../../pages/mentor/MentorProfilePage.vue'
 import MentorSlotsPage from '../../pages/mentor/MentorSlotsPage.vue'
 import MentorBookingsPage from '../../pages/mentor/MentorBookingsPage.vue'
 import VerifyEmailPage from '../../pages/auth/VerifyEmailPage.vue'
+import ForgotPasswordPage from '../../pages/auth/ForgotPasswordPage.vue'
+import ResetPasswordPage from '../../pages/auth/ResetPasswordPage.vue'
 
 const getRoles = (): string[] => {
     try {
@@ -28,6 +30,8 @@ const router = createRouter({
         { path: '/', name: 'home', component: HomePage },
         { path: '/login', name: 'login', component: LoginPage },
         { path: '/register', name: 'register', component: RegisterPage },
+        { path: '/forgot-password', name: 'forgot-password', component: ForgotPasswordPage },
+        { path: '/reset-password', name: 'reset-password', component: ResetPasswordPage },
         { path: '/verify-email', name: 'verify-email', component: VerifyEmailPage },
         { path: '/mentors', name: 'mentor-directory', component: MentorDirectoryPage },
         {

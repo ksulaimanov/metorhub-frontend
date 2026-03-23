@@ -84,6 +84,15 @@
                 :description="errorMessage"
             />
 
+            <div class="text-right">
+              <RouterLink
+                  to="/forgot-password"
+                  class="text-sm font-medium text-slate-700 transition hover:text-slate-900"
+              >
+                Забыли пароль?
+              </RouterLink>
+            </div>
+
             <div
                 v-if="errorMessage && errorMessage.includes('Email ещё не подтверждён')"
                 class="rounded-2xl bg-slate-50 p-4 text-sm text-slate-700 ring-1 ring-slate-200"
