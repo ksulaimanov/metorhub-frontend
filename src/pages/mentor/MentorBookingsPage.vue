@@ -105,6 +105,8 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
 import { http } from '../../shared/api/http'
+import { useToastStore } from '../../shared/lib/getApiErrorMessage'
+import { useErrorHandler } from '../../shared/composables/useErrorHandler'
 import PrivateLayout from '../../widgets/layout/PrivateLayout.vue'
 import AppSectionTitle from '../../shared/ui/AppSectionTitle.vue'
 import AppEmptyState from '../../shared/ui/AppEmptyState.vue'
@@ -112,6 +114,9 @@ import AppCard from '../../shared/ui/AppCard.vue'
 import AppBadge from '../../shared/ui/AppBadge.vue'
 import AppLoadingState from '../../shared/ui/AppLoadingState.vue'
 import AppErrorState from '../../shared/ui/AppErrorState.vue'
+
+const toastStore = useToastStore()
+const { handleError } = useErrorHandler()
 
 interface Booking {
   id: number
@@ -142,6 +147,12 @@ const loadBookings = async () => {
 }
 
 const updateStatus = async (bookingId: number, status: string) => {
+  if (status === 'CANCELLED_BY_MENTOR') {
+    if (!window.confirm('Вы уверены? Запись будет отменена.')) {
+      return
+    }
+  }
+
   updatingId.value = bookingId
 
   try {
@@ -150,10 +161,17 @@ const updateStatus = async (bookingId: number, status: string) => {
       mentorNote: '',
     })
 
+    const statusMessages: Record<string, string> = {
+      CONFIRMED: 'Запись подтверждена.',
+      COMPLETED: 'Запись отмечена как завершённая.',
+      CANCELLED_BY_MENTOR: 'Запись отменена.',
+    }
+
+    toastStore.success(statusMessages[status] || 'Статус обновлён.')
     await loadBookings()
   } catch (e) {
     console.error(e)
-    error.value = 'Не удалось обновить статус записи.'
+    handleError(e as any, 'Не удалось обновить статус записи.')
   } finally {
     updatingId.value = null
   }

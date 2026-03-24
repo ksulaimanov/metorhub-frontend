@@ -94,7 +94,7 @@
             </div>
 
             <div
-                v-if="errorMessage && errorMessage.includes('Email ещё не подтверждён')"
+                v-if="errorMessage && errorMessage.toLowerCase().includes('подтвержден')"
                 class="rounded-2xl bg-slate-50 p-4 text-sm text-slate-700 ring-1 ring-slate-200"
             >
               <p class="font-medium text-slate-900">Нужно подтвердить email</p>
@@ -135,11 +135,13 @@ import { computed, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { http } from '../../shared/api/http'
 import { useAuthStore } from '../../stores/authStore'
+import { useErrorHandler } from '../../shared/composables/useErrorHandler'
 import PublicLayout from '../../widgets/layout/PublicLayout.vue'
 import AppErrorState from '../../shared/ui/AppErrorState.vue'
 
 const router = useRouter()
 const authStore = useAuthStore()
+const { handleError } = useErrorHandler()
 
 const email = ref('')
 const password = ref('')
@@ -166,7 +168,6 @@ const fieldClass = (hasError: boolean) =>
 
 const handleLogin = async () => {
   showValidation.value = true
-  errorMessage.value = ''
 
   if (emailError.value || passwordError.value) {
     return
@@ -187,6 +188,8 @@ const handleLogin = async () => {
       roles: data.roles,
     })
 
+    errorMessage.value = ''
+
     if (data.roles.includes('ROLE_MENTOR')) {
       await router.push('/mentor/profile')
       return
@@ -199,18 +202,7 @@ const handleLogin = async () => {
 
     await router.push('/')
   } catch (error: any) {
-    const backendMessage =
-        error?.response?.data?.message || error?.response?.data?.error || ''
-
-    if (
-        typeof backendMessage === 'string' &&
-        backendMessage.toLowerCase().includes('email')
-    ) {
-      errorMessage.value = 'Email ещё не подтверждён. Сначала введите код подтверждения.'
-      return
-    }
-
-    errorMessage.value = backendMessage || 'Проверьте email и пароль и попробуйте снова.'
+    errorMessage.value = handleError(error, 'Проверьте email и пароль и попробуйте снова.')
   } finally {
     loading.value = false
   }

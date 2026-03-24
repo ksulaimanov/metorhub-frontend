@@ -76,15 +76,20 @@
 import { computed, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { http } from '../../shared/api/http'
+import { useToastStore } from '../../shared/lib/getApiErrorMessage'
+import { useErrorHandler } from '../../shared/composables/useErrorHandler'
 import PublicLayout from '../../widgets/layout/PublicLayout.vue'
 import AppErrorState from '../../shared/ui/AppErrorState.vue'
 
 const router = useRouter()
+const toastStore = useToastStore()
+const { handleError } = useErrorHandler()
 
 const email = ref('')
-const loading = ref(false)
-const showValidation = ref(false)
 const errorMessage = ref('')
+const loading = ref(false)
+
+const showValidation = ref(false)
 const successMessage = ref('')
 
 const emailError = computed(() => {
@@ -100,20 +105,17 @@ const fieldClass = (hasError: boolean) =>
 
 const handleSubmit = async () => {
   showValidation.value = true
-  errorMessage.value = ''
-  successMessage.value = ''
 
   if (emailError.value) return
 
   loading.value = true
 
   try {
-    const { data } = await http.post('/api/auth/forgot-password', {
+    await http.post('/api/auth/forgot-password', {
       email: email.value,
     })
 
-    successMessage.value =
-        data?.message || 'Если email зарегистрирован, код для сброса отправлен.'
+    toastStore.success('Если email зарегистрирован, код для сброса отправлен.')
 
     setTimeout(async () => {
       await router.push({
@@ -122,10 +124,7 @@ const handleSubmit = async () => {
       })
     }, 1000)
   } catch (error: any) {
-    errorMessage.value =
-        error?.response?.data?.message ||
-        error?.response?.data?.error ||
-        'Не удалось отправить код для сброса.'
+    errorMessage.value = handleError(error, 'Не удалось отправить код для сброса.')
   } finally {
     loading.value = false
   }

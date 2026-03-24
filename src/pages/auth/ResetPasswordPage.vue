@@ -132,21 +132,25 @@
 import { computed, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { http } from '../../shared/api/http'
+import { useToastStore } from '../../shared/lib/getApiErrorMessage'
+import { useErrorHandler } from '../../shared/composables/useErrorHandler'
 import PublicLayout from '../../widgets/layout/PublicLayout.vue'
 import AppErrorState from '../../shared/ui/AppErrorState.vue'
 
 const route = useRoute()
 const router = useRouter()
+const toastStore = useToastStore()
+const { handleError } = useErrorHandler()
 
 const email = ref(typeof route.query.email === 'string' ? route.query.email : '')
 const code = ref('')
+const successMessage = ref('')
 const newPassword = ref('')
 const confirmPassword = ref('')
 const showPassword = ref(false)
 const showValidation = ref(false)
 const loading = ref(false)
 const errorMessage = ref('')
-const successMessage = ref('')
 
 const emailError = computed(() => {
   if (!email.value) return 'Введите email'
@@ -176,8 +180,6 @@ const fieldClass = (hasError: boolean) =>
 
 const handleSubmit = async () => {
   showValidation.value = true
-  errorMessage.value = ''
-  successMessage.value = ''
 
   if (
       emailError.value ||
@@ -191,22 +193,19 @@ const handleSubmit = async () => {
   loading.value = true
 
   try {
-    const { data } = await http.post('/api/auth/reset-password', {
+    await http.post('/api/auth/reset-password', {
       email: email.value,
       code: code.value,
       newPassword: newPassword.value,
     })
 
-    successMessage.value = data?.message || 'Пароль успешно обновлён.'
+    toastStore.success('Пароль успешно обновлён. Перенаправляем...')
 
     setTimeout(async () => {
       await router.push('/login')
     }, 1200)
   } catch (error: any) {
-    errorMessage.value =
-        error?.response?.data?.message ||
-        error?.response?.data?.error ||
-        'Не удалось обновить пароль.'
+    errorMessage.value = handleError(error, 'Не удалось обновить пароль.')
   } finally {
     loading.value = false
   }

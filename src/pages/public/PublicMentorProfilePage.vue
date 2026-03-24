@@ -272,13 +272,6 @@
                   </div>
                 </AppCard>
               </div>
-
-              <p v-if="bookingMessage" class="mt-4 text-sm font-medium text-emerald-600">
-                {{ bookingMessage }}
-              </p>
-              <p v-if="bookingError" class="mt-4 text-sm font-medium text-red-600">
-                {{ bookingError }}
-              </p>
             </AppCard>
           </div>
         </div>
@@ -291,12 +284,16 @@
 import { computed, onMounted, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { http } from '../../shared/api/http'
+import { useToastStore } from '../../shared/lib/getApiErrorMessage'
+import { getApiErrorMessage } from '../../shared/lib/getApiErrorMessage'
 import PublicLayout from '../../widgets/layout/PublicLayout.vue'
 import AppCard from '../../shared/ui/AppCard.vue'
 import AppBadge from '../../shared/ui/AppBadge.vue'
 import AppLoadingState from '../../shared/ui/AppLoadingState.vue'
 import AppErrorState from '../../shared/ui/AppErrorState.vue'
 import AppEmptyState from '../../shared/ui/AppEmptyState.vue'
+
+const toastStore = useToastStore()
 
 interface MentorProfile {
   id: number
@@ -416,8 +413,6 @@ const toggleBookingForm = (slotId: number) => {
 
 const bookSlot = async (slotId: number) => {
   bookingLoadingId.value = slotId
-  bookingError.value = ''
-  bookingMessage.value = ''
 
   try {
     await http.post('/api/student/bookings', {
@@ -425,7 +420,7 @@ const bookSlot = async (slotId: number) => {
       studentNote: studentNotes.value[slotId] || '',
     })
 
-    bookingMessage.value = 'Заявка на занятие успешно отправлена.'
+    toastStore.success('Заявка на занятие успешно отправлена.')
     activeBookingFormId.value = null
     studentNotes.value[slotId] = ''
     await loadSlots()
@@ -434,14 +429,12 @@ const bookSlot = async (slotId: number) => {
 
     const status = e?.response?.status
     if (status === 401 || status === 403) {
+      toastStore.error('Пожалуйста, войдите в аккаунт для записи.')
       await router.push('/login')
       return
     }
 
-    bookingError.value =
-        e?.response?.data?.message ||
-        e?.response?.data?.error ||
-        'Не удалось записаться на слот.'
+    getApiErrorMessage(e, 'Не удалось записаться на слот.')
   } finally {
     bookingLoadingId.value = null
   }

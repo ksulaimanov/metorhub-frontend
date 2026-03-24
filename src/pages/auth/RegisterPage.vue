@@ -162,10 +162,14 @@
 import { computed, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { http } from '../../shared/api/http'
+import { useToastStore } from '../../shared/lib/getApiErrorMessage'
+import { useErrorHandler } from '../../shared/composables/useErrorHandler'
 import PublicLayout from '../../widgets/layout/PublicLayout.vue'
 import AppErrorState from '../../shared/ui/AppErrorState.vue'
 
 const router = useRouter()
+const toastStore = useToastStore()
+const { handleError } = useErrorHandler()
 
 const role = ref<'student' | 'mentor'>('student')
 const email = ref('')
@@ -215,13 +219,12 @@ const handleRegister = async () => {
             ? '/api/auth/register/mentor'
             : '/api/auth/register/student'
 
-    const { data } = await http.post(endpoint, {
+    await http.post(endpoint, {
       email: email.value,
       password: password.value,
     })
 
-    successMessage.value =
-        data?.message || 'Код подтверждения отправлен на email. Перенаправляем...'
+    toastStore.success('Код подтверждения отправлен на email. Перенаправляем...')
 
     setTimeout(async () => {
       await router.push({
@@ -230,10 +233,7 @@ const handleRegister = async () => {
       })
     }, 900)
   } catch (error: any) {
-    errorMessage.value =
-        error?.response?.data?.message ||
-        error?.response?.data?.error ||
-        'Не удалось выполнить регистрацию. Попробуйте снова.'
+    errorMessage.value = handleError(error, 'Не удалось выполнить регистрацию. Попробуйте снова.')
   } finally {
     loading.value = false
   }

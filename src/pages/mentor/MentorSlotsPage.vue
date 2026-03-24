@@ -222,6 +222,8 @@
 <script setup lang="ts">
 import { onMounted, reactive, ref } from 'vue'
 import { http } from '../../shared/api/http'
+import { useToastStore } from '../../shared/lib/getApiErrorMessage'
+import { useErrorHandler } from '../../shared/composables/useErrorHandler'
 import PrivateLayout from '../../widgets/layout/PrivateLayout.vue'
 import AppSectionTitle from '../../shared/ui/AppSectionTitle.vue'
 import AppCard from '../../shared/ui/AppCard.vue'
@@ -229,6 +231,10 @@ import AppEmptyState from '../../shared/ui/AppEmptyState.vue'
 import AppBadge from '../../shared/ui/AppBadge.vue'
 import AppLoadingState from '../../shared/ui/AppLoadingState.vue'
 import AppErrorState from '../../shared/ui/AppErrorState.vue'
+
+const toastStore = useToastStore()
+const { handleError } = useErrorHandler()
+
 
 interface Slot {
   id: number
@@ -312,19 +318,12 @@ const createSlot = async () => {
 
   try {
     await http.post('/api/mentor/availability-slots', form)
-    form.startAt = ''
-    form.endAt = ''
-    form.capacity = 1
-    form.meetingLink = ''
-    form.addressText = ''
-    createMessage.value = 'Слот успешно создан.'
+    // ... очистка формы ...
+    toastStore.success('Слот успешно создан.')
     await loadSlots()
   } catch (error: any) {
     console.error('Ошибка создания слота:', error)
-    createError.value =
-        error?.response?.data?.message ||
-        error?.response?.data?.error ||
-        'Не удалось создать слот.'
+    createError.value = handleError(error, 'Не удалось создать слот.')
   } finally {
     creating.value = false
   }
@@ -357,14 +356,11 @@ const updateSlot = async (slotId: number) => {
 
   try {
     await http.put(`/api/mentor/availability-slots/${slotId}`, editForm)
-    editMessage.value = 'Слот успешно обновлён.'
+    toastStore.success('Слот успешно обновлён.')
     await loadSlots()
   } catch (error: any) {
     console.error('Ошибка обновления слота:', error)
-    editError.value =
-        error?.response?.data?.message ||
-        error?.response?.data?.error ||
-        'Не удалось обновить слот.'
+    handleError(error, 'Не удалось обновить слот.')
   } finally {
     updatingId.value = null
   }
@@ -375,10 +371,11 @@ const deactivateSlot = async (slotId: number) => {
 
   try {
     await http.patch(`/api/mentor/availability-slots/${slotId}/deactivate`)
+    toastStore.success('Слот деактивирован.')
     await loadSlots()
   } catch (error) {
     console.error('Ошибка деактивации слота:', error)
-    pageError.value = 'Не удалось деактивировать слот.'
+    handleError(error as any, 'Не удалось деактивировать слот.')
   } finally {
     deactivatingId.value = null
   }

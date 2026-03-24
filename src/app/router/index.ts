@@ -6,9 +6,12 @@ import MentorDirectoryPage from '../../pages/public/MentorDirectoryPage.vue'
 import PublicMentorProfilePage from '../../pages/public/PublicMentorProfilePage.vue'
 import StudentProfilePage from '../../pages/student/StudentProfilePage.vue'
 import StudentBookingsPage from '../../pages/student/StudentBookingsPage.vue'
+import StudentDashboardPage from '../../pages/student/StudentDashboardPage.vue'
 import MentorProfilePage from '../../pages/mentor/MentorProfilePage.vue'
 import MentorSlotsPage from '../../pages/mentor/MentorSlotsPage.vue'
 import MentorBookingsPage from '../../pages/mentor/MentorBookingsPage.vue'
+import MentorDashboardPage from '../../pages/mentor/MentorDashboardPage.vue'
+import AdminDashboardPage from '../../pages/admin/AdminDashboardPage.vue'
 import VerifyEmailPage from '../../pages/auth/VerifyEmailPage.vue'
 import ForgotPasswordPage from '../../pages/auth/ForgotPasswordPage.vue'
 import ResetPasswordPage from '../../pages/auth/ResetPasswordPage.vue'
@@ -42,6 +45,12 @@ const router = createRouter({
         },
 
         {
+            path: '/student/dashboard',
+            name: 'student-dashboard',
+            component: StudentDashboardPage,
+            meta: { requiresAuth: true, role: 'ROLE_STUDENT' },
+        },
+        {
             path: '/student/profile',
             name: 'student-profile',
             component: StudentProfilePage,
@@ -54,6 +63,12 @@ const router = createRouter({
             meta: { requiresAuth: true, role: 'ROLE_STUDENT' },
         },
 
+        {
+            path: '/mentor/dashboard',
+            name: 'mentor-dashboard',
+            component: MentorDashboardPage,
+            meta: { requiresAuth: true, role: 'ROLE_MENTOR' },
+        },
         {
             path: '/mentor/profile',
             name: 'mentor-profile',
@@ -71,6 +86,13 @@ const router = createRouter({
             name: 'mentor-bookings',
             component: MentorBookingsPage,
             meta: { requiresAuth: true, role: 'ROLE_MENTOR' },
+        },
+
+        {
+            path: '/admin/dashboard',
+            name: 'admin-dashboard',
+            component: AdminDashboardPage,
+            meta: { requiresAuth: true, role: 'ROLE_ADMIN' },
         },
     ],
 })

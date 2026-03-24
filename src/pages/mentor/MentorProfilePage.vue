@@ -55,7 +55,7 @@
                   type="button"
                   class="inline-flex items-center justify-center rounded-2xl bg-red-600 px-4 py-3 text-sm font-semibold text-white transition hover:bg-red-700 disabled:cursor-not-allowed disabled:opacity-50"
                   :disabled="avatarDeleting"
-                  @click="handleAvatarDelete"
+                  @click="confirmAvatarDelete"
               >
                 {{ avatarDeleting ? 'Удаление...' : 'Удалить фото' }}
               </button>
@@ -332,24 +332,27 @@
 <script setup lang="ts">
 import { computed, onMounted, reactive, ref } from 'vue'
 import { http } from '../../shared/api/http'
+import { useToastStore } from '../../shared/lib/getApiErrorMessage'
+import { useErrorHandler } from '../../shared/composables/useErrorHandler'
 import PrivateLayout from '../../widgets/layout/PrivateLayout.vue'
 import AppCard from '../../shared/ui/AppCard.vue'
-import AppBadge from '../../shared/ui/AppBadge.vue'
 import AppSectionTitle from '../../shared/ui/AppSectionTitle.vue'
 import AppLoadingState from '../../shared/ui/AppLoadingState.vue'
 import AppErrorState from '../../shared/ui/AppErrorState.vue'
+import AppBadge from '../../shared/ui/AppBadge.vue'
 
+const toastStore = useToastStore()
+const { handleError } = useErrorHandler()
+const saveError = ref('')
 const loading = ref(false)
 const saving = ref(false)
 const avatarUploading = ref(false)
 const avatarDeleting = ref(false)
 
 const pageError = ref('')
-const saveError = ref('')
+const avatarError = ref('')
 const successMessage = ref('')
 const avatarMessage = ref('')
-const avatarError = ref('')
-
 const form = reactive({
   firstName: '',
   lastName: '',
@@ -373,13 +376,13 @@ const form = reactive({
 })
 
 const mentorName = computed(() => {
-  const full = `${form.firstName} ${form.lastName}`.trim()
-  return full || 'Профиль ментора'
+  const full = `${form.firstName || ''} ${form.lastName || ''}`.trim()
+  return full || 'Новый ментор'
 })
 
 const avatarInitials = computed(() => {
-  const first = form.firstName?.trim()?.[0] || ''
-  const last = form.lastName?.trim()?.[0] || ''
+  const first = form.firstName?.charAt(0) || ''
+  const last = form.lastName?.charAt(0) || ''
   return (first + last).toUpperCase() || 'M'
 })
 
@@ -407,25 +410,21 @@ const loadProfile = async () => {
 }
 
 const saveProfile = async () => {
-  successMessage.value = ''
-  saveError.value = ''
-
   if (formatError.value) {
-    saveError.value = formatError.value
+    toastStore.error(formatError.value)
     return
   }
 
   saving.value = true
+  saveError.value = ''
+  successMessage.value = ''
 
   try {
     await http.put('/api/mentor/profile', form)
-    successMessage.value = 'Профиль ментора успешно обновлён.'
-    setTimeout(() => {
-      successMessage.value = ''
-    }, 3000)
+    successMessage.value = 'Профиль успешно сохранён!'
+    toastStore.success('Профиль ментора успешно обновлён.')
   } catch (error) {
-    console.error('Ошибка сохранения профиля:', error)
-    saveError.value = 'Не удалось сохранить изменения. Попробуйте ещё раз.'
+    saveError.value = handleError(error, 'Не удалось сохранить изменения.')
   } finally {
     saving.value = false
   }
@@ -433,7 +432,6 @@ const saveProfile = async () => {
 
 const handleAvatarUpload = async (event: Event) => {
   avatarError.value = ''
-  avatarMessage.value = ''
 
   const input = event.target as HTMLInputElement
   const file = input.files?.[0]
@@ -456,22 +454,26 @@ const handleAvatarUpload = async (event: Event) => {
 
     form.avatarKey = data.avatarKey
     form.avatarUrl = data.avatarUrl
-    avatarMessage.value = 'Фото профиля успешно обновлено.'
+    toastStore.success('Фото профиля успешно обновлено.')
   } catch (error: any) {
     console.error('Ошибка загрузки аватара ментора:', error)
-    avatarError.value =
-        error?.response?.data?.message ||
-        error?.response?.data?.error ||
-        'Не удалось загрузить фото.'
+    avatarError.value = handleError(error, 'Не удалось загрузить фото.')
   } finally {
     avatarUploading.value = false
     input.value = ''
   }
 }
 
+const confirmAvatarDelete = async () => {
+  if (!window.confirm('Вы уверены? Фото профиля будет удалено.')) {
+    return
+  }
+
+  await handleAvatarDelete()
+}
+
 const handleAvatarDelete = async () => {
   avatarError.value = ''
-  avatarMessage.value = ''
 
   avatarDeleting.value = true
 
@@ -479,13 +481,10 @@ const handleAvatarDelete = async () => {
     await http.delete('/api/mentor/profile/avatar')
     form.avatarKey = ''
     form.avatarUrl = ''
-    avatarMessage.value = 'Фото профиля удалено.'
+    toastStore.success('Фото профиля удалено.')
   } catch (error: any) {
     console.error('Ошибка удаления аватара ментора:', error)
-    avatarError.value =
-        error?.response?.data?.message ||
-        error?.response?.data?.error ||
-        'Не удалось удалить фото.'
+    avatarError.value = handleError(error, 'Не удалось удалить фото.')
   } finally {
     avatarDeleting.value = false
   }

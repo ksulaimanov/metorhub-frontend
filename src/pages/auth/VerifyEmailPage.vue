@@ -133,11 +133,15 @@
 import { computed, onBeforeUnmount, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { http } from '../../shared/api/http'
+import { useToastStore } from '../../shared/lib/getApiErrorMessage'
+import { useErrorHandler } from '../../shared/composables/useErrorHandler'
 import PublicLayout from '../../widgets/layout/PublicLayout.vue'
 import AppErrorState from '../../shared/ui/AppErrorState.vue'
 
 const route = useRoute()
 const router = useRouter()
+const toastStore = useToastStore()
+const { handleError } = useErrorHandler()
 
 const email = ref(typeof route.query.email === 'string' ? route.query.email : '')
 const code = ref('')
@@ -191,9 +195,6 @@ const startCooldown = (seconds: number) => {
 
 const handleVerify = async () => {
   showValidation.value = true
-  errorMessage.value = ''
-  successMessage.value = ''
-  resendMessage.value = ''
 
   if (emailError.value || codeError.value) {
     return
@@ -207,16 +208,13 @@ const handleVerify = async () => {
       code: code.value,
     })
 
-    successMessage.value = 'Email успешно подтверждён. Перенаправляем на страницу входа...'
+    toastStore.success('Email успешно подтверждён. Перенаправляем на страницу входа...')
 
     setTimeout(async () => {
       await router.push('/login')
     }, 1200)
   } catch (error: any) {
-    errorMessage.value =
-        error?.response?.data?.message ||
-        error?.response?.data?.error ||
-        'Не удалось подтвердить email. Проверьте код и попробуйте снова.'
+    errorMessage.value = handleError(error, 'Не удалось подтвердить email. Проверьте код и попробуйте снова.')
   } finally {
     verifying.value = false
   }
@@ -224,9 +222,6 @@ const handleVerify = async () => {
 
 const handleResend = async () => {
   showValidation.value = true
-  errorMessage.value = ''
-  resendMessage.value = ''
-  successMessage.value = ''
 
   if (emailError.value) {
     return
@@ -239,17 +234,16 @@ const handleResend = async () => {
       email: email.value,
     })
 
-    resendMessage.value = 'Новый код подтверждения отправлен.'
+    toastStore.success('Новый код подтверждения отправлен.')
     startCooldown(60)
   } catch (error: any) {
-    errorMessage.value =
-        error?.response?.data?.message ||
-        error?.response?.data?.error ||
-        'Не удалось отправить код повторно.'
+    errorMessage.value = handleError(error, 'Не удалось отправить код повторно.')
   } finally {
     resending.value = false
   }
 }
+
+
 
 onBeforeUnmount(() => {
   if (resendInterval) {

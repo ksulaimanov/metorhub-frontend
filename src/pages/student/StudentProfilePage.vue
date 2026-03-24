@@ -55,7 +55,7 @@
                   type="button"
                   class="inline-flex items-center justify-center rounded-2xl bg-red-600 px-4 py-3 text-sm font-semibold text-white transition hover:bg-red-700 disabled:cursor-not-allowed disabled:opacity-50"
                   :disabled="avatarDeleting"
-                  @click="handleAvatarDelete"
+                  @click="confirmAvatarDelete"
               >
                 {{ avatarDeleting ? 'Удаление...' : 'Удалить фото' }}
               </button>
@@ -214,11 +214,19 @@
 <script setup lang="ts">
 import { computed, onMounted, reactive, ref } from 'vue'
 import { http } from '../../shared/api/http'
+import { useToastStore } from '../../shared/lib/getApiErrorMessage'
+import { useErrorHandler } from '../../shared/composables/useErrorHandler'
 import PrivateLayout from '../../widgets/layout/PrivateLayout.vue'
 import AppCard from '../../shared/ui/AppCard.vue'
 import AppSectionTitle from '../../shared/ui/AppSectionTitle.vue'
 import AppLoadingState from '../../shared/ui/AppLoadingState.vue'
 import AppErrorState from '../../shared/ui/AppErrorState.vue'
+
+const toastStore = useToastStore()
+const { handleError } = useErrorHandler()
+const avatarMessage = ref('')
+const successMessage = ref('')
+const saveError = ref('')
 
 const loading = ref(false)
 const saving = ref(false)
@@ -226,9 +234,6 @@ const avatarUploading = ref(false)
 const avatarDeleting = ref(false)
 
 const pageError = ref('')
-const saveError = ref('')
-const successMessage = ref('')
-const avatarMessage = ref('')
 const avatarError = ref('')
 
 const form = reactive({
@@ -293,25 +298,22 @@ const loadProfile = async () => {
 }
 
 const saveProfile = async () => {
-  successMessage.value = ''
-  saveError.value = ''
-
   if (!validate()) {
-    saveError.value = 'Проверьте заполнение обязательных полей.'
+    toastStore.error('Проверьте заполнение обязательных полей.')
     return
   }
 
   saving.value = true
+  saveError.value = ''
+  successMessage.value = ''
 
   try {
     await http.put('/api/student/profile', form)
     successMessage.value = 'Профиль успешно обновлён.'
-    setTimeout(() => {
-      successMessage.value = ''
-    }, 3000)
+    toastStore.success('Профиль успешно обновлён.')
   } catch (error) {
     console.error('Ошибка сохранения профиля ученика:', error)
-    saveError.value = 'Не удалось сохранить изменения. Попробуйте ещё раз.'
+    saveError.value = handleError(error, 'Не удалось сохранить изменения.')
   } finally {
     saving.value = false
   }
@@ -319,7 +321,6 @@ const saveProfile = async () => {
 
 const handleAvatarUpload = async (event: Event) => {
   avatarError.value = ''
-  avatarMessage.value = ''
 
   const input = event.target as HTMLInputElement
   const file = input.files?.[0]
@@ -342,22 +343,25 @@ const handleAvatarUpload = async (event: Event) => {
 
     form.avatarKey = data.avatarKey
     form.avatarUrl = data.avatarUrl
-    avatarMessage.value = 'Фото профиля успешно обновлено.'
+    toastStore.success('Фото профиля успешно обновлено.')
   } catch (error: any) {
     console.error('Ошибка загрузки аватара ученика:', error)
-    avatarError.value =
-        error?.response?.data?.message ||
-        error?.response?.data?.error ||
-        'Не удалось загрузить фото.'
+    avatarError.value = handleError(error, 'Не удалось загрузить фото.')
   } finally {
     avatarUploading.value = false
     input.value = ''
   }
 }
 
+const confirmAvatarDelete = async () => {
+  if (!window.confirm('Вы уверены? Фото профиля будет удалено.')) {
+    return
+  }
+
+  await handleAvatarDelete()
+}
+
 const handleAvatarDelete = async () => {
-  avatarError.value = ''
-  avatarMessage.value = ''
 
   avatarDeleting.value = true
 
@@ -365,13 +369,10 @@ const handleAvatarDelete = async () => {
     await http.delete('/api/student/profile/avatar')
     form.avatarKey = ''
     form.avatarUrl = ''
-    avatarMessage.value = 'Фото профиля удалено.'
+    toastStore.success('Фото профиля удалено.')
   } catch (error: any) {
     console.error('Ошибка удаления аватара ученика:', error)
-    avatarError.value =
-        error?.response?.data?.message ||
-        error?.response?.data?.error ||
-        'Не удалось удалить фото.'
+    avatarError.value = handleError(error, 'Не удалось удалить фото.')
   } finally {
     avatarDeleting.value = false
   }

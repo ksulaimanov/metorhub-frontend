@@ -141,12 +141,16 @@
 import { onMounted, ref } from 'vue'
 import { http } from '../../shared/api/http'
 import { createStudentReview } from '../../shared/api/reviewApi'
+import { useToastStore } from '../../shared/lib/getApiErrorMessage'
+import { getApiErrorMessage } from '../../shared/lib/getApiErrorMessage'
 import PrivateLayout from '../../widgets/layout/PrivateLayout.vue'
 import AppSectionTitle from '../../shared/ui/AppSectionTitle.vue'
 import AppEmptyState from '../../shared/ui/AppEmptyState.vue'
 import AppCard from '../../shared/ui/AppCard.vue'
 import AppBadge from '../../shared/ui/AppBadge.vue'
 import AppLoadingState from '../../shared/ui/AppLoadingState.vue'
+
+const toastStore = useToastStore()
 import AppErrorState from '../../shared/ui/AppErrorState.vue'
 
 interface Booking {
@@ -220,8 +224,6 @@ const cancelBooking = async (bookingId: number) => {
 }
 
 const submitReview = async (bookingId: number) => {
-  reviewMessages.value[bookingId] = ''
-  reviewErrors.value[bookingId] = ''
   reviewLoadingId.value = bookingId
 
   try {
@@ -233,13 +235,10 @@ const submitReview = async (bookingId: number) => {
       comment: form.comment,
     })
 
-    reviewMessages.value[bookingId] = 'Отзыв успешно отправлен.'
+    toastStore.success('Отзыв успешно отправлен.')
     reviewSubmitted.value[bookingId] = true
   } catch (error: any) {
-    reviewErrors.value[bookingId] =
-        error?.response?.data?.message ||
-        error?.response?.data?.error ||
-        'Не удалось отправить отзыв.'
+    getApiErrorMessage(error, 'Не удалось отправить отзыв.')
   } finally {
     reviewLoadingId.value = null
   }
