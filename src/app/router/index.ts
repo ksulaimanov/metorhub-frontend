@@ -1,5 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomePage from '../../pages/public/HomePage.vue'
+import AboutPage from '../../pages/public/AboutPage.vue'
+import NotFoundPage from '../../pages/system/NotFoundPage.vue'
 import LoginPage from '../../pages/auth/LoginPage.vue'
 import RegisterPage from '../../pages/auth/RegisterPage.vue'
 import MentorDirectoryPage from '../../pages/public/MentorDirectoryPage.vue'
@@ -30,70 +32,74 @@ const hasRole = (role: string) => getRoles().includes(role)
 const router = createRouter({
     history: createWebHistory(),
     routes: [
-        { path: '/', name: 'home', component: HomePage },
-        { path: '/login', name: 'login', component: LoginPage },
-        { path: '/register', name: 'register', component: RegisterPage },
-        { path: '/forgot-password', name: 'forgot-password', component: ForgotPasswordPage },
-        { path: '/reset-password', name: 'reset-password', component: ResetPasswordPage },
-        { path: '/verify-email', name: 'verify-email', component: VerifyEmailPage },
-        { path: '/mentors', name: 'mentor-directory', component: MentorDirectoryPage },
+        { path: '/', name: 'home', component: HomePage, meta: { title: 'MentorHub - Платформа для менторов и студентов' } },
+        { path: '/about', name: 'about', component: AboutPage, meta: { title: 'О платформе - MentorHub' } },
+        { path: '/login', name: 'login', component: LoginPage, meta: { title: 'Вход - MentorHub' } },
+        { path: '/register', name: 'register', component: RegisterPage, meta: { title: 'Регистрация - MentorHub' } },
+        { path: '/forgot-password', name: 'forgot-password', component: ForgotPasswordPage, meta: { title: 'Восстановление пароля - MentorHub' } },
+        { path: '/reset-password', name: 'reset-password', component: ResetPasswordPage, meta: { title: 'Сброс пароля - MentorHub' } },
+        { path: '/verify-email', name: 'verify-email', component: VerifyEmailPage, meta: { title: 'Подтверждение email - MentorHub' } },
+        { path: '/mentors', name: 'mentor-directory', component: MentorDirectoryPage, meta: { title: 'Каталог менторов - MentorHub' } },
         {
             path: '/mentors/:id',
             name: 'public-mentor-profile',
             component: PublicMentorProfilePage,
             props: true,
+            meta: { title: 'Профиль ментора - MentorHub' },
         },
 
         {
             path: '/student/dashboard',
             name: 'student-dashboard',
             component: StudentDashboardPage,
-            meta: { requiresAuth: true, role: 'ROLE_STUDENT' },
+            meta: { requiresAuth: true, role: 'ROLE_STUDENT', title: 'Мой кабинет - MentorHub' },
         },
         {
             path: '/student/profile',
             name: 'student-profile',
             component: StudentProfilePage,
-            meta: { requiresAuth: true, role: 'ROLE_STUDENT' },
+            meta: { requiresAuth: true, role: 'ROLE_STUDENT', title: 'Мой профиль - MentorHub' },
         },
         {
             path: '/student/bookings',
             name: 'student-bookings',
             component: StudentBookingsPage,
-            meta: { requiresAuth: true, role: 'ROLE_STUDENT' },
+            meta: { requiresAuth: true, role: 'ROLE_STUDENT', title: 'Мои занятия - MentorHub' },
         },
 
         {
             path: '/mentor/dashboard',
             name: 'mentor-dashboard',
             component: MentorDashboardPage,
-            meta: { requiresAuth: true, role: 'ROLE_MENTOR' },
+            meta: { requiresAuth: true, role: 'ROLE_MENTOR', title: 'Кабинет ментора - MentorHub' },
         },
         {
             path: '/mentor/profile',
             name: 'mentor-profile',
             component: MentorProfilePage,
-            meta: { requiresAuth: true, role: 'ROLE_MENTOR' },
+            meta: { requiresAuth: true, role: 'ROLE_MENTOR', title: 'Мой профиль - MentorHub' },
         },
         {
             path: '/mentor/slots',
             name: 'mentor-slots',
             component: MentorSlotsPage,
-            meta: { requiresAuth: true, role: 'ROLE_MENTOR' },
+            meta: { requiresAuth: true, role: 'ROLE_MENTOR', title: 'Доступные слоты - MentorHub' },
         },
         {
             path: '/mentor/bookings',
             name: 'mentor-bookings',
             component: MentorBookingsPage,
-            meta: { requiresAuth: true, role: 'ROLE_MENTOR' },
+            meta: { requiresAuth: true, role: 'ROLE_MENTOR', title: 'Заявки на занятия - MentorHub' },
         },
 
         {
             path: '/admin/dashboard',
             name: 'admin-dashboard',
             component: AdminDashboardPage,
-            meta: { requiresAuth: true, role: 'ROLE_ADMIN' },
+            meta: { requiresAuth: true, role: 'ROLE_ADMIN', title: 'Админ панель - MentorHub' },
         },
+
+        { path: '/:pathMatch(.*)*', name: 'not-found', component: NotFoundPage, meta: { title: '404 - Страница не найдена' } },
     ],
 })
 
@@ -108,12 +114,12 @@ router.beforeEach((to, _from, next) => {
 
     if (role && !hasRole(role)) {
         if (hasRole('ROLE_MENTOR')) {
-            next('/mentor/profile')
+            next('/mentor/dashboard')
             return
         }
 
         if (hasRole('ROLE_STUDENT')) {
-            next('/student/profile')
+            next('/student/dashboard')
             return
         }
 
@@ -122,6 +128,11 @@ router.beforeEach((to, _from, next) => {
     }
 
     next()
+})
+
+router.afterEach((to) => {
+    const title = (to.meta.title as string) || 'MentorHub'
+    document.title = title
 })
 
 export default router
