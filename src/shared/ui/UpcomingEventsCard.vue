@@ -39,7 +39,7 @@
     <!-- Events List -->
     <div v-else class="space-y-3">
       <div
-          v-for="(event, index) in events"
+          v-for="(event) in events"
           :key="event.id"
           class="rounded-2xl border border-slate-200 p-4 transition hover:border-slate-300 hover:bg-slate-50"
       >
@@ -104,7 +104,6 @@
 </template>
 
 <script setup lang="ts">
-import { computed, defineEmits, defineProps } from 'vue'
 import type { UpcomingEvent } from '../../shared/types/dashboard'
 import AppCard from './AppCard.vue'
 import AppBadge from './AppBadge.vue'
