@@ -41,7 +41,7 @@
           :events="dashboardData?.upcomingEvents || []"
           :loading="loading"
           :error="error"
-          empty-message="Нет предстоящих занятий. Создайте слоты!"
+          empty-message="Ещё нет предстоящих занятий"
           action-button-label="Перейти"
           @retry="loadDashboard"
           @event-click="handleEventClick"

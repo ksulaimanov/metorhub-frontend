@@ -129,7 +129,7 @@
             <AppCard>
               <h2 class="text-xl font-semibold text-slate-900">Запись на занятие</h2>
               <p class="mt-3 text-slate-600">
-                Выберите доступный слот и отправьте заявку на занятие с этим ментором.
+                Выберите удобный для вас слот и оставьте комментарий о целях занятия. Ментор рассмотрит вашу заявку.
               </p>
 
               <div class="mt-6 rounded-2xl bg-slate-50 p-4 ring-1 ring-slate-200">
@@ -189,16 +189,20 @@
                             {{ slot.active ? 'Доступен' : 'Недоступен' }}
                           </AppBadge>
 
-                          <AppBadge variant="info">
-                            Мест: {{ slot.capacity }}
+                          <AppBadge v-if="slot.capacity > 0" variant="info">
+                            Всего мест: {{ slot.capacity }}
                           </AppBadge>
 
-                          <AppBadge variant="warning">
+                          <AppBadge v-if="slot.bookedCount > 0" variant="warning">
                             Занято: {{ slot.bookedCount }}
                           </AppBadge>
 
-                          <AppBadge :variant="slot.availableSeats > 0 ? 'success' : 'danger'">
+                          <AppBadge v-if="slot.availableSeats > 0" :variant="slot.availableSeats > 1 ? 'success' : 'warning'">
                             Свободно: {{ slot.availableSeats }}
+                          </AppBadge>
+
+                          <AppBadge v-else variant="danger">
+                            Нет свободных мест
                           </AppBadge>
                         </div>
 
@@ -206,21 +210,21 @@
                             v-if="slot.availableSeats > 1"
                             class="mt-3 text-sm text-slate-600"
                         >
-                          Можно записаться в мини-группу.
+                          Доступна запись в группу на {{ slot.availableSeats }} мест.
                         </p>
 
                         <p
                             v-else-if="slot.availableSeats === 1"
                             class="mt-3 text-sm text-slate-600"
                         >
-                          Осталось последнее место.
+                          Осталось одно свободное место.
                         </p>
 
                         <p
                             v-else
                             class="mt-3 text-sm font-medium text-red-600"
                         >
-                          Свободных мест больше нет.
+                          Свободных мест нет
                         </p>
                       </div>
 
@@ -261,11 +265,11 @@
                             :disabled="bookingLoadingId === slot.id"
                             @click="bookSlot(slot.id)"
                         >
-                          {{ bookingLoadingId === slot.id ? 'Отправка...' : 'Подтвердить запись' }}
+                          {{ bookingLoadingId === slot.id ? 'Отправляем заявку...' : 'Отправить заявку' }}
                         </button>
 
                         <p class="text-sm text-slate-500">
-                          После отправки заявка появится в кабинете ментора.
+                          Ментор ответит вам в течение суток
                         </p>
                       </div>
                     </div>
@@ -286,6 +290,7 @@ import { useRoute, useRouter } from 'vue-router'
 import { http } from '../../shared/api/http'
 import { useToastStore } from '../../shared/lib/getApiErrorMessage'
 import { getApiErrorMessage } from '../../shared/lib/getApiErrorMessage'
+import { formatDateTimeForDisplay } from '../../shared/lib/dateFormatter'
 import PublicLayout from '../../widgets/layout/PublicLayout.vue'
 import AppCard from '../../shared/ui/AppCard.vue'
 import AppBadge from '../../shared/ui/AppBadge.vue'
@@ -440,11 +445,7 @@ const bookSlot = async (slotId: number) => {
   }
 }
 
-const formatDateTime = (value: string) =>
-    new Date(value).toLocaleString('ru-RU', {
-      dateStyle: 'medium',
-      timeStyle: 'short',
-    })
+const formatDateTime = (value: string) => formatDateTimeForDisplay(value)
 
 const formatLessonFormat = (value: string) => {
   const map: Record<string, string> = {

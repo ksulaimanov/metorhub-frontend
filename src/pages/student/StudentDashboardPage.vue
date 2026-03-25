@@ -34,7 +34,7 @@
           :events="dashboardData?.upcomingEvents || []"
           :loading="loading"
           :error="error"
-          empty-message="Нет предстоящих занятий. Запишитесь к ментору!"
+          empty-message="Нет предстоящих занятий"
           action-button-label="Перейти к занятию"
           @retry="loadDashboard"
           @event-click="handleEventClick"
@@ -43,9 +43,9 @@
 
       <!-- CTA to Find Mentors -->
       <div v-if="(dashboardData?.upcomingEvents.length || 0) === 0" class="rounded-2xl bg-gradient-to-r from-blue-50 to-indigo-50 p-6 ring-1 ring-blue-200">
-        <h3 class="text-lg font-semibold text-slate-900">Готовы учиться?</h3>
+        <h3 class="text-lg font-semibold text-slate-900">Готовы начать учиться?</h3>
         <p class="mt-2 text-slate-600">
-          Найдите идеального ментора и начните свой путь обучения сегодня.
+          Посмотрите каталог менторов и найдите идеального наставника для достижения вашей цели.
         </p>
         <button
             class="mt-4 inline-flex items-center justify-center rounded-2xl bg-indigo-600 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-indigo-700 active:bg-indigo-800"

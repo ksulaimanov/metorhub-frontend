@@ -224,6 +224,7 @@ import { onMounted, reactive, ref } from 'vue'
 import { http } from '../../shared/api/http'
 import { useToastStore } from '../../shared/lib/getApiErrorMessage'
 import { useErrorHandler } from '../../shared/composables/useErrorHandler'
+import { formatDateTimeForDisplay } from '../../shared/lib/dateFormatter'
 import PrivateLayout from '../../widgets/layout/PrivateLayout.vue'
 import AppSectionTitle from '../../shared/ui/AppSectionTitle.vue'
 import AppCard from '../../shared/ui/AppCard.vue'
@@ -388,7 +389,7 @@ const toDateTimeLocalValue = (value: string) => {
   return localDate.toISOString().slice(0, 16)
 }
 
-const formatDateTime = (value: string) => new Date(value).toLocaleString('ru-RU')
+const formatDateTime = (value: string) => formatDateTimeForDisplay(value)
 
 const formatLessonFormat = (value: string) => {
   const map: Record<string, string> = {

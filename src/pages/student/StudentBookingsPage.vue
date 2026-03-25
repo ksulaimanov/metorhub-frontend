@@ -141,16 +141,14 @@
 import { onMounted, ref } from 'vue'
 import { http } from '../../shared/api/http'
 import { createStudentReview } from '../../shared/api/reviewApi'
-import { useToastStore } from '../../shared/lib/getApiErrorMessage'
 import { getApiErrorMessage } from '../../shared/lib/getApiErrorMessage'
+import { formatDateTimeForDisplay } from '../../shared/lib/dateFormatter'
 import PrivateLayout from '../../widgets/layout/PrivateLayout.vue'
 import AppSectionTitle from '../../shared/ui/AppSectionTitle.vue'
 import AppEmptyState from '../../shared/ui/AppEmptyState.vue'
 import AppCard from '../../shared/ui/AppCard.vue'
 import AppBadge from '../../shared/ui/AppBadge.vue'
 import AppLoadingState from '../../shared/ui/AppLoadingState.vue'
-
-const toastStore = useToastStore()
 import AppErrorState from '../../shared/ui/AppErrorState.vue'
 
 interface Booking {
@@ -235,7 +233,7 @@ const submitReview = async (bookingId: number) => {
       comment: form.comment,
     })
 
-    toastStore.success('Отзыв успешно отправлен.')
+    console.log('Отзыв успешно отправлен.')
     reviewSubmitted.value[bookingId] = true
   } catch (error: any) {
     getApiErrorMessage(error, 'Не удалось отправить отзыв.')
@@ -244,11 +242,7 @@ const submitReview = async (bookingId: number) => {
   }
 }
 
-const formatDateTime = (value: string) =>
-    new Date(value).toLocaleString('ru-RU', {
-      dateStyle: 'medium',
-      timeStyle: 'short',
-    })
+const formatDateTime = (value: string) => formatDateTimeForDisplay(value)
 
 const formatLessonFormat = (value: string) => {
   const map: Record<string, string> = {

@@ -105,8 +105,8 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
 import { http } from '../../shared/api/http'
-import { useToastStore } from '../../shared/lib/getApiErrorMessage'
 import { useErrorHandler } from '../../shared/composables/useErrorHandler'
+import { formatDateTimeForDisplay} from '../../shared/lib/dateFormatter'
 import PrivateLayout from '../../widgets/layout/PrivateLayout.vue'
 import AppSectionTitle from '../../shared/ui/AppSectionTitle.vue'
 import AppEmptyState from '../../shared/ui/AppEmptyState.vue'
@@ -115,7 +115,6 @@ import AppBadge from '../../shared/ui/AppBadge.vue'
 import AppLoadingState from '../../shared/ui/AppLoadingState.vue'
 import AppErrorState from '../../shared/ui/AppErrorState.vue'
 
-const toastStore = useToastStore()
 const { handleError } = useErrorHandler()
 
 interface Booking {
@@ -130,6 +129,7 @@ const bookings = ref<Booking[]>([])
 const loading = ref(false)
 const error = ref('')
 const updatingId = ref<number | null>(null)
+const formatDate = (value: string) => formatDateTimeForDisplay(value)
 
 const loadBookings = async () => {
   loading.value = true
@@ -167,7 +167,7 @@ const updateStatus = async (bookingId: number, status: string) => {
       CANCELLED_BY_MENTOR: 'Запись отменена.',
     }
 
-    toastStore.success(statusMessages[status] || 'Статус обновлён.')
+    console.log(statusMessages[status] || 'Статус обновлён.')
     await loadBookings()
   } catch (e) {
     console.error(e)
@@ -177,19 +177,7 @@ const updateStatus = async (bookingId: number, status: string) => {
   }
 }
 
-const formatDateTime = (value: string) =>
-    new Date(value).toLocaleString('ru-RU', {
-      dateStyle: 'medium',
-      timeStyle: 'short',
-    })
-
-const formatDate = (value: string) =>
-    new Date(value).toLocaleDateString('ru-RU', {
-      weekday: 'long',
-      day: 'numeric',
-      month: 'long',
-      year: 'numeric',
-    })
+const formatDateTime = (value: string) => formatDateTimeForDisplay(value)
 
 const formatTime = (value: string) =>
     new Date(value).toLocaleTimeString('ru-RU', {

@@ -191,12 +191,12 @@ const handleLogin = async () => {
     errorMessage.value = ''
 
     if (data.roles.includes('ROLE_MENTOR')) {
-      await router.push('/mentor/profile')
+      await router.push('/mentor/dashboard')
       return
     }
 
     if (data.roles.includes('ROLE_STUDENT')) {
-      await router.push('/student/profile')
+      await router.push('/student/dashboard')
       return
     }
 

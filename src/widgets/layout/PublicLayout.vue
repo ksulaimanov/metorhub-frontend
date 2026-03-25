@@ -1,5 +1,5 @@
 <template>
-  <div class="min-h-screen bg-slate-50 text-slate-900">
+  <div class="flex min-h-screen flex-col bg-slate-50 text-slate-900">
     <header class="sticky top-0 z-30 border-b border-slate-200 bg-white/90 backdrop-blur">
       <div class="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 sm:px-6">
         <RouterLink to="/" class="text-2xl font-bold tracking-tight text-slate-900">
@@ -7,6 +7,7 @@
         </RouterLink>
 
         <nav class="hidden items-center gap-6 text-sm font-medium text-slate-600 md:flex">
+          <RouterLink to="/about" class="transition hover:text-slate-900">О платформе</RouterLink>
           <RouterLink to="/mentors" class="transition hover:text-slate-900">Менторы</RouterLink>
           <RouterLink to="/login" class="transition hover:text-slate-900">Войти</RouterLink>
           <RouterLink
@@ -34,8 +35,14 @@
       </div>
     </header>
 
-    <main>
+    <main class="flex-1">
       <slot />
     </main>
+
+    <AppFooter />
   </div>
 </template>
+
+<script setup lang="ts">
+import AppFooter from '../../shared/ui/AppFooter.vue'
+</script>
