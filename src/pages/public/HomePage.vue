@@ -32,6 +32,13 @@
             >
               Зарегистрироваться
             </RouterLink>
+
+            <RouterLink
+                to="/mentor/apply"
+                class="rounded-2xl border border-slate-300 bg-white px-6 py-3 text-base font-semibold text-slate-900 transition hover:bg-slate-100"
+            >
+              Стать ментором
+            </RouterLink>
           </div>
 
           <div class="mt-10 grid max-w-2xl gap-4 sm:grid-cols-3">

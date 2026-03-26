@@ -4,74 +4,65 @@
       <div class="grid w-full gap-8 lg:grid-cols-2 lg:items-center">
         <div class="hidden lg:block">
           <p class="inline-flex rounded-full bg-slate-200 px-4 py-2 text-sm font-medium text-slate-700">
-            Подтверждение email
+            {{ t('auth.verifyHeroBadge') }}
           </p>
 
           <h1 class="mt-5 max-w-xl text-5xl font-bold leading-tight text-slate-900">
-            Завершите регистрацию в MentorHub
+            {{ t('auth.verifyHeroTitle') }}
           </h1>
 
           <p class="mt-6 max-w-lg text-lg leading-8 text-slate-600">
-            Мы отправили 6-значный код на ваш email. Введите его, чтобы подтвердить адрес и войти в аккаунт.
+            {{ t('auth.verifyHeroSubtitle') }}
           </p>
 
           <div class="mt-8 grid max-w-xl gap-4">
             <div class="rounded-3xl bg-white p-5 shadow-sm ring-1 ring-slate-200">
-              <h3 class="text-lg font-semibold text-slate-900">Безопасный вход</h3>
+              <h3 class="text-lg font-semibold text-slate-900">{{ t('auth.verifyHeroSecureTitle') }}</h3>
               <p class="mt-2 text-sm leading-7 text-slate-600">
-                Подтверждение email помогает защитить аккаунт и исключить ошибки при регистрации.
+                {{ t('auth.verifyHeroSecureDesc') }}
               </p>
             </div>
 
             <div class="rounded-3xl bg-white p-5 shadow-sm ring-1 ring-slate-200">
-              <h3 class="text-lg font-semibold text-slate-900">Быстрое завершение</h3>
+              <h3 class="text-lg font-semibold text-slate-900">{{ t('auth.verifyHeroFastTitle') }}</h3>
               <p class="mt-2 text-sm leading-7 text-slate-600">
-                После подтверждения email вы сможете войти и пользоваться всеми возможностями платформы.
+                {{ t('auth.verifyHeroFastDesc') }}
               </p>
             </div>
           </div>
         </div>
 
         <div class="w-full max-w-md justify-self-center rounded-3xl bg-white p-6 shadow-sm ring-1 ring-slate-200 sm:p-8">
-          <h1 class="text-3xl font-bold text-slate-900">Подтвердите email</h1>
+          <h1 class="text-3xl font-bold text-slate-900">{{ t('auth.verifyTitle') }}</h1>
           <p class="mt-2 text-sm text-slate-600">
-            Введите email и 6-значный код из письма.
+            {{ t('auth.verifySubtitle') }}
           </p>
 
           <form class="mt-8 space-y-5" @submit.prevent="handleVerify">
-            <div>
-              <label class="mb-2 block text-sm font-medium text-slate-700">Email</label>
-              <input
+            <AppField :label="t('auth.email')" :error="showValidation ? emailError : ''">
+              <AppInput
                   v-model.trim="email"
                   type="email"
                   autocomplete="email"
-                  class="w-full rounded-2xl border px-4 py-3 outline-none transition"
-                  :class="fieldClass(showValidation && !!emailError)"
-                  placeholder="you@example.com"
+                  :error="showValidation && !!emailError"
+                  :placeholder="t('auth.emailPlaceholder')"
               />
-              <p v-if="showValidation && emailError" class="mt-2 text-sm text-red-600">
-                {{ emailError }}
-              </p>
-            </div>
+            </AppField>
 
-            <div>
-              <label class="mb-2 block text-sm font-medium text-slate-700">Код подтверждения</label>
-              <input
+            <AppField :label="t('auth.verifyCode')" :error="showValidation ? codeError : ''">
+              <AppInput
                   v-model.trim="code"
                   inputmode="numeric"
                   maxlength="6"
-                  class="w-full rounded-2xl border px-4 py-3 tracking-[0.35em] outline-none transition"
-                  :class="fieldClass(showValidation && !!codeError)"
-                  placeholder="123456"
+                  :error="showValidation && !!codeError"
+                  :placeholder="t('auth.verifyCodePlaceholder')"
+                  class="tracking-[0.35em]"
               />
-              <p v-if="showValidation && codeError" class="mt-2 text-sm text-red-600">
-                {{ codeError }}
-              </p>
-            </div>
+            </AppField>
 
             <AppErrorState
                 v-if="errorMessage"
-                title="Не удалось подтвердить email"
+                :title="t('auth.verifyFailed')"
                 :description="errorMessage"
             />
 
@@ -82,35 +73,36 @@
               {{ successMessage }}
             </div>
 
-            <button
+            <AppButton
                 type="submit"
-                class="w-full rounded-2xl bg-slate-900 px-4 py-3 font-semibold text-white transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50"
-                :disabled="verifying"
+                size="lg"
+                :loading="verifying"
+                class="w-full"
             >
-              {{ verifying ? 'Подтверждение...' : 'Подтвердить email' }}
-            </button>
+              {{ verifying ? t('auth.verifyLoading') : t('auth.verifySubmit') }}
+            </AppButton>
           </form>
 
           <div class="mt-6 rounded-2xl bg-slate-50 p-4 ring-1 ring-slate-200">
-            <p class="text-sm font-medium text-slate-900">Не пришёл код?</p>
+            <p class="text-sm font-medium text-slate-900">{{ t('auth.verifyNoCode') }}</p>
             <p class="mt-1 text-sm text-slate-600">
-              Проверьте папку “Спам” или отправьте код повторно.
+              {{ t('auth.verifyNoCodeDesc') }}
             </p>
 
-            <button
-                type="button"
-                class="mt-4 w-full rounded-2xl border border-slate-300 px-4 py-3 text-sm font-semibold text-slate-700 transition hover:bg-slate-100 disabled:cursor-not-allowed disabled:opacity-50"
-                :disabled="resending || resendCooldown > 0"
+            <AppButton
+                variant="secondary"
+                size="lg"
+                :loading="resending"
+                :disabled="resendCooldown > 0"
+                class="mt-4 w-full"
                 @click="handleResend"
             >
-              <span v-if="resending">Отправка...</span>
+              <span v-if="resending">{{ t('auth.verifyResending') }}</span>
               <span v-else-if="resendCooldown > 0">
-                Повторно отправить через {{ resendCooldown }} сек
+                {{ t('auth.verifyResendCooldown', { seconds: resendCooldown }) }}
               </span>
-              <span v-else>
-                Отправить код повторно
-              </span>
-            </button>
+              <span v-else>{{ t('auth.verifyResend') }}</span>
+            </AppButton>
 
             <p v-if="resendMessage" class="mt-3 text-sm text-emerald-600">
               {{ resendMessage }}
@@ -118,9 +110,9 @@
           </div>
 
           <div class="mt-6 text-center text-sm text-slate-600">
-            Уже подтвердили email?
+            {{ t('auth.verifyAlreadyDone') }}
             <RouterLink to="/login" class="font-semibold text-slate-900 transition hover:opacity-70">
-              Войти
+              {{ t('auth.loginSubmit') }}
             </RouterLink>
           </div>
         </div>
@@ -132,12 +124,17 @@
 <script setup lang="ts">
 import { computed, onBeforeUnmount, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
+import { useI18n } from 'vue-i18n'
 import { http } from '../../shared/api/http'
 import { useToastStore } from '../../shared/lib/getApiErrorMessage'
 import { useErrorHandler } from '../../shared/composables/useErrorHandler'
 import PublicLayout from '../../widgets/layout/PublicLayout.vue'
 import AppErrorState from '../../shared/ui/AppErrorState.vue'
+import AppField from '../../shared/ui/AppField.vue'
+import AppInput from '../../shared/ui/AppInput.vue'
+import AppButton from '../../shared/ui/AppButton.vue'
 
+const { t } = useI18n()
 const route = useRoute()
 const router = useRouter()
 const toastStore = useToastStore()
@@ -158,20 +155,15 @@ const resendCooldown = ref(0)
 let resendInterval: number | null = null
 
 const emailError = computed(() => {
-  if (!email.value) return 'Введите email'
+  if (!email.value) return t('validation.required')
   const valid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value)
-  return valid ? '' : 'Введите корректный email'
+  return valid ? '' : t('validation.emailInvalid')
 })
 
 const codeError = computed(() => {
-  if (!code.value) return 'Введите код подтверждения'
-  return /^\d{6}$/.test(code.value) ? '' : 'Код должен содержать 6 цифр'
+  if (!code.value) return t('validation.required')
+  return /^\d{6}$/.test(code.value) ? '' : t('validation.codeInvalid')
 })
-
-const fieldClass = (hasError: boolean) =>
-    hasError
-        ? 'border-red-300 focus:border-red-500'
-        : 'border-slate-300 focus:border-slate-900'
 
 const startCooldown = (seconds: number) => {
   resendCooldown.value = seconds
@@ -208,13 +200,13 @@ const handleVerify = async () => {
       code: code.value,
     })
 
-    toastStore.success('Email успешно подтверждён. Перенаправляем на страницу входа...')
+    toastStore.success(t('auth.verifySuccess'))
 
     setTimeout(async () => {
       await router.push('/login')
     }, 1200)
   } catch (error: any) {
-    errorMessage.value = handleError(error, 'Не удалось подтвердить email. Проверьте код и попробуйте снова.')
+    errorMessage.value = handleError(error, t('auth.verifyErrorFallback'))
   } finally {
     verifying.value = false
   }
@@ -234,15 +226,14 @@ const handleResend = async () => {
       email: email.value,
     })
 
-    toastStore.success('Новый код подтверждения отправлен.')
+    toastStore.success(t('auth.verifyResendSuccess'))
     startCooldown(60)
   } catch (error: any) {
-    errorMessage.value = handleError(error, 'Не удалось отправить код повторно.')
+    errorMessage.value = handleError(error, t('auth.verifyResendFailed'))
   } finally {
     resending.value = false
   }
 }
-
 
 
 onBeforeUnmount(() => {

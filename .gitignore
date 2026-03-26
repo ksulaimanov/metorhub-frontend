@@ -22,8 +22,10 @@ pnpm-debug.log*
 
 # Переменные окружения (важно для безопасности)
 .env
+.env.**
 .env.local
 .env.*.local
+backend-env.yaml
 
 # TypeScript
 *.tsbuildinfo
