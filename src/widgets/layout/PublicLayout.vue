@@ -7,14 +7,15 @@
         </RouterLink>
 
         <nav class="hidden items-center gap-6 text-sm font-medium text-slate-600 md:flex">
-          <RouterLink to="/about" class="transition hover:text-slate-900">О платформе</RouterLink>
-          <RouterLink to="/mentors" class="transition hover:text-slate-900">Менторы</RouterLink>
-          <RouterLink to="/login" class="transition hover:text-slate-900">Войти</RouterLink>
+          <RouterLink to="/about" class="transition hover:text-slate-900">{{ t('nav.about') }}</RouterLink>
+          <RouterLink to="/mentors" class="transition hover:text-slate-900">{{ t('nav.mentors') }}</RouterLink>
+          <RouterLink to="/mentor/apply" class="transition hover:text-slate-900">{{ t('nav.becomeMentor') }}</RouterLink>
+          <RouterLink to="/login" class="transition hover:text-slate-900">{{ t('nav.login') }}</RouterLink>
           <RouterLink
               to="/register"
               class="rounded-xl bg-slate-900 px-4 py-2 text-white transition hover:opacity-90"
           >
-            Регистрация
+            {{ t('nav.register') }}
           </RouterLink>
         </nav>
 
@@ -23,13 +24,13 @@
               to="/login"
               class="rounded-xl border border-slate-300 px-3 py-2 text-sm font-medium text-slate-700"
           >
-            Войти
+            {{ t('nav.login') }}
           </RouterLink>
           <RouterLink
               to="/register"
               class="rounded-xl bg-slate-900 px-3 py-2 text-sm font-medium text-white"
           >
-            Регистрация
+            {{ t('nav.register') }}
           </RouterLink>
         </div>
       </div>
@@ -44,5 +45,8 @@
 </template>
 
 <script setup lang="ts">
+import { useI18n } from 'vue-i18n'
 import AppFooter from '../../shared/ui/AppFooter.vue'
+
+const { t } = useI18n()
 </script>

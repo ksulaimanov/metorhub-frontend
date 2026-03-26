@@ -17,6 +17,8 @@ import AdminDashboardPage from '../../pages/admin/AdminDashboardPage.vue'
 import VerifyEmailPage from '../../pages/auth/VerifyEmailPage.vue'
 import ForgotPasswordPage from '../../pages/auth/ForgotPasswordPage.vue'
 import ResetPasswordPage from '../../pages/auth/ResetPasswordPage.vue'
+import MentorApplyPage from '../../pages/public/MentorApplyPage.vue'
+import MentorApplicationStatusPage from '../../pages/public/MentorApplicationStatusPage.vue'
 
 const router = createRouter({
     history: createWebHistory(),
@@ -26,6 +28,8 @@ const router = createRouter({
         { path: '/about', name: 'about', component: AboutPage, meta: { title: 'О платформе — MentorHub' } },
         { path: '/mentors', name: 'mentor-directory', component: MentorDirectoryPage, meta: { title: 'Каталог менторов — MentorHub' } },
         { path: '/mentors/:id', name: 'public-mentor-profile', component: PublicMentorProfilePage, props: true, meta: { title: 'Профиль ментора — MentorHub' } },
+        { path: '/mentor/apply', name: 'mentor-apply', component: MentorApplyPage, meta: { title: 'Стать ментором — MentorHub' } },
+        { path: '/mentor/application/status', name: 'mentor-application-status', component: MentorApplicationStatusPage, meta: { title: 'Статус заявки — MentorHub' } },
 
         // --- auth ---
         { path: '/login', name: 'login', component: LoginPage, meta: { title: 'Вход — MentorHub' } },
