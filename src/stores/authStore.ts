@@ -21,6 +21,7 @@ export const useAuthStore = defineStore('auth', {
         isAuthenticated: (state) => Boolean(state.accessToken),
         isStudent: (state) => state.roles.includes('ROLE_STUDENT'),
         isMentor: (state) => state.roles.includes('ROLE_MENTOR'),
+        isAdmin: (state) => state.roles.includes('ROLE_ADMIN'),
     },
 
     actions: {
