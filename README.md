@@ -4,6 +4,12 @@ A modern, role-based web platform that connects **students** with **mentors** fo
 
 ---
 
+🚀 Live Demo
+You can access the deployed frontend application here:
+https://mentorhub-frontend-724185288871.us-central1.run.app
+
+Deployment Platform: Google Cloud Run
+
 ## Table of Contents
 
 - [Overview](#overview)
