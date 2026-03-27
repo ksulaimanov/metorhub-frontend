@@ -9,46 +9,41 @@
 
 export const colors = {
     primary: {
-        DEFAULT: '#0f172a',   // slate-900 — основной brand
-        light: '#334155',     // slate-700
-        lighter: '#64748b',   // slate-500
+        DEFAULT: '#5B3FD3',   // brand purple
+        hover: '#4C31BF',     // brand hover
+        soft: '#EEE9FF',      // brand soft bg
     },
     accent: {
-        DEFAULT: '#4f46e5',   // indigo-600
-        light: '#818cf8',     // indigo-400
-        dark: '#3730a3',      // indigo-800
+        DEFAULT: '#8B7BFF',   // accent purple
     },
     success: {
-        DEFAULT: '#16a34a',   // green-600
-        light: '#bbf7d0',     // green-200
-        bg: '#f0fdf4',        // green-50
+        DEFAULT: '#16a34a',
+        light: '#bbf7d0',
+        bg: '#f0fdf4',
     },
     error: {
-        DEFAULT: '#dc2626',   // red-600
-        light: '#fecaca',     // red-200
-        bg: '#fef2f2',        // red-50
+        DEFAULT: '#dc2626',
+        light: '#fecaca',
+        bg: '#fef2f2',
     },
     warning: {
-        DEFAULT: '#d97706',   // amber-600
-        light: '#fde68a',     // amber-200
-        bg: '#fffbeb',        // amber-50
+        DEFAULT: '#d97706',
+        light: '#fde68a',
+        bg: '#fffbeb',
     },
     info: {
-        DEFAULT: '#2563eb',   // blue-600
-        light: '#bfdbfe',     // blue-200
-        bg: '#eff6ff',        // blue-50
+        DEFAULT: '#2563eb',
+        light: '#bfdbfe',
+        bg: '#eff6ff',
     },
     surface: {
-        DEFAULT: '#ffffff',
-        secondary: '#f8fafc', // slate-50
-        tertiary: '#f1f5f9',  // slate-100
-        border: '#e2e8f0',    // slate-200
+        DEFAULT: '#FFFFFF',
+        secondary: '#F8F8FC',  // page bg
+        border: '#E6E2F3',     // border brand
     },
     text: {
-        DEFAULT: '#0f172a',   // slate-900
-        secondary: '#475569', // slate-600
-        tertiary: '#94a3b8',  // slate-400
+        DEFAULT: '#16151D',    // text primary
+        secondary: '#6F6B7D',  // text secondary
         inverse: '#ffffff',
     },
 } as const
-

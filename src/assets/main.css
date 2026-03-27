@@ -1,5 +1,17 @@
 @import "tailwindcss";
 
+@theme {
+    --color-brand: #5B3FD3;
+    --color-brand-hover: #4C31BF;
+    --color-brand-soft: #EEE9FF;
+    --color-accent: #8B7BFF;
+    --color-bg: #F8F8FC;
+    --color-surface: #FFFFFF;
+    --color-text-primary: #16151D;
+    --color-text-secondary: #6F6B7D;
+    --color-border-brand: #E6E2F3;
+}
+
 html, body, #app {
     margin: 0;
     min-height: 100%;
