@@ -5,7 +5,7 @@
         <!-- Brand -->
         <div>
           <div class="flex items-center gap-2">
-            <span class="flex h-7 w-7 items-center justify-center rounded-lg bg-brand text-xs font-bold text-white">M</span>
+            <span class="flex h-7 w-7 items-center justify-center rounded-xl bg-brand text-xs font-bold text-white">M</span>
             <span class="text-lg font-extrabold tracking-tight text-text-primary">MentorHub</span>
           </div>
           <p class="mt-3 text-sm leading-relaxed text-text-secondary">

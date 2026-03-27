@@ -1,5 +1,5 @@
 <template>
-   <AuthSplitShell
+  <AuthSplitShell
       :badge="t('auth.verifyHeroBadge')"
       :title="t('auth.verifyHeroTitle')"
       :subtitle="t('auth.verifyHeroSubtitle')"

@@ -1,6 +1,6 @@
 <template>
   <div class="space-y-6">
-    <InfoPanel v-if="submitted" variant="success" class="p-6">
+    <InfoPanel v-if="submitted" variant="success">
       <h2 class="text-lg font-semibold">{{ t('mentorApplication.submitSuccess') }}</h2>
       <p class="mt-2 text-sm">
         {{ t('mentorApplication.submitSuccessDesc') }}
