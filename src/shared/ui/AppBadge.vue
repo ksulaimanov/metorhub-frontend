@@ -30,7 +30,7 @@ const variantClass = computed(() => {
     case 'info':
       return 'bg-blue-100 text-blue-700'
     default:
-      return 'bg-slate-100 text-slate-700'
+      return 'bg-brand-soft text-brand'
   }
 })
 </script>

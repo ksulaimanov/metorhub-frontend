@@ -12,14 +12,14 @@
             <p class="text-sm font-semibold">
               {{ titleByType(toast.type) }}
             </p>
-            <p class="mt-1 text-sm leading-6 text-slate-700">
+            <p class="mt-1 text-sm leading-6 text-text-secondary">
               {{ toast.message }}
             </p>
           </div>
 
           <button
               type="button"
-              class="rounded-lg px-2 py-1 text-xs font-medium text-slate-500 transition hover:bg-slate-100 hover:text-slate-700"
+              class="rounded-lg px-2 py-1 text-xs font-medium text-text-secondary transition hover:bg-brand-soft hover:text-text-primary"
               @click="toastStore.removeToast(toast.id)"
           >
             ✕
