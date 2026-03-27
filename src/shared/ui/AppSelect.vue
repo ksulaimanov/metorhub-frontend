@@ -7,7 +7,7 @@
         'w-full appearance-none rounded-2xl border bg-white px-4 py-3 text-sm outline-none transition',
         error
           ? 'border-red-500 focus:border-red-500 focus:ring-2 focus:ring-red-200'
-          : 'border-slate-200 focus:border-slate-400 focus:ring-2 focus:ring-slate-200',
+          : 'border-border-brand focus:border-brand focus:ring-2 focus:ring-brand-soft',
       ]"
   >
     <slot />
@@ -26,4 +26,3 @@ defineEmits<{
   'update:modelValue': [value: string]
 }>()
 </script>
-

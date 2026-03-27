@@ -4,9 +4,9 @@
         type="checkbox"
         :checked="modelValue"
         @change="$emit('update:modelValue', ($event.target as HTMLInputElement).checked)"
-        class="mt-0.5 h-4 w-4 shrink-0 cursor-pointer rounded border-slate-300 text-slate-900 focus:ring-slate-300"
+        class="mt-0.5 h-4 w-4 shrink-0 cursor-pointer rounded border-border-brand text-brand focus:ring-brand-soft"
     />
-    <span v-if="$slots.default || label" class="text-sm text-slate-700">
+    <span v-if="$slots.default || label" class="text-sm text-text-primary">
       <slot>{{ label }}</slot>
     </span>
   </label>
