@@ -51,6 +51,7 @@ const getRoles = (): string[] => {
 const roles = getRoles()
 const isStudent = roles.includes('ROLE_STUDENT')
 const isMentor = roles.includes('ROLE_MENTOR')
+const isAdmin = roles.includes('ROLE_ADMIN')
 
 const desktopNavItems = computed<NavItem[]>(() => {
   const items: NavItem[] = []
@@ -67,6 +68,13 @@ const desktopNavItems = computed<NavItem[]>(() => {
         { label: 'Профиль ментора', to: '/mentor/profile' },
         { label: 'Слоты', to: '/mentor/slots' },
         { label: 'Записи учеников', to: '/mentor/bookings' },
+    )
+  }
+
+  if (isAdmin) {
+    items.push(
+        { label: 'Дашборд', to: '/admin/dashboard' },
+        { label: 'Заявки менторов', to: '/admin/mentor-applications' },
     )
   }
 

@@ -14,6 +14,8 @@ import MentorSlotsPage from '../../pages/mentor/MentorSlotsPage.vue'
 import MentorBookingsPage from '../../pages/mentor/MentorBookingsPage.vue'
 import MentorDashboardPage from '../../pages/mentor/MentorDashboardPage.vue'
 import AdminDashboardPage from '../../pages/admin/AdminDashboardPage.vue'
+import AdminMentorApplicationsPage from '../../pages/admin/AdminMentorApplicationsPage.vue'
+import AdminMentorApplicationDetailPage from '../../pages/admin/AdminMentorApplicationDetailPage.vue'
 import VerifyEmailPage from '../../pages/auth/VerifyEmailPage.vue'
 import ForgotPasswordPage from '../../pages/auth/ForgotPasswordPage.vue'
 import ResetPasswordPage from '../../pages/auth/ResetPasswordPage.vue'
@@ -51,6 +53,8 @@ const router = createRouter({
 
         // --- admin ---
         { path: '/admin/dashboard', name: 'admin-dashboard', component: AdminDashboardPage, meta: { requiresAuth: true, role: 'ROLE_ADMIN', title: 'Админ панель — MentorHub' } },
+        { path: '/admin/mentor-applications', name: 'admin-mentor-applications', component: AdminMentorApplicationsPage, meta: { requiresAuth: true, role: 'ROLE_ADMIN', title: 'Заявки менторов — MentorHub' } },
+        { path: '/admin/mentor-applications/:id', name: 'admin-mentor-application-detail', component: AdminMentorApplicationDetailPage, props: true, meta: { requiresAuth: true, role: 'ROLE_ADMIN', title: 'Заявка ментора — MentorHub' } },
 
         // --- 404 ---
         { path: '/:pathMatch(.*)*', name: 'not-found', component: NotFoundPage, meta: { title: '404 — Страница не найдена' } },
