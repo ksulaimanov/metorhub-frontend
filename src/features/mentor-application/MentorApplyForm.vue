@@ -1,17 +1,17 @@
 <template>
   <div class="space-y-6">
-    <div v-if="submitted" class="rounded-2xl border border-emerald-200 bg-emerald-50 p-6">
-      <h2 class="text-lg font-semibold text-emerald-700">{{ t('mentorApplication.submitSuccess') }}</h2>
-      <p class="mt-2 text-sm text-emerald-700">
+    <InfoPanel v-if="submitted" variant="success" class="p-6">
+      <h2 class="text-lg font-semibold">{{ t('mentorApplication.submitSuccess') }}</h2>
+      <p class="mt-2 text-sm">
         {{ t('mentorApplication.submitSuccessDesc') }}
       </p>
       <RouterLink
           :to="{ path: '/mentor/application/status', query: { email: form.email, token: submittedToken } }"
-          class="mt-4 inline-flex rounded-2xl bg-emerald-700 px-5 py-3 text-sm font-semibold text-white transition hover:opacity-90"
+          class="mt-4 inline-flex rounded-xl bg-brand px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-brand-hover"
       >
         {{ t('mentorApplication.checkStatus') }}
       </RouterLink>
-    </div>
+    </InfoPanel>
 
     <form v-else class="space-y-5" @submit.prevent="handleSubmit">
       <AppField :label="t('mentorApplication.name')" :error="showValidation ? nameError : ''" required>
@@ -65,15 +65,15 @@
               v-for="(optLabel, key) in specializationOptions"
               :key="key"
               class="flex cursor-pointer items-center gap-3 rounded-2xl border p-3 transition"
-              :class="form.specializations.includes(key) ? 'border-slate-900 bg-slate-50' : 'border-slate-200 hover:border-slate-300'"
+              :class="form.specializations.includes(key) ? 'border-brand bg-brand-soft/50' : 'border-border-brand hover:border-brand/40'"
           >
             <input
                 type="checkbox"
                 :checked="form.specializations.includes(key)"
-                class="h-4 w-4 shrink-0 cursor-pointer rounded border-slate-300 text-slate-900 focus:ring-slate-300"
+                class="h-4 w-4 shrink-0 cursor-pointer rounded border-border-brand text-brand focus:ring-brand-soft"
                 @change="toggleSpecialization(key)"
             />
-            <span class="text-sm font-medium text-slate-700">{{ optLabel }}</span>
+            <span class="text-sm font-medium text-text-primary">{{ optLabel }}</span>
           </label>
         </div>
       </AppField>
@@ -93,9 +93,9 @@
         {{ loading ? t('mentorApplication.submitting') : t('mentorApplication.submit') }}
       </AppButton>
 
-      <div class="text-center text-sm text-slate-600">
+      <div class="text-center text-sm text-text-secondary">
         {{ t('mentorApplication.hasAccount') }}
-        <RouterLink to="/login" class="font-semibold text-slate-900 transition hover:opacity-70">
+        <RouterLink to="/login" class="font-semibold text-brand transition hover:text-brand-hover">
           {{ t('mentorApplication.hasAccountLink') }}
         </RouterLink>
       </div>
@@ -113,6 +113,7 @@ import AppInput from '../../shared/ui/AppInput.vue'
 import AppTextarea from '../../shared/ui/AppTextarea.vue'
 import AppButton from '../../shared/ui/AppButton.vue'
 import AppErrorState from '../../shared/ui/AppErrorState.vue'
+import InfoPanel from '../../shared/ui/InfoPanel.vue'
 
 const { t, tm } = useI18n()
 const { handleError } = useErrorHandler()

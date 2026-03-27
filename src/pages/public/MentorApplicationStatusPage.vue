@@ -1,10 +1,10 @@
 <template>
   <PublicLayout>
-    <section class="mx-auto flex min-h-[calc(100vh-73px)] max-w-7xl items-center px-4 py-10 sm:px-6">
-      <div class="w-full max-w-lg mx-auto">
-        <div class="rounded-3xl bg-white p-6 shadow-sm ring-1 ring-slate-200 sm:p-8">
-          <h1 class="text-3xl font-bold text-slate-900">{{ t('mentorApplication.statusPageTitle') }}</h1>
-          <p class="mt-2 text-sm text-slate-600">
+    <section class="mx-auto flex min-h-[calc(100vh-64px)] max-w-6xl items-start px-4 py-10 sm:items-center sm:px-6 lg:py-16">
+      <div class="mx-auto w-full max-w-lg">
+        <div class="rounded-[1.75rem] bg-white p-6 shadow-sm shadow-brand/5 ring-1 ring-border-brand/80 sm:p-8">
+          <h1 class="text-2xl font-bold text-text-primary sm:text-3xl">{{ t('mentorApplication.statusPageTitle') }}</h1>
+          <p class="mt-2 text-sm text-text-secondary">
             {{ t('mentorApplication.statusPageSubtitle') }}
           </p>
 
@@ -13,11 +13,11 @@
           </div>
         </div>
 
-        <div class="mt-6 text-center text-sm text-slate-600">
-          <RouterLink to="/mentor/apply" class="font-semibold text-slate-900 transition hover:opacity-70">
+        <p class="mt-5 text-center text-sm text-text-secondary">
+          <RouterLink to="/mentor/apply" class="font-semibold text-brand transition hover:text-brand-hover">
             {{ t('mentorApplication.submit') }}
           </RouterLink>
-        </div>
+        </p>
       </div>
     </section>
   </PublicLayout>

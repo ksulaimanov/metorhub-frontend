@@ -1,126 +1,100 @@
 <template>
-  <PublicLayout>
-    <section class="mx-auto flex min-h-[calc(100vh-73px)] max-w-7xl items-center px-4 py-10 sm:px-6">
-      <div class="grid w-full gap-8 lg:grid-cols-2 lg:items-center">
-        <div class="hidden lg:block">
-          <p class="inline-flex rounded-full bg-slate-200 px-4 py-2 text-sm font-medium text-slate-700">
-            {{ t('auth.registerHeroBadge') }}
-          </p>
+  <AuthSplitShell
+      :badge="t('auth.registerHeroBadge')"
+      :title="t('auth.registerHeroTitle')"
+      :subtitle="t('auth.registerHeroSubtitle')"
+  >
+    <!-- Left info cards -->
+    <template #cards>
+      <FeatureCard :title="t('auth.registerStudentCardTitle')" :description="t('auth.registerStudentCardDesc')" />
+      <FeatureCard>
+        <template #title>{{ t('auth.registerMentorPrompt') }}</template>
+        <RouterLink to="/mentor/apply" class="font-semibold text-brand underline transition hover:text-brand-hover">
+          {{ t('auth.registerMentorPromptLink') }}
+        </RouterLink>
+      </FeatureCard>
+    </template>
 
-          <h1 class="mt-5 max-w-xl text-5xl font-bold leading-tight text-slate-900">
-            {{ t('auth.registerHeroTitle') }}
-          </h1>
+    <!-- Form -->
+    <h1 class="text-2xl font-bold text-text-primary sm:text-3xl">{{ t('auth.registerTitle') }}</h1>
+    <p class="mt-2 text-sm text-text-secondary">{{ t('auth.registerSubtitle') }}</p>
 
-          <p class="mt-6 max-w-lg text-lg leading-8 text-slate-600">
-            {{ t('auth.registerHeroSubtitle') }}
-          </p>
+    <form class="mt-8 space-y-5" @submit.prevent="handleRegister">
+      <AppField :label="t('auth.email')" :error="showValidation ? emailError : ''">
+        <AppInput
+            v-model.trim="email"
+            type="email"
+            autocomplete="email"
+            :error="showValidation && !!emailError"
+            :placeholder="t('auth.emailPlaceholder')"
+        />
+      </AppField>
 
-          <div class="mt-8 grid max-w-xl gap-4">
-            <div class="rounded-3xl bg-white p-5 shadow-sm ring-1 ring-slate-200">
-              <h3 class="text-lg font-semibold text-slate-900">{{ t('auth.registerStudentCardTitle') }}</h3>
-              <p class="mt-2 text-sm leading-7 text-slate-600">
-                {{ t('auth.registerStudentCardDesc') }}
-              </p>
-            </div>
-
-            <div class="rounded-3xl bg-white p-5 shadow-sm ring-1 ring-slate-200">
-              <h3 class="text-lg font-semibold text-slate-900">{{ t('auth.registerMentorPrompt') }}</h3>
-              <p class="mt-2 text-sm leading-7 text-slate-600">
-                <RouterLink to="/mentor/apply" class="font-semibold text-slate-900 underline transition hover:opacity-70">
-                  {{ t('auth.registerMentorPromptLink') }}
-                </RouterLink>
-              </p>
-            </div>
-          </div>
+      <AppField :label="t('auth.password')" :error="showValidation ? passwordError : ''">
+        <div class="relative">
+          <AppInput
+              v-model="password"
+              :type="showPassword ? 'text' : 'password'"
+              autocomplete="new-password"
+              :error="showValidation && !!passwordError"
+              :placeholder="t('auth.passwordPlaceholder')"
+              class="pr-24"
+          />
+          <button
+              type="button"
+              class="absolute right-3 top-1/2 -translate-y-1/2 rounded-xl px-3 py-1.5 text-sm font-medium text-text-secondary transition hover:bg-brand-soft hover:text-brand"
+              @click="showPassword = !showPassword"
+          >
+            {{ showPassword ? t('auth.hidePassword') : t('auth.showPassword') }}
+          </button>
         </div>
+      </AppField>
 
-        <div class="w-full max-w-xl justify-self-center rounded-3xl bg-white p-6 shadow-sm ring-1 ring-slate-200 sm:p-8">
-          <h1 class="text-3xl font-bold text-slate-900">{{ t('auth.registerTitle') }}</h1>
-          <p class="mt-2 text-sm text-slate-600">
-            {{ t('auth.registerSubtitle') }}
-          </p>
+      <AppField :label="t('auth.confirmPassword')" :error="showValidation ? confirmPasswordError : ''">
+        <AppInput
+            v-model="confirmPassword"
+            :type="showPassword ? 'text' : 'password'"
+            autocomplete="new-password"
+            :error="showValidation && !!confirmPasswordError"
+            :placeholder="t('auth.confirmPasswordPlaceholder')"
+        />
+      </AppField>
 
-          <form class="mt-8 space-y-5" @submit.prevent="handleRegister">
-            <AppField :label="t('auth.email')" :error="showValidation ? emailError : ''">
-              <AppInput
-                  v-model.trim="email"
-                  type="email"
-                  autocomplete="email"
-                  :error="showValidation && !!emailError"
-                  :placeholder="t('auth.emailPlaceholder')"
-              />
-            </AppField>
+      <AppErrorState
+          v-if="errorMessage"
+          :title="t('auth.registerFailed')"
+          :description="errorMessage"
+      />
 
-            <AppField :label="t('auth.password')" :error="showValidation ? passwordError : ''">
-              <div class="relative">
-                <AppInput
-                    v-model="password"
-                    :type="showPassword ? 'text' : 'password'"
-                    autocomplete="new-password"
-                    :error="showValidation && !!passwordError"
-                    :placeholder="t('auth.passwordPlaceholder')"
-                    class="pr-24"
-                />
-                <button
-                    type="button"
-                    class="absolute right-3 top-1/2 -translate-y-1/2 rounded-xl px-3 py-1.5 text-sm font-medium text-slate-600 transition hover:bg-slate-100 hover:text-slate-900"
-                    @click="showPassword = !showPassword"
-                >
-                  {{ showPassword ? t('auth.hidePassword') : t('auth.showPassword') }}
-                </button>
-              </div>
-            </AppField>
+      <InfoPanel v-if="successMessage" variant="success">
+        {{ successMessage }}
+      </InfoPanel>
 
-            <AppField :label="t('auth.confirmPassword')" :error="showValidation ? confirmPasswordError : ''">
-              <AppInput
-                  v-model="confirmPassword"
-                  :type="showPassword ? 'text' : 'password'"
-                  autocomplete="new-password"
-                  :error="showValidation && !!confirmPasswordError"
-                  :placeholder="t('auth.confirmPasswordPlaceholder')"
-              />
-            </AppField>
+      <AppButton
+          type="submit"
+          size="lg"
+          :loading="loading"
+          class="w-full"
+      >
+        {{ loading ? t('auth.registerLoading') : t('auth.registerSubmit') }}
+      </AppButton>
 
-            <AppErrorState
-                v-if="errorMessage"
-                :title="t('auth.registerFailed')"
-                :description="errorMessage"
-            />
+      <p class="text-center text-sm text-text-secondary">
+        {{ t('auth.hasAccount') }}
+        <RouterLink to="/login" class="font-semibold text-brand transition hover:text-brand-hover">
+          {{ t('auth.loginSubmit') }}
+        </RouterLink>
+      </p>
 
-            <div
-                v-if="successMessage"
-                class="rounded-2xl border border-emerald-200 bg-emerald-50 p-4 text-sm text-emerald-700"
-            >
-              {{ successMessage }}
-            </div>
-
-            <AppButton
-                type="submit"
-                size="lg"
-                :loading="loading"
-                class="w-full"
-            >
-              {{ loading ? t('auth.registerLoading') : t('auth.registerSubmit') }}
-            </AppButton>
-
-            <div class="text-center text-sm text-slate-600">
-              {{ t('auth.hasAccount') }}
-              <RouterLink to="/login" class="font-semibold text-slate-900 transition hover:opacity-70">
-                {{ t('auth.loginSubmit') }}
-              </RouterLink>
-            </div>
-
-            <div class="text-center text-sm text-slate-600 lg:hidden">
-              {{ t('auth.registerMentorPrompt') }}
-              <RouterLink to="/mentor/apply" class="font-semibold text-slate-900 transition hover:opacity-70">
-                {{ t('auth.registerMentorPromptLink') }}
-              </RouterLink>
-            </div>
-          </form>
-        </div>
-      </div>
-    </section>
-  </PublicLayout>
+      <!-- Mentor prompt for mobile (visible only when left panel is hidden) -->
+      <p class="text-center text-sm text-text-secondary lg:hidden">
+        {{ t('auth.registerMentorPrompt') }}
+        <RouterLink to="/mentor/apply" class="font-semibold text-brand transition hover:text-brand-hover">
+          {{ t('auth.registerMentorPromptLink') }}
+        </RouterLink>
+      </p>
+    </form>
+  </AuthSplitShell>
 </template>
 
 <script setup lang="ts">
@@ -130,7 +104,9 @@ import { useI18n } from 'vue-i18n'
 import { http } from '../../shared/api/http'
 import { useToastStore } from '../../shared/lib/getApiErrorMessage'
 import { useErrorHandler } from '../../shared/composables/useErrorHandler'
-import PublicLayout from '../../widgets/layout/PublicLayout.vue'
+import AuthSplitShell from '../../shared/ui/AuthSplitShell.vue'
+import FeatureCard from '../../shared/ui/FeatureCard.vue'
+import InfoPanel from '../../shared/ui/InfoPanel.vue'
 import AppErrorState from '../../shared/ui/AppErrorState.vue'
 import AppField from '../../shared/ui/AppField.vue'
 import AppInput from '../../shared/ui/AppInput.vue'

@@ -1,168 +1,148 @@
 <template>
   <PublicLayout>
-    <section class="mx-auto max-w-7xl px-6 py-14 lg:py-20">
-      <div class="grid gap-12 lg:grid-cols-2 lg:items-center">
-        <div>
-          <p
-              class="inline-flex rounded-full bg-slate-200 px-4 py-2 text-sm font-medium text-slate-700"
-          >
-            MentorHub — платформа поиска менторов и записи на занятия
-          </p>
+    <!-- ─── Hero ─── -->
+    <section class="relative overflow-hidden bg-gradient-to-b from-brand-soft/40 to-bg">
+      <div class="mx-auto max-w-6xl px-4 pb-16 pt-14 sm:px-6 lg:pb-24 lg:pt-20">
+        <div class="grid gap-12 lg:grid-cols-2 lg:items-center">
+          <div>
+            <p class="inline-flex rounded-full bg-brand-soft px-4 py-1.5 text-sm font-medium text-brand">
+              {{ t('home.heroBadge') }}
+            </p>
 
-          <h1 class="mt-5 max-w-3xl text-4xl font-bold leading-tight text-slate-900 md:text-5xl">
-            Найдите ментора под свою цель и начните обучение в удобном формате
-          </h1>
+            <h1 class="mt-5 max-w-lg text-3xl font-extrabold leading-tight text-text-primary sm:text-4xl lg:text-[2.75rem]">
+              {{ t('home.heroTitle') }}
+            </h1>
 
-          <p class="mt-6 max-w-2xl text-lg leading-8 text-slate-600">
-            Выбирайте менторов по специализации, рейтингу, стоимости и формату занятий.
-            Онлайн, офлайн или гибридно — так, как удобно именно вам.
-          </p>
+            <p class="mt-5 max-w-md text-base leading-7 text-text-secondary lg:text-lg lg:leading-8">
+              {{ t('home.heroSubtitle') }}
+            </p>
 
-          <div class="mt-8 flex flex-wrap gap-4">
-            <RouterLink
-                to="/mentors"
-                class="rounded-2xl bg-slate-900 px-6 py-3 text-base font-semibold text-white transition hover:opacity-90"
-            >
-              Найти ментора
-            </RouterLink>
+            <div class="mt-8 flex flex-wrap gap-3">
+              <RouterLink
+                  to="/mentors"
+                  class="rounded-2xl bg-brand px-6 py-3.5 text-base font-semibold text-white shadow-md shadow-brand/20 transition hover:bg-brand-hover active:scale-[0.98]"
+              >
+                {{ t('home.ctaFindMentor') }}
+              </RouterLink>
 
-            <RouterLink
-                to="/register"
-                class="rounded-2xl border border-slate-300 bg-white px-6 py-3 text-base font-semibold text-slate-900 transition hover:bg-slate-100"
-            >
-              Зарегистрироваться
-            </RouterLink>
-
-            <RouterLink
-                to="/mentor/apply"
-                class="rounded-2xl border border-slate-300 bg-white px-6 py-3 text-base font-semibold text-slate-900 transition hover:bg-slate-100"
-            >
-              Стать ментором
-            </RouterLink>
-          </div>
-
-          <div class="mt-10 grid max-w-2xl gap-4 sm:grid-cols-3">
-            <div class="rounded-2xl bg-white p-4 shadow-sm ring-1 ring-slate-200">
-              <p class="text-2xl font-bold text-slate-900">Удобно</p>
-              <p class="mt-1 text-sm text-slate-600">
-                Быстрый поиск, фильтры и запись на занятия
-              </p>
-            </div>
-
-            <div class="rounded-2xl bg-white p-4 shadow-sm ring-1 ring-slate-200">
-              <p class="text-2xl font-bold text-slate-900">Прозрачно</p>
-              <p class="mt-1 text-sm text-slate-600">
-                Профили, рейтинг, формат работы и стоимость
-              </p>
-            </div>
-
-            <div class="rounded-2xl bg-white p-4 shadow-sm ring-1 ring-slate-200">
-              <p class="text-2xl font-bold text-slate-900">Гибко</p>
-              <p class="mt-1 text-sm text-slate-600">
-                Онлайн, офлайн и гибридный формат обучения
-              </p>
+              <RouterLink
+                  to="/register"
+                  class="rounded-2xl border border-border-brand bg-white px-6 py-3.5 text-base font-semibold text-text-primary transition hover:bg-brand-soft active:scale-[0.98]"
+              >
+                {{ t('home.ctaRegister') }}
+              </RouterLink>
             </div>
           </div>
-        </div>
 
-        <div class="grid gap-4">
-          <AppCard>
-            <h3 class="text-lg font-semibold text-slate-900">Проверенные профили</h3>
-            <p class="mt-2 text-slate-600">
-              Смотрите рейтинг, опыт, специализацию, форматы занятий и отзывы учеников.
-            </p>
-          </AppCard>
-
-          <AppCard>
-            <h3 class="text-lg font-semibold text-slate-900">Удобная запись</h3>
-            <p class="mt-2 text-slate-600">
-              Выбирайте свободный слот, подходящее время и записывайтесь на занятие в пару кликов.
-            </p>
-          </AppCard>
-
-          <AppCard>
-            <h3 class="text-lg font-semibold text-slate-900">Формат под вас</h3>
-            <p class="mt-2 text-slate-600">
-              Поддержка онлайн-ссылок, офлайн-адресов и гибридного формата обучения.
-            </p>
-          </AppCard>
+          <!-- Right: value pills -->
+          <div class="grid gap-3 sm:grid-cols-3 lg:grid-cols-1 lg:gap-4">
+            <div
+                v-for="(item, i) in valueProps"
+                :key="i"
+                class="rounded-2xl bg-white p-5 shadow-sm shadow-brand/5 ring-1 ring-border-brand/80"
+            >
+              <p class="text-xl font-bold text-text-primary">{{ item.title }}</p>
+              <p class="mt-1 text-sm leading-relaxed text-text-secondary">{{ item.desc }}</p>
+            </div>
+          </div>
         </div>
       </div>
     </section>
 
-    <section class="mx-auto max-w-7xl px-6 pb-6">
-      <div class="rounded-[2rem] bg-slate-900 px-6 py-8 text-white md:px-8 md:py-10">
+    <!-- ─── Steps ─── -->
+    <section class="mx-auto max-w-6xl px-4 py-6 sm:px-6">
+      <div class="rounded-[1.75rem] bg-brand px-6 py-8 text-white md:px-10 md:py-12">
+        <h2 class="mb-8 text-xl font-bold sm:text-2xl">{{ t('home.stepsTitle') }}</h2>
         <div class="grid gap-6 md:grid-cols-3">
-          <div>
-            <p class="text-sm uppercase tracking-wide text-slate-300">Шаг 1</p>
-            <h3 class="mt-2 text-xl font-semibold">Выберите ментора</h3>
-            <p class="mt-2 text-sm leading-7 text-slate-300">
-              Найдите наставника по специализации, стоимости, рейтингу и формату занятий.
-            </p>
-          </div>
-
-          <div>
-            <p class="text-sm uppercase tracking-wide text-slate-300">Шаг 2</p>
-            <h3 class="mt-2 text-xl font-semibold">Выберите время</h3>
-            <p class="mt-2 text-sm leading-7 text-slate-300">
-              Посмотрите свободные слоты ментора и забронируйте удобное время.
-            </p>
-          </div>
-
-          <div>
-            <p class="text-sm uppercase tracking-wide text-slate-300">Шаг 3</p>
-            <h3 class="mt-2 text-xl font-semibold">Начните обучение</h3>
-            <p class="mt-2 text-sm leading-7 text-slate-300">
-              Подключайтесь онлайн или приходите офлайн, в зависимости от формата занятий.
-            </p>
+          <div v-for="(step, i) in steps" :key="i">
+            <span class="inline-flex h-8 w-8 items-center justify-center rounded-lg bg-white/15 text-sm font-bold">
+              {{ i + 1 }}
+            </span>
+            <h3 class="mt-3 text-lg font-semibold">{{ step.title }}</h3>
+            <p class="mt-2 text-sm leading-7 text-white/70">{{ step.desc }}</p>
           </div>
         </div>
       </div>
     </section>
 
-    <section class="mx-auto max-w-7xl px-6 py-12 lg:py-16">
-      <div class="mb-8 max-w-2xl">
-        <h2 class="text-3xl font-bold text-slate-900">Почему MentorHub</h2>
-        <p class="mt-3 text-slate-600">
-          Платформа помогает ученикам быстро находить наставников, а менторам — удобно управлять профилем,
-          слотами и записями.
-        </p>
+    <!-- ─── Why MentorHub ─── -->
+    <section class="mx-auto max-w-6xl px-4 py-14 sm:px-6 lg:py-20">
+      <div class="mb-10 max-w-lg">
+        <h2 class="text-2xl font-bold text-text-primary sm:text-3xl">{{ t('home.whyTitle') }}</h2>
+        <p class="mt-3 text-base leading-7 text-text-secondary">{{ t('home.whySubtitle') }}</p>
       </div>
 
-      <div class="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-        <AppCard>
-          <h3 class="text-lg font-semibold text-slate-900">Каталог менторов</h3>
-          <p class="mt-2 text-sm leading-7 text-slate-600">
-            Удобный список менторов с фильтрами, карточками и переходом в подробный профиль.
-          </p>
-        </AppCard>
+      <div class="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+        <FeatureCard
+            v-for="(feature, i) in features"
+            :key="i"
+            :title="feature.title"
+            :description="feature.desc"
+        />
+      </div>
+    </section>
 
-        <AppCard>
-          <h3 class="text-lg font-semibold text-slate-900">Профили с доверием</h3>
-          <p class="mt-2 text-sm leading-7 text-slate-600">
-            Опыт, рейтинг, форматы занятий, специализация и полезная информация для выбора.
-          </p>
-        </AppCard>
+    <!-- ─── Dual-path CTA ─── -->
+    <section class="mx-auto max-w-6xl px-4 pb-16 sm:px-6 lg:pb-24">
+      <div class="grid gap-4 md:grid-cols-2">
+        <!-- Student path -->
+        <div class="rounded-[1.75rem] bg-white p-6 shadow-sm shadow-brand/5 ring-1 ring-border-brand/80 sm:p-8">
+          <span class="inline-flex rounded-full bg-brand-soft px-3 py-1 text-xs font-semibold text-brand">
+            {{ t('home.studentBadge') }}
+          </span>
+          <h3 class="mt-4 text-xl font-bold text-text-primary">{{ t('home.studentTitle') }}</h3>
+          <p class="mt-2 text-sm leading-relaxed text-text-secondary">{{ t('home.studentDesc') }}</p>
+          <RouterLink
+              to="/register"
+              class="mt-6 inline-flex rounded-xl bg-brand px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-brand-hover"
+          >
+            {{ t('home.studentCta') }}
+          </RouterLink>
+        </div>
 
-        <AppCard>
-          <h3 class="text-lg font-semibold text-slate-900">Бронирование занятий</h3>
-          <p class="mt-2 text-sm leading-7 text-slate-600">
-            Ученик выбирает слот, а ментор подтверждает, отменяет или завершает занятие.
-          </p>
-        </AppCard>
-
-        <AppCard>
-          <h3 class="text-lg font-semibold text-slate-900">Личный кабинет</h3>
-          <p class="mt-2 text-sm leading-7 text-slate-600">
-            Отдельные private pages для ученика и ментора с нужными рабочими сценариями.
-          </p>
-        </AppCard>
+        <!-- Mentor path -->
+        <div class="rounded-[1.75rem] bg-white p-6 shadow-sm shadow-brand/5 ring-1 ring-border-brand/80 sm:p-8">
+          <span class="inline-flex rounded-full bg-accent/15 px-3 py-1 text-xs font-semibold text-accent">
+            {{ t('home.mentorBadge') }}
+          </span>
+          <h3 class="mt-4 text-xl font-bold text-text-primary">{{ t('home.mentorTitle') }}</h3>
+          <p class="mt-2 text-sm leading-relaxed text-text-secondary">{{ t('home.mentorDesc') }}</p>
+          <RouterLink
+              to="/mentor/apply"
+              class="mt-6 inline-flex rounded-xl border border-border-brand px-5 py-2.5 text-sm font-semibold text-text-primary transition hover:bg-brand-soft"
+          >
+            {{ t('home.mentorCta') }}
+          </RouterLink>
+        </div>
       </div>
     </section>
   </PublicLayout>
 </template>
 
 <script setup lang="ts">
+import { computed } from 'vue'
+import { useI18n } from 'vue-i18n'
 import PublicLayout from '../../widgets/layout/PublicLayout.vue'
-import AppCard from '../../shared/ui/AppCard.vue'
+import FeatureCard from '../../shared/ui/FeatureCard.vue'
+
+const { t } = useI18n()
+
+const valueProps = computed(() => [
+  { title: t('home.val1Title'), desc: t('home.val1Desc') },
+  { title: t('home.val2Title'), desc: t('home.val2Desc') },
+  { title: t('home.val3Title'), desc: t('home.val3Desc') },
+])
+
+const steps = computed(() => [
+  { title: t('home.step1Title'), desc: t('home.step1Desc') },
+  { title: t('home.step2Title'), desc: t('home.step2Desc') },
+  { title: t('home.step3Title'), desc: t('home.step3Desc') },
+])
+
+const features = computed(() => [
+  { title: t('home.feat1Title'), desc: t('home.feat1Desc') },
+  { title: t('home.feat2Title'), desc: t('home.feat2Desc') },
+  { title: t('home.feat3Title'), desc: t('home.feat3Desc') },
+  { title: t('home.feat4Title'), desc: t('home.feat4Desc') },
+])
 </script>
