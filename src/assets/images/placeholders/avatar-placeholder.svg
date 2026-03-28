@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" fill="none">
+  <!--
+    MentorHub default avatar placeholder
+    Brand purple (#5B3FD3) on soft background (#EEE9FF)
+    Clean, gender-neutral silhouette
+  -->
+  <rect width="120" height="120" rx="60" fill="#EEE9FF"/>
+  <circle cx="60" cy="46" r="18" fill="#5B3FD3" opacity="0.85"/>
+  <path
+    d="M60 70c-20 0-34 10-34 22v2a60 60 0 0 0 68 0v-2c0-12-14-22-34-22z"
+    fill="#5B3FD3"
+    opacity="0.65"
+  />
+</svg>
+
