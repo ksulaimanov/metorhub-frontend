@@ -1,24 +1,24 @@
 @echo off
-REM MentorHub Frontend - Production Deploy Script (Windows)
+REM JaiMentorship Frontend - Production Deploy Script (Windows)
 REM Usage: deploy.bat <api-domain>
-REM Example: deploy.bat https://api.mentorhub.com
+REM Example: deploy.bat https://api.jaimentorship.kg
 
 setlocal enabledelayedexpansion
 
 if "%1"=="" (
   echo Error: API domain not provided
   echo Usage: deploy.bat ^<api-domain^>
-  echo Example: deploy.bat https://api.mentorhub.com
+  echo Example: deploy.bat https://api.jaimentorship.kg
   exit /b 1
 )
 
 set API_DOMAIN=%1
-set PROJECT_NAME=mentorhub-frontend
+set PROJECT_NAME=jaimentorship-frontend
 set REGION=us-central1
 
 echo.
 echo ========================================
-echo MentorHub Frontend Production Deploy
+echo JaiMentorship Frontend Production Deploy
 echo ========================================
 echo API Domain: %API_DOMAIN%
 echo Region: %REGION%

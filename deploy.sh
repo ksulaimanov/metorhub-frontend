@@ -1,7 +1,7 @@
 #!/bin/bash
-# MentorHub Frontend - Production Deploy Script
+# JaiMentorship Frontend - Production Deploy Script
 # Usage: ./deploy.sh <api-domain>
-# Example: ./deploy.sh https://api.mentorhub.com
+# Example: ./deploy.sh https://api.jaimentorship.kg
 
 set -e
 
@@ -15,15 +15,15 @@ NC='\033[0m' # No Color
 if [ -z "$1" ]; then
   echo -e "${RED}Error: API domain not provided${NC}"
   echo "Usage: ./deploy.sh <api-domain>"
-  echo "Example: ./deploy.sh https://api.mentorhub.com"
+  echo "Example: ./deploy.sh https://api.jaimentorship.kg"
   exit 1
 fi
 
 API_DOMAIN=$1
-PROJECT_NAME="mentorhub-frontend"
+PROJECT_NAME="jaimentorship-frontend"
 REGION="us-central1"
 
-echo -e "${YELLOW}🚀 MentorHub Frontend Production Deploy${NC}"
+echo -e "${YELLOW}🚀 JaiMentorship Frontend Production Deploy${NC}"
 echo -e "${YELLOW}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
 echo "API Domain: $API_DOMAIN"
 echo "Region: $REGION"

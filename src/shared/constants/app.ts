@@ -1,4 +1,4 @@
-export const APP_NAME = 'MentorHub'
+export const APP_NAME = 'JaiMentorship'
 
 export const ROLES = {
     STUDENT: 'ROLE_STUDENT',
