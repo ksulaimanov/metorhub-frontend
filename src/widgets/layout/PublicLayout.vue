@@ -5,8 +5,8 @@
       <div class="mx-auto flex max-w-6xl items-center justify-between px-4 py-3 sm:px-6 lg:py-4">
         <!-- Brand -->
         <RouterLink to="/" class="flex items-center gap-2 text-xl font-extrabold tracking-tight text-brand sm:text-2xl">
-          <span class="flex h-8 w-8 items-center justify-center rounded-xl bg-brand text-sm font-bold text-white">M</span>
-          MentorHub
+          <span class="flex h-8 w-8 items-center justify-center rounded-xl bg-brand text-sm font-bold text-white">J</span>
+          JaiMentorship
         </RouterLink>
 
         <!-- Desktop nav -->
@@ -23,14 +23,10 @@
           >
             {{ t('nav.mentors') }}
           </RouterLink>
-          <RouterLink
-              to="/mentor/apply"
-              class="rounded-xl px-3 py-2 text-sm font-medium text-text-secondary transition hover:bg-brand-soft hover:text-brand"
-          >
-            {{ t('nav.becomeMentor') }}
-          </RouterLink>
 
           <div class="mx-2 h-5 w-px bg-border-brand/60" />
+
+          <LanguageSwitcher />
 
           <RouterLink
               to="/login"
@@ -48,6 +44,7 @@
 
         <!-- Mobile: minimal actions only -->
         <div class="flex items-center gap-2 md:hidden">
+          <LanguageSwitcher />
           <RouterLink
               to="/login"
               class="rounded-xl px-3 py-2 text-sm font-semibold text-text-primary transition hover:bg-brand-soft"
@@ -77,6 +74,7 @@
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n'
 import AppFooter from '../../shared/ui/AppFooter.vue'
+import LanguageSwitcher from '../../shared/ui/LanguageSwitcher.vue'
 
 const { t } = useI18n()
 </script>

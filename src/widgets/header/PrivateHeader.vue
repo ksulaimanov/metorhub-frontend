@@ -3,14 +3,14 @@
     <div class="mx-auto flex max-w-7xl flex-col gap-4 px-4 py-4 sm:px-6 md:flex-row md:items-center md:justify-between">
       <div class="flex items-center justify-between">
         <RouterLink to="/" class="text-2xl font-bold tracking-tight text-slate-900">
-          MentorHub
+          JaiMentorship
         </RouterLink>
 
         <button
             class="rounded-xl bg-slate-900 px-4 py-2 text-sm font-medium text-white md:hidden"
             @click="logout"
         >
-          Выйти
+          {{ t('auth.logout') }}
         </button>
       </div>
 
@@ -20,13 +20,13 @@
               to="/student/profile"
               class="rounded-xl px-3 py-2 transition hover:bg-slate-100 hover:text-slate-900"
           >
-            Профиль
+            {{ t('nav.studentProfile') }}
           </RouterLink>
           <RouterLink
               to="/student/bookings"
               class="rounded-xl px-3 py-2 transition hover:bg-slate-100 hover:text-slate-900"
           >
-            Мои занятия
+            {{ t('nav.studentBookings') }}
           </RouterLink>
         </template>
 
@@ -35,19 +35,19 @@
               to="/mentor/profile"
               class="rounded-xl px-3 py-2 transition hover:bg-slate-100 hover:text-slate-900"
           >
-            Профиль ментора
+            {{ t('nav.mentorProfile') }}
           </RouterLink>
           <RouterLink
               to="/mentor/slots"
               class="rounded-xl px-3 py-2 transition hover:bg-slate-100 hover:text-slate-900"
           >
-            Слоты
+            {{ t('nav.mentorSlots') }}
           </RouterLink>
           <RouterLink
               to="/mentor/bookings"
               class="rounded-xl px-3 py-2 transition hover:bg-slate-100 hover:text-slate-900"
           >
-            Записи
+            {{ t('nav.mentorBookings') }}
           </RouterLink>
         </template>
 
@@ -55,7 +55,7 @@
             class="hidden rounded-xl bg-slate-900 px-4 py-2 text-white md:inline-flex"
             @click="logout"
         >
-          Выйти
+          {{ t('auth.logout') }}
         </button>
       </nav>
     </div>
@@ -64,8 +64,10 @@
 
 <script setup lang="ts">
 import { useRouter } from 'vue-router'
+import { useI18n } from 'vue-i18n'
 import { useAuthStore } from '../../stores/authStore'
 
+const { t } = useI18n()
 const router = useRouter()
 const authStore = useAuthStore()
 
