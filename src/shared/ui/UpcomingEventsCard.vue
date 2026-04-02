@@ -7,7 +7,7 @@
         <p class="mt-1 text-sm text-slate-600">{{ subtitle }}</p>
       </div>
       <div v-if="!loading && events.length > 0" class="text-sm font-semibold text-slate-500">
-        {{ events.length }} из 5
+        {{ events.length }} {{ t('common.ofMax') }} 5
       </div>
     </div>
 
@@ -24,7 +24,7 @@
           class="mt-3 text-sm font-semibold text-red-600 underline hover:text-red-700"
           @click="$emit('retry')"
       >
-        Попробовать снова
+        {{ t('common.retry') }}
       </button>
     </div>
 
@@ -54,7 +54,7 @@
             </p>
           </div>
           <AppBadge :variant="statusVariant(event.status)" class="shrink-0">
-            {{ statusLabel(event.status) }}
+            {{ t(`common.bookingStatus.${event.status}`, event.status) }}
           </AppBadge>
         </div>
 
@@ -69,14 +69,14 @@
           <!-- Format -->
           <div class="flex items-center gap-2">
             <span class="font-medium text-slate-700">📍</span>
-            <span>{{ formatLessonFormat(event.lessonFormat) }}</span>
+            <span>{{ t(`common.lessonFormat.${event.lessonFormat}`, event.lessonFormat) }}</span>
           </div>
 
           <!-- Capacity (for mentors) -->
           <div v-if="event.capacity" class="flex items-center gap-2">
             <span class="font-medium text-slate-700">👥</span>
             <span>
-              {{ event.bookedCount }}/{{ event.capacity }} (свободно: {{ event.availableSeats }})
+              {{ event.bookedCount }}/{{ event.capacity }} ({{ t('common.free') }}: {{ event.availableSeats }})
             </span>
           </div>
         </div>
@@ -97,17 +97,20 @@
           class="w-full rounded-lg border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-700 transition hover:bg-slate-50 active:bg-slate-100"
           @click="$emit('view-all')"
       >
-        Смотреть все события →
+        {{ t('common.viewAllEvents') }}
       </button>
     </div>
   </AppCard>
 </template>
 
 <script setup lang="ts">
+import { useI18n } from 'vue-i18n'
 import type { UpcomingEvent } from '../../shared/types/dashboard'
 import AppCard from './AppCard.vue'
 import AppBadge from './AppBadge.vue'
 import AppEventSkeleton from './AppEventSkeleton.vue'
+
+const { t, locale } = useI18n()
 
 interface Props {
   title: string
@@ -124,8 +127,8 @@ interface Props {
 withDefaults(defineProps<Props>(), {
   loading: false,
   error: '',
-  emptyMessage: 'Нет предстоящих событий',
-  actionButtonLabel: 'Перейти',
+  emptyMessage: '',
+  actionButtonLabel: '',
   actionButtonVisible: true,
   showViewAll: true,
 })
@@ -146,16 +149,6 @@ const statusVariant = (status: string): 'default' | 'success' | 'warning' | 'dan
   return map[status] || 'default'
 }
 
-const statusLabel = (status: string) => {
-  const map: Record<string, string> = {
-    PENDING: 'Ожидает',
-    CONFIRMED: 'Подтверждено',
-    COMPLETED: 'Завершено',
-    CANCELLED: 'Отменено',
-  }
-  return map[status] || status
-}
-
 const formatDateTime = (value: string) => {
   const date = new Date(value)
   const today = new Date()
@@ -172,33 +165,26 @@ const formatDateTime = (value: string) => {
       date.getMonth() === tomorrow.getMonth() &&
       date.getFullYear() === tomorrow.getFullYear()
 
+  const dateLoc = locale.value === 'ky' ? 'ky-KG' : 'ru-RU'
+
   let dateStr = ''
   if (isToday) {
-    dateStr = 'Сегодня'
+    dateStr = t('common.today')
   } else if (isTomorrow) {
-    dateStr = 'Завтра'
+    dateStr = t('common.tomorrow')
   } else {
-    dateStr = date.toLocaleDateString('ru-RU', {
+    dateStr = date.toLocaleDateString(dateLoc, {
       month: 'short',
       day: 'numeric',
     })
   }
 
-  const timeStr = date.toLocaleTimeString('ru-RU', {
+  const timeStr = date.toLocaleTimeString(dateLoc, {
     hour: '2-digit',
     minute: '2-digit',
   })
 
   return `${dateStr}, ${timeStr}`
-}
-
-const formatLessonFormat = (value: string) => {
-  const map: Record<string, string> = {
-    ONLINE: 'Онлайн',
-    OFFLINE: 'Офлайн',
-    HYBRID: 'Гибрид',
-  }
-  return map[value] || value
 }
 </script>
 

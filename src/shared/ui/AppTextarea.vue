@@ -1,6 +1,8 @@
 <template>
   <textarea
       v-bind="$attrs"
+      :value="modelValue"
+      @input="$emit('update:modelValue', ($event.target as HTMLTextAreaElement).value)"
       :class="[
         'w-full resize-y rounded-2xl border px-4 py-3 text-sm outline-none transition',
         'placeholder:text-text-secondary/60',
@@ -15,6 +17,11 @@
 defineOptions({ inheritAttrs: false })
 
 defineProps<{
+  modelValue?: string
   error?: boolean
+}>()
+
+defineEmits<{
+  'update:modelValue': [value: string]
 }>()
 </script>

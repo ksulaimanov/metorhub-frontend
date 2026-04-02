@@ -33,15 +33,17 @@
 <script setup lang="ts">
 import type { ToastType } from '../lib/getApiErrorMessage'
 import { useToastStore } from '../lib/getApiErrorMessage'
+import { useI18n } from 'vue-i18n'
 
+const { t } = useI18n()
 const toastStore = useToastStore()
 
 const titleByType = (type: ToastType) => {
   const map: Record<ToastType, string> = {
-    success: 'Успешно',
-    error: 'Ошибка',
-    info: 'Информация',
-    warning: 'Внимание',
+    success: t('toast.success'),
+    error: t('toast.error'),
+    info: t('toast.info'),
+    warning: t('toast.warning'),
   }
 
   return map[type]
