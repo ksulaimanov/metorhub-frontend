@@ -67,6 +67,18 @@
                   <!-- Headline -->
                   <p class="mt-2 text-lg text-text-secondary">{{ mentor.headline || t('publicMentorProfile.defaultHeadline') }}</p>
 
+                  <!-- Trust summary line -->
+                  <div class="mt-3 flex flex-wrap items-center gap-4 text-sm">
+                    <div v-if="mentor.averageRating" class="flex items-center gap-1.5">
+                      <StarRating :rating="mentor.averageRating" :show-value="false" class="text-sm" />
+                      <span class="font-semibold text-text-primary">{{ (mentor.averageRating).toFixed(1) }}</span>
+                      <span v-if="reviews.length" class="text-text-secondary">({{ t('publicMentorProfile.reviewCount', { count: reviews.length }) }})</span>
+                    </div>
+                    <span v-if="mentor.lessonsCompleted" class="text-text-secondary">
+                      {{ mentor.lessonsCompleted }} {{ t('publicMentorProfile.lessonsUnit') }}
+                    </span>
+                  </div>
+
                   <!-- Format badges -->
                   <div class="mt-4 flex flex-wrap gap-2">
                     <AppBadge v-if="mentor.lessonFormatOnline">{{ t('common.lessonFormat.ONLINE') }}</AppBadge>
@@ -191,7 +203,8 @@
                 <div
                     v-for="slot in slots"
                     :key="slot.id"
-                    class="rounded-xl bg-surface-secondary p-4 ring-1 ring-border-brand/50"
+                    class="rounded-xl p-4 ring-1"
+                    :class="isSlotPast(slot) ? 'bg-surface-secondary/50 ring-border-brand/30 opacity-60' : 'bg-surface-secondary ring-border-brand/50'"
                 >
                   <div class="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
                     <div class="min-w-0">
@@ -201,38 +214,60 @@
 
                       <div class="mt-2 flex flex-wrap gap-1.5">
                         <AppBadge>{{ t(`common.lessonFormat.${slot.lessonFormat}`, slot.lessonFormat) }}</AppBadge>
-                        <AppBadge :variant="slot.active ? 'success' : 'danger'">
-                          {{ slot.active ? t('publicMentorProfile.slotAvailable') : t('publicMentorProfile.slotUnavailable') }}
-                        </AppBadge>
-                        <AppBadge v-if="slot.availableSeats > 0" :variant="slot.availableSeats > 1 ? 'success' : 'warning'">
-                          {{ t('publicMentorProfile.available') }}: {{ slot.availableSeats }}
-                        </AppBadge>
-                        <AppBadge v-else variant="danger">{{ t('publicMentorProfile.noSeats') }}</AppBadge>
+                        <AppBadge v-if="isSlotPast(slot)" variant="default">{{ t('publicMentorProfile.slotPast') }}</AppBadge>
+                        <AppBadge v-else-if="!slot.active" variant="danger">{{ t('publicMentorProfile.slotUnavailable') }}</AppBadge>
+                        <AppBadge v-else-if="slot.availableSeats === 0" variant="danger">{{ t('publicMentorProfile.noSeats') }}</AppBadge>
+                        <AppBadge v-else-if="slot.availableSeats === 1" variant="warning">{{ t('publicMentorProfile.lastSeat') }}</AppBadge>
+                        <AppBadge v-else variant="success">{{ t('publicMentorProfile.available') }}: {{ slot.availableSeats }}</AppBadge>
                       </div>
 
-                      <p v-if="slot.availableSeats > 1" class="mt-2 text-xs text-text-secondary">
+                      <p v-if="!isSlotPast(slot) && slot.availableSeats > 1" class="mt-2 text-xs text-text-secondary">
                         {{ t('publicMentorProfile.groupAvailable', { count: slot.availableSeats }) }}
-                      </p>
-                      <p v-else-if="slot.availableSeats === 1" class="mt-2 text-xs font-medium text-amber-600">
-                        {{ t('publicMentorProfile.lastSeat') }}
-                      </p>
-                      <p v-else class="mt-2 text-xs font-medium text-red-600">
-                        {{ t('publicMentorProfile.noSeatsLeft') }}
                       </p>
                     </div>
 
                     <button
                         type="button"
                         class="shrink-0 rounded-xl bg-brand px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-brand-hover active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50"
-                        :disabled="bookingLoadingId === slot.id || !slot.bookable"
+                        :disabled="bookingLoadingId === slot.id || !slot.bookable || isSlotPast(slot)"
                         @click="toggleBookingForm(slot.id)"
                     >
-                      {{ activeBookingFormId === slot.id ? t('publicMentorProfile.hideForm') : !slot.bookable ? t('publicMentorProfile.noSlotsBtn') : t('publicMentorProfile.bookBtn') }}
+                      {{ slotButtonLabel(slot) }}
                     </button>
                   </div>
 
+                  <!-- Booking success card (replaces form after booking) -->
+                  <div v-if="bookedSlotId === slot.id" class="mt-4 rounded-xl border border-emerald-200 bg-emerald-50 p-5">
+                    <div class="flex items-start gap-3">
+                      <div class="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-emerald-100">
+                        <CheckCircle2 class="h-5 w-5 text-emerald-600" />
+                      </div>
+                      <div class="min-w-0 flex-1">
+                        <p class="font-semibold text-emerald-800">{{ t('publicMentorProfile.bookingSuccessTitle') }}</p>
+                        <p class="mt-1 text-sm text-emerald-700">
+                          {{ t('publicMentorProfile.bookingSuccessDesc', { mentor: mentorName, date: formatDateTime(slot.startAt) }) }}
+                        </p>
+                        <div class="mt-4 flex flex-wrap gap-3">
+                          <RouterLink
+                              to="/student/bookings"
+                              class="rounded-lg bg-emerald-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-emerald-700"
+                          >
+                            {{ t('publicMentorProfile.goToBookings') }}
+                          </RouterLink>
+                          <button
+                              type="button"
+                              class="rounded-lg border border-emerald-300 px-4 py-2 text-sm font-medium text-emerald-700 transition hover:bg-emerald-100"
+                              @click="bookedSlotId = null"
+                          >
+                            {{ t('publicMentorProfile.backToSlots') }}
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
                   <!-- Booking form -->
-                  <div v-if="activeBookingFormId === slot.id && slot.bookable" class="mt-4 rounded-xl border border-border-brand bg-white p-4">
+                  <div v-else-if="activeBookingFormId === slot.id && slot.bookable && !isSlotPast(slot)" class="mt-4 rounded-xl border border-border-brand bg-white p-4">
                     <label class="mb-1.5 block text-sm font-medium text-text-primary">{{ t('publicMentorProfile.noteLabel') }}</label>
                     <textarea
                         v-model.trim="studentNotes[slot.id]"
@@ -272,6 +307,7 @@ import { useToastStore } from '../../shared/lib/getApiErrorMessage'
 import { getApiErrorMessage } from '../../shared/lib/getApiErrorMessage'
 import { formatDateTimeForDisplay } from '../../shared/lib/dateFormatter'
 import type { PublicMentorProfile, AvailabilitySlot, MentorReview } from '../../shared/types/mentor'
+import { CheckCircle2 } from 'lucide-vue-next'
 import PublicLayout from '../../widgets/layout/PublicLayout.vue'
 import AppCard from '../../shared/ui/AppCard.vue'
 import AppBadge from '../../shared/ui/AppBadge.vue'
@@ -298,6 +334,7 @@ const reviewsError = ref('')
 
 const bookingLoadingId = ref<number | null>(null)
 const activeBookingFormId = ref<number | null>(null)
+const bookedSlotId = ref<number | null>(null)
 const studentNotes = ref<Record<number, string>>({})
 
 const mentorId = Number(route.params.id)
@@ -372,8 +409,9 @@ const bookSlot = async (slotId: number) => {
       availabilitySlotId: slotId,
       studentNote: studentNotes.value[slotId] || '',
     })
-    toastStore.success(t('publicMentorProfile.bookingSuccess'))
+    // Show inline success card instead of just toast
     activeBookingFormId.value = null
+    bookedSlotId.value = slotId
     studentNotes.value[slotId] = ''
     await loadSlots()
   } catch (e: any) {
@@ -381,13 +419,23 @@ const bookSlot = async (slotId: number) => {
     const status = e?.response?.status
     if (status === 401 || status === 403) {
       toastStore.error(t('publicMentorProfile.loginRequired'))
-      await router.push('/login')
+      await router.push({ path: '/login', query: { redirect: route.fullPath } })
       return
     }
     toastStore.error(getApiErrorMessage(e, t('publicMentorProfile.bookingError')))
   } finally {
     bookingLoadingId.value = null
   }
+}
+
+const isSlotPast = (slot: AvailabilitySlot) => new Date(slot.endAt) < new Date()
+
+const slotButtonLabel = (slot: AvailabilitySlot) => {
+  if (activeBookingFormId.value === slot.id) return t('publicMentorProfile.hideForm')
+  if (isSlotPast(slot)) return t('publicMentorProfile.slotPastBtn')
+  if (!slot.active) return t('publicMentorProfile.slotUnavailable')
+  if (slot.availableSeats === 0) return t('publicMentorProfile.noSlotsBtn')
+  return t('publicMentorProfile.bookBtn')
 }
 
 const formatDateTime = (value: string) => formatDateTimeForDisplay(value)
