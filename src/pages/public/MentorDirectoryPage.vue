@@ -1,188 +1,182 @@
 <template>
   <PublicLayout>
-    <section class="mx-auto max-w-7xl px-6 py-12">
-      <AppSectionTitle
-          title="Каталог менторов"
-          description="Выберите наставника по цели, формату занятий, рейтингу и стоимости."
-      />
+    <!-- ─── Hero intro ─── -->
+    <section class="bg-gradient-to-b from-brand-soft/30 to-bg">
+      <div class="mx-auto max-w-7xl px-4 pb-8 pt-12 sm:px-6 lg:pt-14">
+        <p class="inline-flex rounded-full bg-brand-soft px-4 py-1.5 text-sm font-medium text-brand">
+          {{ t('mentorDirectory.heroBadge') }}
+        </p>
+        <h1 class="mt-4 max-w-xl text-3xl font-extrabold leading-tight text-text-primary sm:text-4xl">
+          {{ t('mentorDirectory.title') }}
+        </h1>
+        <p class="mt-3 max-w-lg text-base leading-7 text-text-secondary">
+          {{ t('mentorDirectory.description') }}
+        </p>
+      </div>
+    </section>
 
-      <div class="mt-8 rounded-3xl bg-white p-5 shadow-sm ring-1 ring-slate-200 md:p-6">
+    <section class="mx-auto max-w-7xl px-4 pb-16 sm:px-6">
+      <!-- ─── Filters ─── -->
+      <div class="rounded-2xl bg-white p-5 shadow-sm ring-1 ring-border-brand/80 md:p-6">
         <div class="grid gap-4 md:grid-cols-4">
           <div class="md:col-span-2">
-            <label class="mb-2 block text-sm font-medium text-slate-700">
-              Поиск
-            </label>
+            <label class="mb-1.5 block text-sm font-medium text-text-primary">{{ t('mentorDirectory.searchLabel') }}</label>
             <input
                 v-model="query"
                 type="text"
-                placeholder="Имя, фамилия, специализация"
-                class="w-full rounded-2xl border border-slate-300 bg-white px-4 py-3 outline-none transition focus:border-slate-900"
+                :placeholder="t('mentorDirectory.searchPlaceholder')"
+                class="w-full rounded-xl border border-border-brand bg-white px-4 py-2.5 text-sm outline-none transition placeholder:text-text-secondary/60 focus:border-brand focus:ring-2 focus:ring-brand/20"
             />
           </div>
 
           <div>
-            <label class="mb-2 block text-sm font-medium text-slate-700">
-              Город
-            </label>
+            <label class="mb-1.5 block text-sm font-medium text-text-primary">{{ t('mentorDirectory.cityLabel') }}</label>
             <input
                 v-model="city"
                 type="text"
-                placeholder="Например: Бишкек"
-                class="w-full rounded-2xl border border-slate-300 bg-white px-4 py-3 outline-none transition focus:border-slate-900"
+                :placeholder="t('mentorDirectory.cityPlaceholder')"
+                class="w-full rounded-xl border border-border-brand bg-white px-4 py-2.5 text-sm outline-none transition placeholder:text-text-secondary/60 focus:border-brand focus:ring-2 focus:ring-brand/20"
             />
           </div>
 
           <div>
-            <label class="mb-2 block text-sm font-medium text-slate-700">
-              Сортировка
-            </label>
+            <label class="mb-1.5 block text-sm font-medium text-text-primary">{{ t('mentorDirectory.sortLabel') }}</label>
             <select
                 v-model="sortBy"
-                class="w-full rounded-2xl border border-slate-300 bg-white px-4 py-3 outline-none transition focus:border-slate-900"
+                class="w-full rounded-xl border border-border-brand bg-white px-4 py-2.5 text-sm outline-none transition focus:border-brand focus:ring-2 focus:ring-brand/20"
             >
-              <option value="">По умолчанию</option>
-              <option value="ratingDesc">По рейтингу</option>
-              <option value="priceAsc">Сначала дешевле</option>
-              <option value="priceDesc">Сначала дороже</option>
-              <option value="experienceDesc">По опыту</option>
+              <option value="">{{ t('mentorDirectory.sortDefault') }}</option>
+              <option value="ratingDesc">{{ t('mentorDirectory.sortRating') }}</option>
+              <option value="priceAsc">{{ t('mentorDirectory.sortPriceAsc') }}</option>
+              <option value="priceDesc">{{ t('mentorDirectory.sortPriceDesc') }}</option>
+              <option value="experienceDesc">{{ t('mentorDirectory.sortExperience') }}</option>
+              <option value="newest">{{ t('mentorDirectory.sortNewest') }}</option>
             </select>
           </div>
         </div>
 
-        <div class="mt-5 flex flex-wrap gap-3">
-          <label class="flex items-center gap-2 rounded-full bg-slate-50 px-4 py-2 text-sm ring-1 ring-slate-200">
-            <input v-model="online" type="checkbox" />
-            Онлайн
+        <!-- Format filter chips -->
+        <div class="mt-4 flex flex-wrap items-center gap-2">
+          <label
+              :class="[
+                'flex cursor-pointer items-center gap-2 rounded-full px-4 py-2 text-sm font-medium ring-1 transition',
+                online ? 'bg-brand-soft text-brand ring-brand/30' : 'bg-white text-text-secondary ring-border-brand hover:bg-brand-soft/50',
+              ]"
+          >
+            <input v-model="online" type="checkbox" class="sr-only" />
+            {{ t('common.lessonFormat.ONLINE') }}
           </label>
 
-          <label class="flex items-center gap-2 rounded-full bg-slate-50 px-4 py-2 text-sm ring-1 ring-slate-200">
-            <input v-model="offline" type="checkbox" />
-            Офлайн
+          <label
+              :class="[
+                'flex cursor-pointer items-center gap-2 rounded-full px-4 py-2 text-sm font-medium ring-1 transition',
+                offline ? 'bg-brand-soft text-brand ring-brand/30' : 'bg-white text-text-secondary ring-border-brand hover:bg-brand-soft/50',
+              ]"
+          >
+            <input v-model="offline" type="checkbox" class="sr-only" />
+            {{ t('common.lessonFormat.OFFLINE') }}
           </label>
 
-          <label class="flex items-center gap-2 rounded-full bg-slate-50 px-4 py-2 text-sm ring-1 ring-slate-200">
-            <input v-model="hybrid" type="checkbox" />
-            Гибрид
+          <label
+              :class="[
+                'flex cursor-pointer items-center gap-2 rounded-full px-4 py-2 text-sm font-medium ring-1 transition',
+                hybrid ? 'bg-brand-soft text-brand ring-brand/30' : 'bg-white text-text-secondary ring-border-brand hover:bg-brand-soft/50',
+              ]"
+          >
+            <input v-model="hybrid" type="checkbox" class="sr-only" />
+            {{ t('common.lessonFormat.HYBRID') }}
           </label>
 
           <button
+              v-if="hasActiveFilters"
               type="button"
-              class="rounded-full border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-100"
+              class="rounded-full border border-border-brand px-4 py-2 text-sm font-medium text-text-secondary transition hover:bg-brand-soft/50"
               @click="resetFilters"
           >
-            Сбросить фильтры
+            {{ t('mentorDirectory.resetFilters') }}
           </button>
         </div>
       </div>
 
+      <!-- ─── Results meta ─── -->
       <div class="mt-6 flex flex-wrap items-center justify-between gap-3">
-        <p class="text-sm text-slate-600">
-          Найдено менторов: <span class="font-semibold text-slate-900">{{ mentors.length }}</span>
+        <p v-if="!loading" class="text-sm text-text-secondary">
+          {{ t('mentorDirectory.foundMentors') }}:
+          <span class="font-semibold text-text-primary">{{ totalElements }}</span>
         </p>
-
-        <p class="text-sm text-slate-500">
-          Выбирайте профиль и переходите к подробной информации и записи.
-        </p>
+        <p class="text-sm text-text-secondary">{{ t('mentorDirectory.foundHint') }}</p>
       </div>
 
+      <!-- ─── Content ─── -->
       <div class="mt-6">
-        <AppLoadingState v-if="loading" text="Загружаем менторов..." />
+        <!-- Skeleton loading -->
+        <div v-if="loading" class="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
+          <div v-for="i in 6" :key="i" class="animate-pulse rounded-2xl bg-white p-5 ring-1 ring-border-brand/80">
+            <div class="flex items-start gap-3.5">
+              <div class="h-14 w-14 rounded-full bg-brand-soft" />
+              <div class="flex-1 space-y-2">
+                <div class="h-4 w-28 rounded bg-brand-soft" />
+                <div class="h-3 w-36 rounded bg-brand-soft/60" />
+              </div>
+            </div>
+            <div class="mt-4 h-3 w-full rounded bg-brand-soft/40" />
+            <div class="mt-2 h-3 w-2/3 rounded bg-brand-soft/40" />
+            <div class="mt-4 flex gap-2">
+              <div class="h-6 w-16 rounded-full bg-brand-soft/50" />
+              <div class="h-6 w-14 rounded-full bg-brand-soft/50" />
+            </div>
+            <div class="mt-4 grid grid-cols-2 gap-2.5 rounded-xl bg-surface-secondary p-3">
+              <div class="space-y-1">
+                <div class="h-2.5 w-10 rounded bg-brand-soft/40" />
+                <div class="h-3.5 w-16 rounded bg-brand-soft" />
+              </div>
+              <div class="space-y-1">
+                <div class="h-2.5 w-10 rounded bg-brand-soft/40" />
+                <div class="h-3.5 w-20 rounded bg-brand-soft" />
+              </div>
+              <div class="space-y-1">
+                <div class="h-2.5 w-10 rounded bg-brand-soft/40" />
+                <div class="h-3.5 w-14 rounded bg-brand-soft" />
+              </div>
+              <div class="space-y-1">
+                <div class="h-2.5 w-10 rounded bg-brand-soft/40" />
+                <div class="h-3.5 w-8 rounded bg-brand-soft" />
+              </div>
+            </div>
+          </div>
+        </div>
 
+        <!-- Error -->
         <AppErrorState
             v-else-if="error"
-            title="Не удалось загрузить каталог"
+            :title="t('mentorDirectory.loadError')"
             :description="error"
         />
 
-        <AppEmptyState
-            v-else-if="mentors.length === 0"
-            title="Менторы не найдены"
-            description="Попробуйте изменить фильтры, город или параметры поиска."
-        />
+        <!-- Empty -->
+        <div v-else-if="mentors.length === 0" class="rounded-2xl bg-white p-10 text-center ring-1 ring-border-brand/80">
+          <div class="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-brand-soft">
+            <Search class="h-6 w-6 text-brand" />
+          </div>
+          <h3 class="mt-4 text-lg font-semibold text-text-primary">{{ t('mentorDirectory.emptyTitle') }}</h3>
+          <p class="mt-2 text-sm text-text-secondary">{{ t('mentorDirectory.emptyDesc') }}</p>
+          <button
+              v-if="hasActiveFilters"
+              type="button"
+              class="mt-5 inline-flex rounded-xl bg-brand px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-brand-hover"
+              @click="resetFilters"
+          >
+            {{ t('mentorDirectory.resetFilters') }}
+          </button>
+        </div>
 
-        <div v-else class="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
-          <RouterLink
+        <!-- Mentor cards -->
+        <div v-else class="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
+          <MentorCard
               v-for="mentor in mentors"
               :key="mentor.id"
-              :to="`/mentors/${mentor.id}`"
-              class="rounded-3xl bg-white p-6 shadow-sm ring-1 ring-slate-200 transition hover:-translate-y-0.5 hover:shadow-md"
-          >
-            <div class="flex items-start gap-4">
-              <div class="flex h-16 w-16 shrink-0 items-center justify-center overflow-hidden rounded-full bg-slate-200 text-lg font-bold text-slate-600">
-                <img
-                    v-if="mentor.avatarUrl"
-                    :src="mentor.avatarUrl"
-                    :alt="mentorName(mentor)"
-                    class="h-full w-full object-cover"
-                />
-                <span v-else>{{ mentorInitials(mentor) }}</span>
-              </div>
-
-              <div class="min-w-0 flex-1">
-                <div class="flex items-start justify-between gap-4">
-                  <div class="min-w-0">
-                    <h3 class="truncate text-xl font-semibold text-slate-900">
-                      {{ mentorName(mentor) }}
-                    </h3>
-                    <p class="mt-1 text-sm text-slate-500">
-                      {{ mentor.headline || 'Ментор MentorHub' }}
-                    </p>
-                  </div>
-
-                  <AppBadge v-if="mentor.verified" variant="success">
-                    Проверен
-                  </AppBadge>
-                </div>
-              </div>
-            </div>
-
-            <p class="mt-4 line-clamp-2 text-sm text-slate-600">
-              {{ mentor.specialization || 'Специализация пока не указана' }}
-            </p>
-
-            <div class="mt-5 flex flex-wrap gap-2 text-xs font-medium">
-              <AppBadge v-if="mentor.lessonFormatOnline">Онлайн</AppBadge>
-              <AppBadge v-if="mentor.lessonFormatOffline">Офлайн</AppBadge>
-              <AppBadge v-if="mentor.lessonFormatHybrid">Гибрид</AppBadge>
-            </div>
-
-            <div class="mt-6 grid gap-3 rounded-2xl bg-slate-50 p-4 text-sm sm:grid-cols-2">
-              <div>
-                <p class="text-slate-500">Город</p>
-                <p class="mt-1 font-medium text-slate-900">
-                  {{ mentor.city || 'Не указан' }}
-                </p>
-              </div>
-
-              <div>
-                <p class="text-slate-500">Стоимость</p>
-                <p class="mt-1 font-medium text-slate-900">
-                  {{ mentor.pricePerHour ? `${mentor.pricePerHour} сом/час` : 'Не указана' }}
-                </p>
-              </div>
-
-              <div>
-                <p class="text-slate-500">Рейтинг</p>
-                <p class="mt-1 font-medium text-slate-900">
-                  {{ mentor.averageRating ?? 0 }}
-                </p>
-              </div>
-
-              <div>
-                <p class="text-slate-500">Проведено занятий</p>
-                <p class="mt-1 font-medium text-slate-900">
-                  {{ mentor.lessonsCompleted ?? 0 }}
-                </p>
-              </div>
-            </div>
-
-            <div class="mt-6 flex items-center justify-between">
-              <span class="text-sm font-medium text-slate-500">Подробнее и запись</span>
-              <span class="rounded-full bg-slate-900 px-4 py-2 text-sm font-semibold text-white">
-                Открыть
-              </span>
-            </div>
-          </RouterLink>
+              :mentor="mentor"
+          />
         </div>
       </div>
     </section>
@@ -190,34 +184,19 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref, watch } from 'vue'
-import { http } from '../../shared/api/http'
+import { computed, onMounted, ref, watch } from 'vue'
+import { useI18n } from 'vue-i18n'
+import { Search } from 'lucide-vue-next'
+import { getPublicMentors } from '../../shared/api/mentorPublicApi'
+import type { MentorDirectoryItem } from '../../shared/types/mentor'
 import PublicLayout from '../../widgets/layout/PublicLayout.vue'
-import AppSectionTitle from '../../shared/ui/AppSectionTitle.vue'
-import AppLoadingState from '../../shared/ui/AppLoadingState.vue'
-import AppEmptyState from '../../shared/ui/AppEmptyState.vue'
 import AppErrorState from '../../shared/ui/AppErrorState.vue'
-import AppBadge from '../../shared/ui/AppBadge.vue'
+import MentorCard from '../../features/mentor-directory/MentorCard.vue'
 
-interface MentorDirectoryItem {
-  id: number
-  firstName: string | null
-  lastName: string | null
-  avatarKey?: string | null
-  avatarUrl?: string | null
-  headline: string | null
-  specialization: string | null
-  city: string | null
-  pricePerHour: number | null
-  averageRating: number | null
-  lessonsCompleted: number | null
-  verified: boolean
-  lessonFormatOnline: boolean
-  lessonFormatOffline: boolean
-  lessonFormatHybrid: boolean
-}
+const { t } = useI18n()
 
 const mentors = ref<MentorDirectoryItem[]>([])
+const totalElements = ref(0)
 const loading = ref(false)
 const error = ref('')
 
@@ -231,16 +210,9 @@ const hybrid = ref(false)
 
 let searchTimer: number | undefined
 
-const mentorName = (mentor: MentorDirectoryItem) => {
-  const fullName = `${mentor.firstName || ''} ${mentor.lastName || ''}`.trim()
-  return fullName || 'Без имени'
-}
-
-const mentorInitials = (mentor: MentorDirectoryItem) => {
-  const first = mentor.firstName?.trim()?.[0] || ''
-  const last = mentor.lastName?.trim()?.[0] || ''
-  return (first + last).toUpperCase() || 'M'
-}
+const hasActiveFilters = computed(() =>
+    !!debouncedQuery.value || !!city.value || !!sortBy.value || online.value || offline.value || hybrid.value,
+)
 
 const resetFilters = () => {
   query.value = ''
@@ -257,21 +229,20 @@ const loadMentors = async () => {
   error.value = ''
 
   try {
-    const { data } = await http.get('/api/public/mentors', {
-      params: {
-        query: debouncedQuery.value || undefined,
-        city: city.value || undefined,
-        sortBy: sortBy.value || undefined,
-        online: online.value || undefined,
-        offline: offline.value || undefined,
-        hybrid: hybrid.value || undefined,
-      },
+    const page = await getPublicMentors({
+      query: debouncedQuery.value || undefined,
+      city: city.value || undefined,
+      sortBy: sortBy.value || undefined,
+      online: online.value || undefined,
+      offline: offline.value || undefined,
+      hybrid: hybrid.value || undefined,
+      size: 50,
     })
-
-    mentors.value = data
+    mentors.value = page.content
+    totalElements.value = page.totalElements
   } catch (e) {
     console.error(e)
-    error.value = 'Попробуйте обновить страницу чуть позже.'
+    error.value = t('mentorDirectory.pageLoadError')
   } finally {
     loading.value = false
   }
