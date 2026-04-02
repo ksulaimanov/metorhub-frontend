@@ -6,85 +6,149 @@
           :description="t('studentBookings.description')"
       />
 
+      <!-- ─── Status filter tabs ─── -->
+      <div class="flex flex-wrap gap-2">
+        <button
+            v-for="tab in tabs"
+            :key="tab.value"
+            type="button"
+            class="rounded-full px-4 py-2 text-sm font-medium transition"
+            :class="activeTab === tab.value
+              ? 'bg-brand text-white'
+              : 'bg-white text-text-secondary ring-1 ring-border-brand hover:bg-brand-soft'"
+            @click="activeTab = tab.value"
+        >
+          {{ tab.label }}
+          <span v-if="tab.count > 0" class="ml-1.5 rounded-full bg-white/20 px-1.5 text-xs">{{ tab.count }}</span>
+        </button>
+      </div>
+
+      <!-- ─── Loading ─── -->
       <AppLoadingState v-if="loading" :text="t('studentBookings.loadingBookings')" />
 
+      <!-- ─── Error ─── -->
       <AppErrorState
           v-else-if="pageError"
           :title="t('studentBookings.loadError')"
           :description="pageError"
-      />
+      >
+        <template #actions>
+          <AppButton variant="secondary" size="sm" @click="loadBookings">{{ t('common.retry') }}</AppButton>
+        </template>
+      </AppErrorState>
 
-      <AppEmptyState
-          v-else-if="bookings.length === 0"
-          :title="t('studentBookings.emptyTitle')"
-          :description="t('studentBookings.emptyDesc')"
-      />
+      <!-- ─── Empty ─── -->
+      <div v-else-if="filteredBookings.length === 0" class="rounded-3xl bg-white p-10 text-center shadow-sm ring-1 ring-border-brand">
+        <div class="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-brand-soft">
+          <CalendarX class="h-6 w-6 text-brand" />
+        </div>
+        <h3 class="mt-4 text-lg font-semibold text-text-primary">
+          {{ activeTab === 'all' ? t('studentBookings.emptyTitle') : t('studentBookings.emptyFilterTitle') }}
+        </h3>
+        <p class="mt-2 text-sm text-text-secondary">
+          {{ activeTab === 'all' ? t('studentBookings.emptyDesc') : t('studentBookings.emptyFilterDesc') }}
+        </p>
+        <RouterLink
+            v-if="activeTab === 'all'"
+            to="/mentors"
+            class="mt-5 inline-flex rounded-xl bg-brand px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-brand-hover"
+        >
+          {{ t('studentBookings.findMentor') }}
+        </RouterLink>
+      </div>
 
+      <!-- ─── Booking cards ─── -->
       <div v-else class="grid gap-4">
-        <AppCard v-for="booking in bookings" :key="booking.id">
+        <AppCard v-for="booking in filteredBookings" :key="booking.id" radius="lg" padding="md">
           <div class="flex flex-col gap-5">
-            <div class="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
-              <div class="space-y-3">
-                <p class="text-lg font-semibold text-slate-900">
-                  {{ formatDateTime(booking.startAt) }} — {{ formatDateTime(booking.endAt) }}
-                </p>
-
-                <div class="flex flex-wrap items-center gap-3">
-                  <AppBadge>{{ t(`common.lessonFormat.${booking.lessonFormat}`, booking.lessonFormat) }}</AppBadge>
-                  <AppBadge :variant="statusVariant(booking.status)">
-                    {{ formatStatus(booking.status) }}
-                  </AppBadge>
+            <!-- Header row: mentor info + status -->
+            <div class="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+              <!-- Mentor info -->
+              <div class="flex items-center gap-3.5">
+                <div class="flex h-11 w-11 shrink-0 items-center justify-center overflow-hidden rounded-full bg-brand-soft text-sm font-bold text-brand">
+                  <img
+                      v-if="booking.mentorAvatarUrl"
+                      :src="booking.mentorAvatarUrl"
+                      :alt="mentorName(booking)"
+                      class="h-full w-full object-cover"
+                  />
+                  <span v-else>{{ mentorInitials(booking) }}</span>
                 </div>
-
-                <div class="grid gap-2 text-sm text-slate-600 sm:grid-cols-2">
-                  <p>
-                    <span class="font-medium text-slate-800">{{ t('studentBookings.startLabel') }}:</span>
-                    {{ formatDateTime(booking.startAt) }}
-                  </p>
-                  <p>
-                    <span class="font-medium text-slate-800">{{ t('studentBookings.endLabel') }}:</span>
-                    {{ formatDateTime(booking.endAt) }}
-                  </p>
-                </div>
-
-                <div
-                    v-if="booking.studentNote"
-                    class="rounded-2xl bg-slate-50 px-4 py-3 text-sm text-slate-700 ring-1 ring-slate-200"
-                >
-                  <span class="font-medium text-slate-900">{{ t('studentBookings.yourNote') }}:</span>
-                  {{ booking.studentNote }}
-                </div>
-
-                <div
-                    v-if="booking.mentorNote"
-                    class="rounded-2xl bg-slate-50 px-4 py-3 text-sm text-slate-700 ring-1 ring-slate-200"
-                >
-                  <span class="font-medium text-slate-900">{{ t('studentBookings.mentorNote') }}:</span>
-                  {{ booking.mentorNote }}
+                <div class="min-w-0">
+                  <p class="truncate text-base font-semibold text-text-primary">{{ mentorName(booking) }}</p>
+                  <p class="text-sm text-text-secondary">{{ formatDateTime(booking.startAt) }}</p>
                 </div>
               </div>
 
-              <button
-                  v-if="canCancel(booking.status)"
-                  class="rounded-2xl border border-red-300 px-4 py-2 text-red-600 transition hover:bg-red-50 disabled:cursor-not-allowed disabled:opacity-50"
-                  :disabled="cancelLoadingId === booking.id"
-                  @click="cancelBooking(booking.id)"
-              >
-                {{ cancelLoadingId === booking.id ? t('studentBookings.cancelling') : t('studentBookings.cancelBooking') }}
-              </button>
+              <!-- Status badge -->
+              <div class="flex flex-wrap items-center gap-2">
+                <AppBadge>{{ t(`common.lessonFormat.${booking.lessonFormat}`, booking.lessonFormat) }}</AppBadge>
+                <AppBadge :variant="statusVariant(booking.status)">{{ formatStatus(booking.status) }}</AppBadge>
+              </div>
+            </div>
+
+            <!-- Time details -->
+            <div class="grid gap-2 rounded-xl bg-surface-secondary p-3.5 text-sm sm:grid-cols-2">
+              <div>
+                <p class="text-xs text-text-secondary">{{ t('studentBookings.startLabel') }}</p>
+                <p class="mt-0.5 font-medium text-text-primary">{{ formatDateTime(booking.startAt) }}</p>
+              </div>
+              <div>
+                <p class="text-xs text-text-secondary">{{ t('studentBookings.endLabel') }}</p>
+                <p class="mt-0.5 font-medium text-text-primary">{{ formatDateTime(booking.endAt) }}</p>
+              </div>
+            </div>
+
+            <!-- Notes -->
+            <div
+                v-if="booking.studentNote"
+                class="rounded-xl bg-brand-soft/30 px-4 py-3 text-sm text-text-primary ring-1 ring-border-brand/60"
+            >
+              <span class="font-medium">{{ t('studentBookings.yourNote') }}:</span>
+              {{ booking.studentNote }}
             </div>
 
             <div
-                v-if="booking.status === 'COMPLETED' && !reviewSubmitted[booking.id]"
-                class="rounded-2xl border border-slate-200 bg-slate-50 p-5"
+                v-if="booking.mentorNote"
+                class="rounded-xl bg-brand-soft/30 px-4 py-3 text-sm text-text-primary ring-1 ring-border-brand/60"
             >
-              <h2 class="text-lg font-semibold text-slate-900">{{ t('studentBookings.reviewTitle') }}</h2>
-              <p class="mt-2 text-sm text-slate-600">{{ t('studentBookings.reviewHint') }}</p>
+              <span class="font-medium">{{ t('studentBookings.mentorNote') }}:</span>
+              {{ booking.mentorNote }}
+            </div>
+
+            <!-- Actions -->
+            <div class="flex flex-wrap items-center gap-3">
+              <AppButton
+                  v-if="canCancel(booking.status)"
+                  variant="danger"
+                  size="sm"
+                  :loading="cancelLoadingId === booking.id"
+                  @click="cancelBooking(booking.id)"
+              >
+                {{ t('studentBookings.cancelBooking') }}
+              </AppButton>
+
+              <RouterLink
+                  v-if="booking.mentorId"
+                  :to="`/mentors/${booking.mentorId}`"
+                  class="text-sm font-medium text-brand transition hover:text-brand-hover"
+              >
+                {{ t('studentBookings.viewMentor') }}
+              </RouterLink>
+            </div>
+
+            <!-- Review section for completed bookings -->
+            <div
+                v-if="booking.status === 'COMPLETED' && !reviewSubmitted[booking.id]"
+                class="rounded-xl border border-border-brand bg-surface-secondary p-5"
+            >
+              <h2 class="text-base font-semibold text-text-primary">{{ t('studentBookings.reviewTitle') }}</h2>
+              <p class="mt-1 text-sm text-text-secondary">{{ t('studentBookings.reviewHint') }}</p>
 
               <div class="mt-4 grid gap-4">
                 <select
                     v-model="reviewForms[booking.id].rating"
-                    class="rounded-2xl border border-slate-300 bg-white px-4 py-3 outline-none focus:border-slate-900"
+                    class="rounded-xl border border-border-brand bg-white px-4 py-2.5 text-sm outline-none transition focus:border-brand focus:ring-2 focus:ring-brand/20"
                 >
                   <option :value="5">{{ t('studentBookings.rating5') }}</option>
                   <option :value="4">{{ t('studentBookings.rating4') }}</option>
@@ -95,22 +159,18 @@
 
                 <textarea
                     v-model="reviewForms[booking.id].comment"
-                    class="min-h-28 rounded-2xl border border-slate-300 bg-white px-4 py-3 outline-none focus:border-slate-900"
+                    class="min-h-24 rounded-xl border border-border-brand bg-white px-4 py-3 text-sm outline-none transition placeholder:text-text-secondary/60 focus:border-brand focus:ring-2 focus:ring-brand/20"
                     :placeholder="t('studentBookings.reviewPlaceholder')"
                 />
 
-                <div class="flex flex-col gap-3 md:flex-row md:items-center">
-                  <button
-                      class="rounded-2xl bg-slate-900 px-5 py-3 font-semibold text-white transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50"
-                      :disabled="reviewLoadingId === booking.id"
+                <div class="flex flex-col gap-3 sm:flex-row sm:items-center">
+                  <AppButton
+                      size="sm"
+                      :loading="reviewLoadingId === booking.id"
                       @click="submitReview(booking.id)"
                   >
-                    {{ reviewLoadingId === booking.id ? t('studentBookings.submittingReview') : t('studentBookings.submitReview') }}
-                  </button>
-
-                  <p v-if="reviewMessages[booking.id]" class="text-sm font-medium text-emerald-600">
-                    {{ reviewMessages[booking.id] }}
-                  </p>
+                    {{ t('studentBookings.submitReview') }}
+                  </AppButton>
 
                   <p v-if="reviewErrors[booking.id]" class="text-sm font-medium text-red-600">
                     {{ reviewErrors[booking.id] }}
@@ -119,12 +179,13 @@
               </div>
             </div>
 
+            <!-- Review submitted -->
             <div
                 v-else-if="booking.status === 'COMPLETED' && reviewSubmitted[booking.id]"
-                class="rounded-2xl border border-emerald-200 bg-emerald-50 p-5"
+                class="rounded-xl border border-emerald-200 bg-emerald-50 p-5"
             >
               <p class="font-semibold text-emerald-700">{{ t('studentBookings.reviewThanks') }}</p>
-              <p class="mt-2 text-sm text-emerald-700">{{ t('studentBookings.reviewThanksDesc') }}</p>
+              <p class="mt-1 text-sm text-emerald-700">{{ t('studentBookings.reviewThanksDesc') }}</p>
             </div>
           </div>
         </AppCard>
@@ -134,47 +195,63 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { http } from '../../shared/api/http'
-import { createStudentReview } from '../../shared/api/reviewApi'
-import { getApiErrorMessage } from '../../shared/lib/getApiErrorMessage'
-import { formatDateTimeForDisplay } from '../../shared/lib/dateFormatter'
-import PrivateLayout from '../../widgets/layout/PrivateLayout.vue'
-import AppSectionTitle from '../../shared/ui/AppSectionTitle.vue'
-import AppEmptyState from '../../shared/ui/AppEmptyState.vue'
-import AppCard from '../../shared/ui/AppCard.vue'
-import AppBadge from '../../shared/ui/AppBadge.vue'
-import AppLoadingState from '../../shared/ui/AppLoadingState.vue'
-import AppErrorState from '../../shared/ui/AppErrorState.vue'
+import { CalendarX } from 'lucide-vue-next'
+import { getStudentBookings, cancelStudentBooking } from '@/shared/api/bookingApi'
+import { createStudentReview } from '@/shared/api/reviewApi'
+import { useErrorHandler } from '@/shared/composables/useErrorHandler'
+import { formatDateTimeForDisplay } from '@/shared/lib/dateFormatter'
+import type { StudentBookingItem, BookingStatus } from '@/shared/types/booking'
+import PrivateLayout from '@/widgets/layout/PrivateLayout.vue'
+import AppSectionTitle from '@/shared/ui/AppSectionTitle.vue'
+import AppCard from '@/shared/ui/AppCard.vue'
+import AppBadge from '@/shared/ui/AppBadge.vue'
+import AppButton from '@/shared/ui/AppButton.vue'
+import AppLoadingState from '@/shared/ui/AppLoadingState.vue'
+import AppErrorState from '@/shared/ui/AppErrorState.vue'
 
 const { t } = useI18n()
+const { handleError, handleSuccess } = useErrorHandler()
 
-interface Booking {
-  id: number
-  startAt: string
-  endAt: string
-  lessonFormat: string
-  status: string
-  studentNote: string | null
-  mentorNote: string | null
-}
+// ─── State ──────────────────────────────────────────────────────────────────
 
-interface ReviewForm {
-  rating: number
-  comment: string
-}
-
-const bookings = ref<Booking[]>([])
+const bookings = ref<StudentBookingItem[]>([])
 const loading = ref(false)
 const pageError = ref('')
 const cancelLoadingId = ref<number | null>(null)
 const reviewLoadingId = ref<number | null>(null)
+const activeTab = ref<BookingStatus | 'all'>('all')
 
+interface ReviewForm { rating: number; comment: string }
 const reviewForms = ref<Record<number, ReviewForm>>({})
-const reviewMessages = ref<Record<number, string>>({})
 const reviewErrors = ref<Record<number, string>>({})
 const reviewSubmitted = ref<Record<number, boolean>>({})
+
+// ─── Tabs ───────────────────────────────────────────────────────────────────
+
+const countByStatus = (status: BookingStatus) =>
+    bookings.value.filter((b) => b.status === status).length
+
+const tabs = computed(() => [
+  { value: 'all' as const, label: t('studentBookings.tabAll'), count: bookings.value.length },
+  { value: 'PENDING' as const, label: t('studentBookings.tabPending'), count: countByStatus('PENDING') },
+  { value: 'CONFIRMED' as const, label: t('studentBookings.tabConfirmed'), count: countByStatus('CONFIRMED') },
+  { value: 'COMPLETED' as const, label: t('studentBookings.tabCompleted'), count: countByStatus('COMPLETED') },
+  { value: 'CANCELLED_BY_STUDENT' as const, label: t('studentBookings.tabCancelled'), count: countByStatus('CANCELLED_BY_STUDENT') + countByStatus('CANCELLED_BY_MENTOR') },
+])
+
+const filteredBookings = computed(() => {
+  if (activeTab.value === 'all') return bookings.value
+  if (activeTab.value === 'CANCELLED_BY_STUDENT') {
+    return bookings.value.filter((b) =>
+        b.status === 'CANCELLED_BY_STUDENT' || b.status === 'CANCELLED_BY_MENTOR',
+    )
+  }
+  return bookings.value.filter((b) => b.status === activeTab.value)
+})
+
+// ─── Data loading ───────────────────────────────────────────────────────────
 
 const ensureReviewForm = (bookingId: number) => {
   if (!reviewForms.value[bookingId]) {
@@ -185,31 +262,30 @@ const ensureReviewForm = (bookingId: number) => {
 const loadBookings = async () => {
   loading.value = true
   pageError.value = ''
-
   try {
-    const { data } = await http.get('/api/student/bookings')
-    bookings.value = data
+    bookings.value = await getStudentBookings()
     for (const booking of bookings.value) {
       ensureReviewForm(booking.id)
     }
-  } catch (error) {
-    console.error(error)
-    pageError.value = t('studentBookings.pageLoadError')
+  } catch (e) {
+    pageError.value = handleError(e as any, t('studentBookings.pageLoadError'), { toast: false })
   } finally {
     loading.value = false
   }
 }
 
-const canCancel = (status: string) => status === 'PENDING' || status === 'CONFIRMED'
+// ─── Actions ────────────────────────────────────────────────────────────────
+
+const canCancel = (status: BookingStatus) => status === 'PENDING' || status === 'CONFIRMED'
 
 const cancelBooking = async (bookingId: number) => {
   cancelLoadingId.value = bookingId
   try {
-    await http.patch(`/api/student/bookings/${bookingId}/cancel`)
+    await cancelStudentBooking(bookingId)
+    handleSuccess(t('studentBookings.cancelSuccess'))
     await loadBookings()
-  } catch (error) {
-    console.error(error)
-    pageError.value = t('studentBookings.cancelError')
+  } catch (e) {
+    handleError(e as any, t('studentBookings.cancelError'))
   } finally {
     cancelLoadingId.value = null
   }
@@ -217,21 +293,36 @@ const cancelBooking = async (bookingId: number) => {
 
 const submitReview = async (bookingId: number) => {
   reviewLoadingId.value = bookingId
+  reviewErrors.value[bookingId] = ''
   try {
     const form = reviewForms.value[bookingId]
     await createStudentReview({ bookingId, rating: form.rating, comment: form.comment })
     reviewSubmitted.value[bookingId] = true
-  } catch (error: any) {
-    getApiErrorMessage(error, t('studentBookings.reviewError'))
+    handleSuccess(t('studentBookings.reviewThanks'))
+  } catch (e: any) {
+    reviewErrors.value[bookingId] = handleError(e, t('studentBookings.reviewError'), { toast: false })
   } finally {
     reviewLoadingId.value = null
   }
 }
 
+// ─── Formatting ─────────────────────────────────────────────────────────────
+
+const mentorName = (b: StudentBookingItem) => {
+  const full = `${b.mentorFirstName || ''} ${b.mentorLastName || ''}`.trim()
+  return full || t('studentBookings.unknownMentor')
+}
+
+const mentorInitials = (b: StudentBookingItem) => {
+  const first = b.mentorFirstName?.trim()?.[0] || ''
+  const last = b.mentorLastName?.trim()?.[0] || ''
+  return (first + last).toUpperCase() || 'M'
+}
+
 const formatDateTime = (value: string) => formatDateTimeForDisplay(value)
 
-const formatStatus = (value: string) => {
-  const map: Record<string, string> = {
+const formatStatus = (value: BookingStatus) => {
+  const map: Record<BookingStatus, string> = {
     PENDING: t('studentBookings.statusPending'),
     CONFIRMED: t('studentBookings.statusConfirmed'),
     CANCELLED_BY_STUDENT: t('studentBookings.statusCancelledByStudent'),
@@ -241,8 +332,8 @@ const formatStatus = (value: string) => {
   return map[value] || value
 }
 
-const statusVariant = (value: string): 'default' | 'success' | 'warning' | 'danger' | 'info' => {
-  const map: Record<string, 'default' | 'success' | 'warning' | 'danger' | 'info'> = {
+const statusVariant = (value: BookingStatus): 'default' | 'success' | 'warning' | 'danger' | 'info' => {
+  const map: Record<BookingStatus, 'default' | 'success' | 'warning' | 'danger' | 'info'> = {
     PENDING: 'warning',
     CONFIRMED: 'success',
     CANCELLED_BY_STUDENT: 'danger',
