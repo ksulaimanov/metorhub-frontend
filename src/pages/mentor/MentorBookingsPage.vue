@@ -6,94 +6,147 @@
           :description="t('mentorBookings.description')"
       />
 
+      <!-- ─── Status filter tabs ─── -->
+      <div class="flex flex-wrap gap-2">
+        <button
+            v-for="tab in tabs"
+            :key="tab.value"
+            type="button"
+            class="rounded-full px-4 py-2 text-sm font-medium transition"
+            :class="activeTab === tab.value
+              ? 'bg-brand text-white'
+              : 'bg-white text-text-secondary ring-1 ring-border-brand hover:bg-brand-soft'"
+            @click="activeTab = tab.value"
+        >
+          {{ tab.label }}
+          <span v-if="tab.count > 0" class="ml-1.5 rounded-full bg-white/20 px-1.5 text-xs">{{ tab.count }}</span>
+        </button>
+      </div>
+
+      <!-- ─── Loading ─── -->
       <AppLoadingState v-if="loading" :text="t('mentorBookings.loadingBookings')" />
 
+      <!-- ─── Error ─── -->
       <AppErrorState
-          v-else-if="error"
+          v-else-if="pageError"
           :title="t('mentorBookings.loadError')"
-          :description="error"
-      />
+          :description="pageError"
+      >
+        <template #actions>
+          <AppButton variant="secondary" size="sm" @click="loadBookings">{{ t('common.retry') }}</AppButton>
+        </template>
+      </AppErrorState>
 
-      <AppEmptyState
-          v-else-if="bookings.length === 0"
-          :title="t('mentorBookings.emptyTitle')"
-          :description="t('mentorBookings.emptyDesc')"
-      />
+      <!-- ─── Empty ─── -->
+      <div v-else-if="filteredBookings.length === 0" class="rounded-3xl bg-white p-10 text-center shadow-sm ring-1 ring-border-brand">
+        <div class="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-brand-soft">
+          <CalendarX class="h-6 w-6 text-brand" />
+        </div>
+        <h3 class="mt-4 text-lg font-semibold text-text-primary">
+          {{ activeTab === 'all' ? t('mentorBookings.emptyTitle') : t('mentorBookings.emptyFilterTitle') }}
+        </h3>
+        <p class="mt-2 text-sm text-text-secondary">
+          {{ activeTab === 'all' ? t('mentorBookings.emptyDesc') : t('mentorBookings.emptyFilterDesc') }}
+        </p>
+        <RouterLink
+            v-if="activeTab === 'all'"
+            to="/mentor/slots"
+            class="mt-5 inline-flex rounded-xl bg-brand px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-brand-hover"
+        >
+          {{ t('mentorBookings.manageSlots') }}
+        </RouterLink>
+      </div>
 
+      <!-- ─── Booking cards ─── -->
       <div v-else class="grid gap-4">
-        <AppCard v-for="booking in bookings" :key="booking.id">
+        <AppCard v-for="booking in filteredBookings" :key="booking.id" radius="lg" padding="md">
           <div class="flex flex-col gap-5">
-            <div class="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
-              <div class="space-y-3">
-                <div class="flex flex-wrap items-center gap-3">
-                  <h3 class="text-lg font-semibold text-slate-900">
-                    {{ formatDate(booking.startAt) }}
-                  </h3>
-
-                  <AppBadge :variant="statusVariant(booking.status)">
-                    {{ formatStatus(booking.status) }}
-                  </AppBadge>
+            <!-- Header row: student info + status -->
+            <div class="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+              <!-- Student info -->
+              <div class="flex items-center gap-3.5">
+                <div class="flex h-11 w-11 shrink-0 items-center justify-center overflow-hidden rounded-full bg-brand-soft text-sm font-bold text-brand">
+                  <img
+                      v-if="booking.studentAvatarUrl"
+                      :src="booking.studentAvatarUrl"
+                      :alt="studentName(booking)"
+                      class="h-full w-full object-cover"
+                  />
+                  <span v-else>{{ studentInitials(booking) }}</span>
                 </div>
-
-                <p class="text-sm text-slate-600">
-                  {{ formatTime(booking.startAt) }} — {{ formatTime(booking.endAt) }}
-                </p>
-
-                <div class="grid gap-2 text-sm text-slate-600 sm:grid-cols-2">
-                  <p>
-                    <span class="font-medium text-slate-800">{{ t('mentorBookings.startLabel') }}:</span>
-                    {{ formatDateTime(booking.startAt) }}
-                  </p>
-                  <p>
-                    <span class="font-medium text-slate-800">{{ t('mentorBookings.endLabel') }}:</span>
-                    {{ formatDateTime(booking.endAt) }}
-                  </p>
-                </div>
-
-                <div
-                    v-if="booking.studentNote"
-                    class="rounded-2xl bg-slate-50 px-4 py-3 text-sm text-slate-700 ring-1 ring-slate-200"
-                >
-                  <span class="font-medium text-slate-900">{{ t('mentorBookings.studentNote') }}:</span>
-                  {{ booking.studentNote }}
+                <div class="min-w-0">
+                  <p class="truncate text-base font-semibold text-text-primary">{{ studentName(booking) }}</p>
+                  <p class="text-sm text-text-secondary">{{ formatDateTime(booking.startAt) }}</p>
                 </div>
               </div>
 
-              <div class="rounded-2xl bg-slate-50 px-4 py-3 text-sm text-slate-600 ring-1 ring-slate-200">
-                <p>
-                  <span class="font-medium text-slate-900">{{ t('mentorBookings.bookingId') }}:</span>
-                  #{{ booking.id }}
-                </p>
+              <!-- Status badge + booking ID -->
+              <div class="flex flex-wrap items-center gap-2">
+                <AppBadge>{{ t(`common.lessonFormat.${booking.lessonFormat}`, booking.lessonFormat) }}</AppBadge>
+                <AppBadge :variant="statusVariant(booking.status)">{{ formatStatus(booking.status) }}</AppBadge>
+                <span class="text-xs text-text-secondary">#{{ booking.id }}</span>
               </div>
             </div>
 
+            <!-- Time details -->
+            <div class="grid gap-2 rounded-xl bg-surface-secondary p-3.5 text-sm sm:grid-cols-2">
+              <div>
+                <p class="text-xs text-text-secondary">{{ t('mentorBookings.startLabel') }}</p>
+                <p class="mt-0.5 font-medium text-text-primary">{{ formatDateTime(booking.startAt) }}</p>
+              </div>
+              <div>
+                <p class="text-xs text-text-secondary">{{ t('mentorBookings.endLabel') }}</p>
+                <p class="mt-0.5 font-medium text-text-primary">{{ formatDateTime(booking.endAt) }}</p>
+              </div>
+            </div>
+
+            <!-- Student note -->
+            <div
+                v-if="booking.studentNote"
+                class="rounded-xl bg-brand-soft/30 px-4 py-3 text-sm text-text-primary ring-1 ring-border-brand/60"
+            >
+              <span class="font-medium">{{ t('mentorBookings.studentNote') }}:</span>
+              {{ booking.studentNote }}
+            </div>
+
+            <!-- Mentor note (if previously added) -->
+            <div
+                v-if="booking.mentorNote"
+                class="rounded-xl bg-brand-soft/30 px-4 py-3 text-sm text-text-primary ring-1 ring-border-brand/60"
+            >
+              <span class="font-medium">{{ t('mentorBookings.yourNote') }}:</span>
+              {{ booking.mentorNote }}
+            </div>
+
+            <!-- Action buttons -->
             <div class="flex flex-wrap gap-3">
-              <button
+              <AppButton
                   v-if="canConfirm(booking.status)"
-                  class="rounded-2xl bg-emerald-600 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-emerald-700 disabled:cursor-not-allowed disabled:opacity-60"
-                  :disabled="updatingId === booking.id"
+                  size="sm"
+                  :loading="updatingId === booking.id"
                   @click="updateStatus(booking.id, 'CONFIRMED')"
               >
-                {{ updatingId === booking.id ? t('mentorBookings.updating') : t('mentorBookings.confirm') }}
-              </button>
+                {{ t('mentorBookings.confirm') }}
+              </AppButton>
 
-              <button
+              <AppButton
                   v-if="canComplete(booking.status)"
-                  class="rounded-2xl bg-slate-900 px-4 py-2.5 text-sm font-semibold text-white transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-60"
-                  :disabled="updatingId === booking.id"
+                  size="sm"
+                  :loading="updatingId === booking.id"
                   @click="updateStatus(booking.id, 'COMPLETED')"
               >
-                {{ updatingId === booking.id ? t('mentorBookings.updating') : t('mentorBookings.complete') }}
-              </button>
+                {{ t('mentorBookings.complete') }}
+              </AppButton>
 
-              <button
+              <AppButton
                   v-if="canCancel(booking.status)"
-                  class="rounded-2xl bg-red-600 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-red-700 disabled:cursor-not-allowed disabled:opacity-60"
-                  :disabled="updatingId === booking.id"
-                  @click="updateStatus(booking.id, 'CANCELLED_BY_MENTOR')"
+                  variant="danger"
+                  size="sm"
+                  :loading="updatingId === booking.id"
+                  @click="confirmAndCancel(booking.id)"
               >
-                {{ updatingId === booking.id ? t('mentorBookings.updating') : t('mentorBookings.cancel') }}
-              </button>
+                {{ t('mentorBookings.cancel') }}
+              </AppButton>
             </div>
           </div>
         </AppCard>
@@ -103,95 +156,123 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { http } from '../../shared/api/http'
-import { useErrorHandler } from '../../shared/composables/useErrorHandler'
-import { formatDateTimeForDisplay } from '../../shared/lib/dateFormatter'
-import PrivateLayout from '../../widgets/layout/PrivateLayout.vue'
-import AppSectionTitle from '../../shared/ui/AppSectionTitle.vue'
-import AppEmptyState from '../../shared/ui/AppEmptyState.vue'
-import AppCard from '../../shared/ui/AppCard.vue'
-import AppBadge from '../../shared/ui/AppBadge.vue'
-import AppLoadingState from '../../shared/ui/AppLoadingState.vue'
-import AppErrorState from '../../shared/ui/AppErrorState.vue'
+import { CalendarX } from 'lucide-vue-next'
+import { getMentorBookings, updateMentorBookingStatus } from '@/shared/api/bookingApi'
+import { useErrorHandler } from '@/shared/composables/useErrorHandler'
+import { formatDateTimeForDisplay } from '@/shared/lib/dateFormatter'
+import type { MentorBookingItem, BookingStatus } from '@/shared/types/booking'
+import PrivateLayout from '@/widgets/layout/PrivateLayout.vue'
+import AppSectionTitle from '@/shared/ui/AppSectionTitle.vue'
+import AppCard from '@/shared/ui/AppCard.vue'
+import AppBadge from '@/shared/ui/AppBadge.vue'
+import AppButton from '@/shared/ui/AppButton.vue'
+import AppLoadingState from '@/shared/ui/AppLoadingState.vue'
+import AppErrorState from '@/shared/ui/AppErrorState.vue'
 
-const { t, locale } = useI18n()
-const { handleError } = useErrorHandler()
+const { t } = useI18n()
+const { handleError, handleSuccess } = useErrorHandler()
 
-interface Booking {
-  id: number
-  startAt: string
-  endAt: string
-  status: string
-  studentNote: string | null
-}
+// ─── State ──────────────────────────────────────────────────────────────────
 
-const bookings = ref<Booking[]>([])
+const bookings = ref<MentorBookingItem[]>([])
 const loading = ref(false)
-const error = ref('')
+const pageError = ref('')
 const updatingId = ref<number | null>(null)
-const formatDate = (value: string) => formatDateTimeForDisplay(value)
+const activeTab = ref<BookingStatus | 'all'>('all')
+
+// ─── Tabs ───────────────────────────────────────────────────────────────────
+
+const countByStatus = (status: BookingStatus) =>
+    bookings.value.filter((b) => b.status === status).length
+
+const tabs = computed(() => [
+  { value: 'all' as const, label: t('mentorBookings.tabAll'), count: bookings.value.length },
+  { value: 'PENDING' as const, label: t('mentorBookings.tabPending'), count: countByStatus('PENDING') },
+  { value: 'CONFIRMED' as const, label: t('mentorBookings.tabConfirmed'), count: countByStatus('CONFIRMED') },
+  { value: 'COMPLETED' as const, label: t('mentorBookings.tabCompleted'), count: countByStatus('COMPLETED') },
+  { value: 'CANCELLED_BY_MENTOR' as const, label: t('mentorBookings.tabCancelled'), count: countByStatus('CANCELLED_BY_MENTOR') + countByStatus('CANCELLED_BY_STUDENT') },
+])
+
+const filteredBookings = computed(() => {
+  if (activeTab.value === 'all') return bookings.value
+  if (activeTab.value === 'CANCELLED_BY_MENTOR') {
+    return bookings.value.filter((b) =>
+        b.status === 'CANCELLED_BY_STUDENT' || b.status === 'CANCELLED_BY_MENTOR',
+    )
+  }
+  return bookings.value.filter((b) => b.status === activeTab.value)
+})
+
+// ─── Data loading ───────────────────────────────────────────────────────────
 
 const loadBookings = async () => {
   loading.value = true
-  error.value = ''
-
+  pageError.value = ''
   try {
-    const { data } = await http.get('/api/mentor/bookings')
-    bookings.value = data
+    bookings.value = await getMentorBookings()
   } catch (e) {
-    console.error(e)
-    error.value = t('mentorBookings.pageLoadError')
+    pageError.value = handleError(e as any, t('mentorBookings.pageLoadError'), { toast: false })
   } finally {
     loading.value = false
   }
 }
 
-const updateStatus = async (bookingId: number, status: string) => {
-  if (status === 'CANCELLED_BY_MENTOR') {
-    if (!window.confirm(t('mentorBookings.confirmCancel'))) {
-      return
-    }
-  }
+// ─── Actions ────────────────────────────────────────────────────────────────
 
+const canConfirm = (status: BookingStatus) => status === 'PENDING'
+const canComplete = (status: BookingStatus) => status === 'CONFIRMED'
+const canCancel = (status: BookingStatus) => status === 'PENDING' || status === 'CONFIRMED'
+
+const updateStatus = async (bookingId: number, status: BookingStatus) => {
   updatingId.value = bookingId
-
   try {
-    await http.patch(`/api/mentor/bookings/${bookingId}/status`, {
-      status,
-      mentorNote: '',
-    })
-
-    const statusMessages: Record<string, string> = {
-      CONFIRMED: t('mentorBookings.statusConfirmed'),
-      COMPLETED: t('mentorBookings.statusCompleted'),
-      CANCELLED_BY_MENTOR: t('mentorBookings.statusCancelled'),
+    await updateMentorBookingStatus(bookingId, status)
+    const messages: Partial<Record<BookingStatus, string>> = {
+      CONFIRMED: t('mentorBookings.toastConfirmed'),
+      COMPLETED: t('mentorBookings.toastCompleted'),
     }
-
-    console.log(statusMessages[status] || t('mentorBookings.statusUpdated'))
+    handleSuccess(messages[status] || t('mentorBookings.statusUpdated'))
     await loadBookings()
   } catch (e) {
-    console.error(e)
     handleError(e as any, t('mentorBookings.updateError'))
   } finally {
     updatingId.value = null
   }
 }
 
-const formatDateTime = (value: string) => formatDateTimeForDisplay(value)
-
-
-const formatTime = (value: string) => {
-  const loc = locale.value === 'ky' ? 'ky-KG' : 'ru-RU'
-  return new Date(value).toLocaleTimeString(loc, {
-    hour: '2-digit',
-    minute: '2-digit',
-  })
+const confirmAndCancel = async (bookingId: number) => {
+  if (!window.confirm(t('mentorBookings.confirmCancel'))) return
+  updatingId.value = bookingId
+  try {
+    await updateMentorBookingStatus(bookingId, 'CANCELLED_BY_MENTOR')
+    handleSuccess(t('mentorBookings.toastCancelled'))
+    await loadBookings()
+  } catch (e) {
+    handleError(e as any, t('mentorBookings.updateError'))
+  } finally {
+    updatingId.value = null
+  }
 }
 
-const formatStatus = (value: string) => {
-  const map: Record<string, string> = {
+// ─── Formatting ─────────────────────────────────────────────────────────────
+
+const studentName = (b: MentorBookingItem) => {
+  const full = `${b.studentFirstName || ''} ${b.studentLastName || ''}`.trim()
+  return full || t('mentorBookings.unknownStudent')
+}
+
+const studentInitials = (b: MentorBookingItem) => {
+  const first = b.studentFirstName?.trim()?.[0] || ''
+  const last = b.studentLastName?.trim()?.[0] || ''
+  return (first + last).toUpperCase() || 'S'
+}
+
+const formatDateTime = (value: string) => formatDateTimeForDisplay(value)
+
+const formatStatus = (value: BookingStatus) => {
+  const map: Record<BookingStatus, string> = {
     PENDING: t('mentorBookings.statusPending'),
     CONFIRMED: t('mentorBookings.statusApproved'),
     CANCELLED_BY_STUDENT: t('mentorBookings.statusCancelledByStudent'),
@@ -201,23 +282,17 @@ const formatStatus = (value: string) => {
   return map[value] || value
 }
 
-const statusVariant = (
-    value: string
-): 'default' | 'success' | 'warning' | 'danger' | 'info' => {
-  const map: Record<string, 'default' | 'success' | 'warning' | 'danger' | 'info'> = {
+const statusVariant = (value: BookingStatus): 'default' | 'success' | 'warning' | 'danger' | 'info' => {
+  const map: Record<BookingStatus, 'default' | 'success' | 'warning' | 'danger' | 'info'> = {
     PENDING: 'warning',
     CONFIRMED: 'success',
     CANCELLED_BY_STUDENT: 'danger',
     CANCELLED_BY_MENTOR: 'danger',
     COMPLETED: 'info',
   }
-
   return map[value] || 'default'
 }
 
-const canConfirm = (status: string) => status === 'PENDING'
-const canComplete = (status: string) => status === 'CONFIRMED'
-const canCancel = (status: string) => status === 'PENDING' || status === 'CONFIRMED'
 
 onMounted(loadBookings)
 </script>
