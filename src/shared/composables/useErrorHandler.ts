@@ -1,16 +1,46 @@
 import { useToastStore } from '../lib/getApiErrorMessage'
 
+export interface HandleErrorOptions {
+  /** Show toast notification. Default: true. Set to false for inline-only error display. */
+  toast?: boolean
+}
+
 /**
- * Composable для централизованной обработки ошибок
- * Проверяет поля в порядке: detail → fieldErrors → message → error → error.message → fallback
+ * Raw error.message strings that should never be shown to users.
+ * When matched, the fallback message is used instead.
+ */
+const RAW_ERROR_PATTERNS = [
+  'network error',
+  'timeout',
+  'econnrefused',
+  'econnaborted',
+  'enotfound',
+  'err_network',
+  'failed to fetch',
+  'load failed',
+]
+
+function isRawNetworkMessage(msg: string): boolean {
+  const lower = msg.toLowerCase()
+  return RAW_ERROR_PATTERNS.some((p) => lower.includes(p))
+}
+
+/**
+ * Composable для централизованной обработки ошибок.
+ * Проверяет поля в порядке: detail → fieldErrors → message → error → fallback.
+ *
+ * По умолчанию показывает toast. Если страница показывает ошибку inline (AppErrorState),
+ * передайте `{ toast: false }`, чтобы избежать двойного отображения.
  */
 export const useErrorHandler = () => {
   const toastStore = useToastStore()
 
   const handleError = (
       error: any,
-      fallbackMessage: string = 'Произошла ошибка. Попробуйте ещё раз.'
+      fallbackMessage: string = 'Произошла ошибка. Попробуйте ещё раз.',
+      options: HandleErrorOptions = {},
   ): string => {
+    const { toast = true } = options
     let errorMessage = fallbackMessage
 
     if (error?.response?.data?.detail && typeof error.response.data.detail === 'string') {
@@ -31,10 +61,18 @@ export const useErrorHandler = () => {
       errorMessage = error.response.data.error
     }
     else if (error?.message && typeof error.message === 'string') {
-      errorMessage = error.message
+      // Network-level errors (no response from server) — use fallback, not raw string
+      if (isRawNetworkMessage(error.message)) {
+        errorMessage = fallbackMessage
+      } else {
+        errorMessage = error.message
+      }
     }
 
-    toastStore.error(errorMessage)
+    if (toast) {
+      toastStore.error(errorMessage)
+    }
+
     return errorMessage
   }
 
