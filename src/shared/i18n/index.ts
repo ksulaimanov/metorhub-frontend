@@ -4,12 +4,12 @@ import ky from './ky'
 
 export type SupportedLocale = 'ru' | 'ky'
 
-const LOCALE_KEY = 'mentorhub_locale'
+const LOCALE_KEY = 'jaimentorship_locale'
 
 function getSavedLocale(): SupportedLocale {
     const saved = localStorage.getItem(LOCALE_KEY)
     if (saved === 'ru' || saved === 'ky') return saved
-    return 'ru'
+    return 'ky'
 }
 
 export function saveLocale(locale: SupportedLocale) {
