@@ -2,11 +2,26 @@ import { http } from './http'
 import type {
   AdminMentorApplicationPage,
   AdminMentorApplicationDetail,
+  AdminMentorApplicationListItem,
   AdminMentorApplicationFilter,
   RejectMentorApplicationPayload,
 } from '../types/adminMentorApplication'
 
 const BASE = '/api/admin/mentor-applications'
+
+/**
+ * Normalize a single list/detail item coming from the backend.
+ * Handles: name→fullName fallback, null specializations.
+ */
+function normalizeItem<T extends { fullName?: string; specializations?: string[] | null }>(
+  raw: any,
+): T {
+  return {
+    ...raw,
+    fullName: raw.fullName || raw.name || '',
+    specializations: Array.isArray(raw.specializations) ? raw.specializations : [],
+  } as T
+}
 
 export const getAdminMentorApplications = async (
   filter: AdminMentorApplicationFilter = {},
@@ -18,14 +33,20 @@ export const getAdminMentorApplications = async (
   if (filter.size !== undefined) params.size = filter.size
 
   const { data } = await http.get(BASE, { params })
-  return data
+
+  return {
+    ...data,
+    content: Array.isArray(data.content)
+      ? data.content.map((item: any) => normalizeItem<AdminMentorApplicationListItem>(item))
+      : [],
+  }
 }
 
 export const getAdminMentorApplicationById = async (
   id: number,
 ): Promise<AdminMentorApplicationDetail> => {
   const { data } = await http.get(`${BASE}/${id}`)
-  return data
+  return normalizeItem<AdminMentorApplicationDetail>(data)
 }
 
 export const approveApplication = async (id: number): Promise<void> => {

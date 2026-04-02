@@ -13,12 +13,15 @@
           </router-link>
         </nav>
 
-        <button
-            @click="logout"
-            class="rounded-lg bg-red-50 px-3 py-2 text-sm font-semibold text-red-600 hover:bg-red-100"
-        >
-          Выйти
-        </button>
+        <div class="flex items-center gap-3">
+          <LanguageSwitcher />
+          <button
+              @click="logout"
+              class="rounded-lg bg-red-50 px-3 py-2 text-sm font-semibold text-red-600 hover:bg-red-100"
+          >
+            {{ t('privateNav.logout') }}
+          </button>
+        </div>
       </div>
     </header>
 
@@ -32,7 +35,11 @@
 
 <script setup lang="ts">
 import { computed } from 'vue'
+import { useI18n } from 'vue-i18n'
 import AppFooter from '../../shared/ui/AppFooter.vue'
+import LanguageSwitcher from '../../shared/ui/LanguageSwitcher.vue'
+
+const { t } = useI18n()
 
 interface NavItem {
   label: string
@@ -41,7 +48,6 @@ interface NavItem {
 
 const getRoles = (): string[] => {
   try {
-    // В браузере localStorage доступен напрямую
     return JSON.parse(localStorage.getItem('roles') || '[]')
   } catch {
     return []
@@ -58,23 +64,23 @@ const desktopNavItems = computed<NavItem[]>(() => {
 
   if (isStudent) {
     items.push(
-        { label: 'Профиль ученика', to: '/student/profile' },
-        { label: 'Мои записи', to: '/student/bookings' },
+        { label: t('privateNav.studentProfile'), to: '/student/profile' },
+        { label: t('privateNav.studentBookings'), to: '/student/bookings' },
     )
   }
 
   if (isMentor) {
     items.push(
-        { label: 'Профиль ментора', to: '/mentor/profile' },
-        { label: 'Слоты', to: '/mentor/slots' },
-        { label: 'Записи учеников', to: '/mentor/bookings' },
+        { label: t('privateNav.mentorProfile'), to: '/mentor/profile' },
+        { label: t('privateNav.mentorSlots'), to: '/mentor/slots' },
+        { label: t('privateNav.mentorBookings'), to: '/mentor/bookings' },
     )
   }
 
   if (isAdmin) {
     items.push(
-        { label: 'Дашборд', to: '/admin/dashboard' },
-        { label: 'Заявки менторов', to: '/admin/mentor-applications' },
+        { label: t('privateNav.adminDashboard'), to: '/admin/dashboard' },
+        { label: t('privateNav.adminApplications'), to: '/admin/mentor-applications' },
     )
   }
 

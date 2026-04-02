@@ -108,7 +108,7 @@ import AppField from '../../shared/ui/AppField.vue'
 import AppInput from '../../shared/ui/AppInput.vue'
 import AppButton from '../../shared/ui/AppButton.vue'
 
-const { t } = useI18n()
+const { t, locale } = useI18n()
 const route = useRoute()
 const router = useRouter()
 const toastStore = useToastStore()
@@ -198,6 +198,7 @@ const handleResend = async () => {
   try {
     await http.post('/api/auth/resend-verification', {
       email: email.value,
+      locale: locale.value,
     })
 
     toastStore.success(t('auth.verifyResendSuccess'))

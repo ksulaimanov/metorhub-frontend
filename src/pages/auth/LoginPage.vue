@@ -62,7 +62,7 @@
 
       <!-- Verify-email rescue block -->
       <InfoPanel
-          v-if="errorMessage && errorMessage.toLowerCase().includes('подтвержден')"
+          v-if="errorMessage && isEmailNotVerifiedError"
           variant="muted"
       >
         <p class="font-medium text-text-primary">{{ t('auth.loginNeedVerify') }}</p>
@@ -130,6 +130,11 @@ const emailError = computed(() => {
 const passwordError = computed(() => {
   if (!password.value) return t('validation.required')
   return password.value.length >= 8 ? '' : t('validation.passwordMin', { min: 8 })
+})
+
+const isEmailNotVerifiedError = computed(() => {
+  const msg = errorMessage.value.toLowerCase()
+  return msg.includes('подтвержден') || msg.includes('verify') || msg.includes('verified') || msg.includes('тастыкта')
 })
 
 const handleLogin = async () => {

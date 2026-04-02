@@ -2,15 +2,15 @@
   <PrivateLayout>
     <div class="space-y-8">
       <AppSectionTitle
-          title="Профиль ученика"
-          description="Заполненный профиль помогает быстрее записываться на занятия, понятнее формулировать запрос и удобнее взаимодействовать с ментором."
+          :title="t('studentProfile.title')"
+          :description="t('studentProfile.description')"
       />
 
-      <AppLoadingState v-if="loading" text="Загружаем профиль..." />
+      <AppLoadingState v-if="loading" :text="t('studentProfile.loadingProfile')" />
 
       <AppErrorState
           v-else-if="pageError"
-          title="Не удалось загрузить профиль"
+          :title="t('studentProfile.loadError')"
           :description="pageError"
       />
 
@@ -19,35 +19,20 @@
           <div class="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
             <div class="flex items-center gap-4">
               <div class="flex h-24 w-24 items-center justify-center overflow-hidden rounded-full bg-slate-200 text-2xl font-bold text-slate-600">
-                <img
-                    v-if="form.avatarUrl"
-                    :src="form.avatarUrl"
-                    alt="Аватар ученика"
-                    class="h-full w-full object-cover"
-                />
+                <img v-if="form.avatarUrl" :src="form.avatarUrl" :alt="t('studentProfile.avatarAlt')" class="h-full w-full object-cover" />
                 <span v-else>{{ avatarInitials }}</span>
               </div>
 
               <div>
                 <h2 class="text-xl font-semibold text-slate-900">{{ fullName }}</h2>
-                <p class="mt-1 text-sm text-slate-600">
-                  Добавьте фото профиля, чтобы кабинет выглядел персональнее.
-                </p>
+                <p class="mt-1 text-sm text-slate-600">{{ t('studentProfile.avatarHint') }}</p>
               </div>
             </div>
 
             <div class="flex flex-col gap-3 sm:flex-row">
-              <label
-                  class="inline-flex cursor-pointer items-center justify-center rounded-2xl border border-slate-300 px-4 py-3 text-sm font-semibold text-slate-700 transition hover:bg-slate-100"
-              >
-                <input
-                    type="file"
-                    class="hidden"
-                    accept="image/png,image/jpeg,image/webp"
-                    :disabled="avatarUploading"
-                    @change="handleAvatarUpload"
-                />
-                {{ avatarUploading ? 'Загрузка...' : 'Загрузить фото' }}
+              <label class="inline-flex cursor-pointer items-center justify-center rounded-2xl border border-slate-300 px-4 py-3 text-sm font-semibold text-slate-700 transition hover:bg-slate-100">
+                <input type="file" class="hidden" accept="image/png,image/jpeg,image/webp" :disabled="avatarUploading" @change="handleAvatarUpload" />
+                {{ avatarUploading ? t('studentProfile.uploadingPhoto') : t('studentProfile.uploadPhoto') }}
               </label>
 
               <button
@@ -57,39 +42,29 @@
                   :disabled="avatarDeleting"
                   @click="confirmAvatarDelete"
               >
-                {{ avatarDeleting ? 'Удаление...' : 'Удалить фото' }}
+                {{ avatarDeleting ? t('studentProfile.deletingPhoto') : t('studentProfile.deletePhoto') }}
               </button>
             </div>
           </div>
 
-          <p v-if="avatarMessage" class="mt-4 text-sm font-medium text-emerald-600">
-            {{ avatarMessage }}
-          </p>
-          <p v-if="avatarError" class="mt-4 text-sm font-medium text-red-600">
-            {{ avatarError }}
-          </p>
+          <p v-if="avatarMessage" class="mt-4 text-sm font-medium text-emerald-600">{{ avatarMessage }}</p>
+          <p v-if="avatarError" class="mt-4 text-sm font-medium text-red-600">{{ avatarError }}</p>
         </AppCard>
 
         <div class="grid gap-4 md:grid-cols-3">
           <AppCard>
-            <p class="text-sm text-slate-500">Имя и фамилия</p>
-            <p class="mt-2 text-lg font-semibold text-slate-900">
-              {{ fullName }}
-            </p>
+            <p class="text-sm text-slate-500">{{ t('studentProfile.statName') }}</p>
+            <p class="mt-2 text-lg font-semibold text-slate-900">{{ fullName }}</p>
           </AppCard>
 
           <AppCard>
-            <p class="text-sm text-slate-500">Город</p>
-            <p class="mt-2 text-lg font-semibold text-slate-900">
-              {{ form.city || 'Не указан' }}
-            </p>
+            <p class="text-sm text-slate-500">{{ t('studentProfile.statCity') }}</p>
+            <p class="mt-2 text-lg font-semibold text-slate-900">{{ form.city || t('studentProfile.notSpecified') }}</p>
           </AppCard>
 
           <AppCard>
-            <p class="text-sm text-slate-500">Часовой пояс</p>
-            <p class="mt-2 text-lg font-semibold text-slate-900">
-              {{ form.timezone || 'Не указан' }}
-            </p>
+            <p class="text-sm text-slate-500">{{ t('studentProfile.statTimezone') }}</p>
+            <p class="mt-2 text-lg font-semibold text-slate-900">{{ form.timezone || t('studentProfile.notSpecified') }}</p>
           </AppCard>
         </div>
 
@@ -97,68 +72,38 @@
           <AppCard>
             <div class="space-y-6">
               <div>
-                <h2 class="text-xl font-semibold text-slate-900">Основная информация</h2>
-                <p class="mt-1 text-sm text-slate-600">
-                  Эти данные помогут ментору лучше понимать, как к вам обращаться и откуда вы.
-                </p>
+                <h2 class="text-xl font-semibold text-slate-900">{{ t('studentProfile.sectionMain') }}</h2>
+                <p class="mt-1 text-sm text-slate-600">{{ t('studentProfile.sectionMainHint') }}</p>
               </div>
 
               <div class="grid gap-4 md:grid-cols-2">
                 <div>
-                  <label class="mb-2 block text-sm font-medium text-slate-700">Имя</label>
-                  <input
-                      v-model.trim="form.firstName"
-                      class="w-full rounded-2xl border border-slate-300 px-4 py-3 outline-none transition focus:border-slate-900"
-                      placeholder="Введите имя"
-                  />
-                  <p v-if="fieldErrors.firstName" class="mt-2 text-sm text-red-600">
-                    {{ fieldErrors.firstName }}
-                  </p>
+                  <label class="mb-2 block text-sm font-medium text-slate-700">{{ t('studentProfile.firstName') }}</label>
+                  <input v-model.trim="form.firstName" class="w-full rounded-2xl border border-slate-300 px-4 py-3 outline-none transition focus:border-slate-900" :placeholder="t('studentProfile.firstNamePlaceholder')" />
+                  <p v-if="fieldErrors.firstName" class="mt-2 text-sm text-red-600">{{ fieldErrors.firstName }}</p>
                 </div>
 
                 <div>
-                  <label class="mb-2 block text-sm font-medium text-slate-700">Фамилия</label>
-                  <input
-                      v-model.trim="form.lastName"
-                      class="w-full rounded-2xl border border-slate-300 px-4 py-3 outline-none transition focus:border-slate-900"
-                      placeholder="Введите фамилию"
-                  />
-                  <p v-if="fieldErrors.lastName" class="mt-2 text-sm text-red-600">
-                    {{ fieldErrors.lastName }}
-                  </p>
+                  <label class="mb-2 block text-sm font-medium text-slate-700">{{ t('studentProfile.lastName') }}</label>
+                  <input v-model.trim="form.lastName" class="w-full rounded-2xl border border-slate-300 px-4 py-3 outline-none transition focus:border-slate-900" :placeholder="t('studentProfile.lastNamePlaceholder')" />
+                  <p v-if="fieldErrors.lastName" class="mt-2 text-sm text-red-600">{{ fieldErrors.lastName }}</p>
                 </div>
 
                 <div>
-                  <label class="mb-2 block text-sm font-medium text-slate-700">Город</label>
-                  <input
-                      v-model.trim="form.city"
-                      class="w-full rounded-2xl border border-slate-300 px-4 py-3 outline-none transition focus:border-slate-900"
-                      placeholder="Например: Бишкек"
-                  />
+                  <label class="mb-2 block text-sm font-medium text-slate-700">{{ t('studentProfile.city') }}</label>
+                  <input v-model.trim="form.city" class="w-full rounded-2xl border border-slate-300 px-4 py-3 outline-none transition focus:border-slate-900" :placeholder="t('studentProfile.cityPlaceholder')" />
                 </div>
 
                 <div>
-                  <label class="mb-2 block text-sm font-medium text-slate-700">Телефон</label>
-                  <input
-                      v-model.trim="form.phone"
-                      class="w-full rounded-2xl border border-slate-300 px-4 py-3 outline-none transition focus:border-slate-900"
-                      placeholder="+996 700 00 00 00"
-                  />
-                  <p class="mt-2 text-xs text-slate-500">
-                    Укажите номер, по которому с вами удобно связаться.
-                  </p>
+                  <label class="mb-2 block text-sm font-medium text-slate-700">{{ t('studentProfile.phone') }}</label>
+                  <input v-model.trim="form.phone" class="w-full rounded-2xl border border-slate-300 px-4 py-3 outline-none transition focus:border-slate-900" :placeholder="t('studentProfile.phonePlaceholder')" />
+                  <p class="mt-2 text-xs text-slate-500">{{ t('studentProfile.phoneHint') }}</p>
                 </div>
 
                 <div class="md:col-span-2">
-                  <label class="mb-2 block text-sm font-medium text-slate-700">Часовой пояс</label>
-                  <input
-                      v-model.trim="form.timezone"
-                      class="w-full rounded-2xl border border-slate-300 px-4 py-3 outline-none transition focus:border-slate-900"
-                      placeholder="Например: Asia/Bishkek"
-                  />
-                  <p class="mt-2 text-xs text-slate-500">
-                    Это поможет корректно показывать время занятий и бронирований.
-                  </p>
+                  <label class="mb-2 block text-sm font-medium text-slate-700">{{ t('studentProfile.timezone') }}</label>
+                  <input v-model.trim="form.timezone" class="w-full rounded-2xl border border-slate-300 px-4 py-3 outline-none transition focus:border-slate-900" :placeholder="t('studentProfile.timezonePlaceholder')" />
+                  <p class="mt-2 text-xs text-slate-500">{{ t('studentProfile.timezoneHint') }}</p>
                 </div>
               </div>
             </div>
@@ -167,34 +112,22 @@
           <AppCard>
             <div class="space-y-6">
               <div>
-                <h2 class="text-xl font-semibold text-slate-900">О себе</h2>
-                <p class="mt-1 text-sm text-slate-600">
-                  Расскажите коротко о своих целях, интересах и запросе к обучению.
-                </p>
+                <h2 class="text-xl font-semibold text-slate-900">{{ t('studentProfile.sectionBio') }}</h2>
+                <p class="mt-1 text-sm text-slate-600">{{ t('studentProfile.sectionBioHint') }}</p>
               </div>
 
               <div>
-                <label class="mb-2 block text-sm font-medium text-slate-700">Краткое описание</label>
-                <textarea
-                    v-model.trim="form.bio"
-                    class="min-h-40 w-full rounded-2xl border border-slate-300 px-4 py-3 outline-none transition focus:border-slate-900"
-                    placeholder="Например: Хочу улучшить навыки frontend-разработки, подготовиться к собеседованиям и научиться работать с Vue."
-                />
-                <p class="mt-2 text-xs text-slate-500">
-                  Хорошее описание помогает ментору лучше подготовиться к занятию.
-                </p>
+                <label class="mb-2 block text-sm font-medium text-slate-700">{{ t('studentProfile.bioLabel') }}</label>
+                <textarea v-model.trim="form.bio" class="min-h-40 w-full rounded-2xl border border-slate-300 px-4 py-3 outline-none transition focus:border-slate-900" :placeholder="t('studentProfile.bioPlaceholder')" />
+                <p class="mt-2 text-xs text-slate-500">{{ t('studentProfile.bioHint') }}</p>
               </div>
             </div>
           </AppCard>
 
           <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <div class="min-h-[24px]">
-              <p v-if="successMessage" class="text-sm font-medium text-emerald-600">
-                {{ successMessage }}
-              </p>
-              <p v-else-if="saveError" class="text-sm font-medium text-red-600">
-                {{ saveError }}
-              </p>
+              <p v-if="successMessage" class="text-sm font-medium text-emerald-600">{{ successMessage }}</p>
+              <p v-else-if="saveError" class="text-sm font-medium text-red-600">{{ saveError }}</p>
             </div>
 
             <button
@@ -202,7 +135,7 @@
                 class="inline-flex items-center justify-center rounded-2xl bg-slate-900 px-5 py-3 text-sm font-semibold text-white transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-60"
                 :disabled="saving"
             >
-              {{ saving ? 'Сохранение...' : 'Сохранить изменения' }}
+              {{ saving ? t('studentProfile.saving') : t('studentProfile.saveChanges') }}
             </button>
           </div>
         </form>
@@ -213,6 +146,7 @@
 
 <script setup lang="ts">
 import { computed, onMounted, reactive, ref } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { http } from '../../shared/api/http'
 import { useToastStore } from '../../shared/lib/getApiErrorMessage'
 import { useErrorHandler } from '../../shared/composables/useErrorHandler'
@@ -222,6 +156,7 @@ import AppSectionTitle from '../../shared/ui/AppSectionTitle.vue'
 import AppLoadingState from '../../shared/ui/AppLoadingState.vue'
 import AppErrorState from '../../shared/ui/AppErrorState.vue'
 
+const { t } = useI18n()
 const toastStore = useToastStore()
 const { handleError } = useErrorHandler()
 const avatarMessage = ref('')
@@ -254,7 +189,7 @@ const fieldErrors = reactive({
 
 const fullName = computed(() => {
   const full = `${form.firstName} ${form.lastName}`.trim()
-  return full || 'Не заполнено'
+  return full || t('studentProfile.notFilled')
 })
 
 const avatarInitials = computed(() => {
@@ -266,16 +201,15 @@ const avatarInitials = computed(() => {
 const validate = () => {
   fieldErrors.firstName = ''
   fieldErrors.lastName = ''
-
   let isValid = true
 
   if (!form.firstName.trim()) {
-    fieldErrors.firstName = 'Введите имя'
+    fieldErrors.firstName = t('studentProfile.firstNameRequired')
     isValid = false
   }
 
   if (!form.lastName.trim()) {
-    fieldErrors.lastName = 'Введите фамилию'
+    fieldErrors.lastName = t('studentProfile.lastNameRequired')
     isValid = false
   }
 
@@ -290,8 +224,8 @@ const loadProfile = async () => {
     const { data } = await http.get('/api/student/profile')
     Object.assign(form, data)
   } catch (error) {
-    console.error('Ошибка загрузки профиля ученика:', error)
-    pageError.value = 'Попробуйте обновить страницу чуть позже.'
+    console.error(error)
+    pageError.value = t('studentProfile.pageLoadError')
   } finally {
     loading.value = false
   }
@@ -299,7 +233,7 @@ const loadProfile = async () => {
 
 const saveProfile = async () => {
   if (!validate()) {
-    toastStore.error('Проверьте заполнение обязательных полей.')
+    toastStore.error(t('studentProfile.validationError'))
     return
   }
 
@@ -309,11 +243,11 @@ const saveProfile = async () => {
 
   try {
     await http.put('/api/student/profile', form)
-    successMessage.value = 'Профиль успешно обновлён.'
-    toastStore.success('Профиль успешно обновлён.')
+    successMessage.value = t('studentProfile.saveSuccess')
+    toastStore.success(t('studentProfile.saveSuccess'))
   } catch (error) {
-    console.error('Ошибка сохранения профиля ученика:', error)
-    saveError.value = handleError(error, 'Не удалось сохранить изменения.')
+    console.error(error)
+    saveError.value = handleError(error, t('studentProfile.saveError'))
   } finally {
     saving.value = false
   }
@@ -321,32 +255,24 @@ const saveProfile = async () => {
 
 const handleAvatarUpload = async (event: Event) => {
   avatarError.value = ''
-
   const input = event.target as HTMLInputElement
   const file = input.files?.[0]
-
-  if (!file) {
-    return
-  }
+  if (!file) return
 
   const formData = new FormData()
   formData.append('file', file)
-
   avatarUploading.value = true
 
   try {
     const { data } = await http.post('/api/student/profile/avatar', formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
+      headers: { 'Content-Type': 'multipart/form-data' },
     })
-
     form.avatarKey = data.avatarKey
     form.avatarUrl = data.avatarUrl
-    toastStore.success('Фото профиля успешно обновлено.')
+    toastStore.success(t('studentProfile.avatarUploaded'))
   } catch (error: any) {
-    console.error('Ошибка загрузки аватара ученика:', error)
-    avatarError.value = handleError(error, 'Не удалось загрузить фото.')
+    console.error(error)
+    avatarError.value = handleError(error, t('studentProfile.avatarUploadError'))
   } finally {
     avatarUploading.value = false
     input.value = ''
@@ -354,25 +280,21 @@ const handleAvatarUpload = async (event: Event) => {
 }
 
 const confirmAvatarDelete = async () => {
-  if (!window.confirm('Вы уверены? Фото профиля будет удалено.')) {
-    return
-  }
-
+  if (!window.confirm(t('studentProfile.confirmDeleteAvatar'))) return
   await handleAvatarDelete()
 }
 
 const handleAvatarDelete = async () => {
-
   avatarDeleting.value = true
 
   try {
     await http.delete('/api/student/profile/avatar')
     form.avatarKey = ''
     form.avatarUrl = ''
-    toastStore.success('Фото профиля удалено.')
+    toastStore.success(t('studentProfile.avatarDeleted'))
   } catch (error: any) {
-    console.error('Ошибка удаления аватара ученика:', error)
-    avatarError.value = handleError(error, 'Не удалось удалить фото.')
+    console.error(error)
+    avatarError.value = handleError(error, t('studentProfile.avatarDeleteError'))
   } finally {
     avatarDeleting.value = false
   }

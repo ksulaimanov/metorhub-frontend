@@ -40,13 +40,13 @@
             <AdminDataRow :label="t('admin.applications.fieldEmail')" :value="application.email" />
             <AdminDataRow :label="t('admin.applications.fieldPhone')" :value="application.phone" />
             <AdminDataRow :label="t('admin.applications.fieldSpecializations')">
-              {{ application.specializations.join(', ') || '—' }}
+              {{ (application.specializations ?? []).join(', ') || '—' }}
             </AdminDataRow>
             <AdminDataRow :label="t('admin.applications.fieldExperience')">
-              <p class="whitespace-pre-line">{{ application.experience }}</p>
+              <p class="whitespace-pre-line">{{ application.experience || '—' }}</p>
             </AdminDataRow>
             <AdminDataRow :label="t('admin.applications.fieldMotivation')">
-              <p class="whitespace-pre-line">{{ application.motivation }}</p>
+              <p class="whitespace-pre-line">{{ application.motivation || '—' }}</p>
             </AdminDataRow>
           </dl>
         </AppCard>
@@ -59,7 +59,7 @@
           <dl>
             <AdminDataRow
               :label="t('admin.applications.fieldSubmittedAt')"
-              :value="formatDateTimeForDisplay(application.submittedAt)"
+              :value="application.submittedAt ? formatDateTimeForDisplay(application.submittedAt) : '—'"
             />
             <AdminDataRow
               v-if="application.reviewedAt"
@@ -188,11 +188,17 @@ const rejectionReason = ref('')
 const rejectValidationError = ref('')
 
 async function loadApplication() {
+  const numericId = Number(props.id)
+  if (!numericId || isNaN(numericId)) {
+    error.value = t('errors.notFound')
+    return
+  }
+
   loading.value = true
   error.value = ''
 
   try {
-    application.value = await getAdminMentorApplicationById(Number(props.id))
+    application.value = await getAdminMentorApplicationById(numericId)
   } catch (err: any) {
     error.value = err?.response?.data?.message || t('admin.applications.loadError')
   } finally {

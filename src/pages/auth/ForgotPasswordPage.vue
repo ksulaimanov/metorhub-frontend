@@ -4,34 +4,34 @@
       <div class="grid w-full gap-8 lg:grid-cols-2 lg:items-center">
         <div class="hidden lg:block">
           <p class="inline-flex rounded-full bg-slate-200 px-4 py-2 text-sm font-medium text-slate-700">
-            Восстановление доступа
+            {{ t('forgotPassword.heroBadge') }}
           </p>
 
           <h1 class="mt-5 max-w-xl text-5xl font-bold leading-tight text-slate-900">
-            Сбросьте пароль и вернитесь в MentorHub
+            {{ t('forgotPassword.heroTitle') }}
           </h1>
 
           <p class="mt-6 max-w-lg text-lg leading-8 text-slate-600">
-            Введите email, и мы отправим код для сброса пароля.
+            {{ t('forgotPassword.heroSubtitle') }}
           </p>
         </div>
 
         <div class="w-full max-w-md justify-self-center rounded-3xl bg-white p-6 shadow-sm ring-1 ring-slate-200 sm:p-8">
-          <h1 class="text-3xl font-bold text-slate-900">Забыли пароль?</h1>
+          <h1 class="text-3xl font-bold text-slate-900">{{ t('forgotPassword.title') }}</h1>
           <p class="mt-2 text-sm text-slate-600">
-            Укажите email, связанный с вашим аккаунтом.
+            {{ t('forgotPassword.subtitle') }}
           </p>
 
           <form class="mt-8 space-y-5" @submit.prevent="handleSubmit">
             <div>
-              <label class="mb-2 block text-sm font-medium text-slate-700">Email</label>
+              <label class="mb-2 block text-sm font-medium text-slate-700">{{ t('forgotPassword.emailLabel') }}</label>
               <input
                   v-model.trim="email"
                   type="email"
                   autocomplete="email"
                   class="w-full rounded-2xl border px-4 py-3 outline-none transition"
                   :class="fieldClass(showValidation && !!emailError)"
-                  placeholder="you@example.com"
+                  :placeholder="t('forgotPassword.emailPlaceholder')"
               />
               <p v-if="showValidation && emailError" class="mt-2 text-sm text-red-600">
                 {{ emailError }}
@@ -40,7 +40,7 @@
 
             <AppErrorState
                 v-if="errorMessage"
-                title="Не удалось отправить код"
+                :title="t('forgotPassword.errorTitle')"
                 :description="errorMessage"
             />
 
@@ -56,13 +56,13 @@
                 class="w-full rounded-2xl bg-slate-900 px-4 py-3 font-semibold text-white transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50"
                 :disabled="loading"
             >
-              {{ loading ? 'Отправка...' : 'Отправить код' }}
+              {{ loading ? t('forgotPassword.submitLoading') : t('forgotPassword.submit') }}
             </button>
 
             <div class="text-center text-sm text-slate-600">
-              Вспомнили пароль?
+              {{ t('forgotPassword.backToLogin') }}
               <RouterLink to="/login" class="font-semibold text-slate-900 transition hover:opacity-70">
-                Вернуться ко входу
+                {{ t('forgotPassword.backToLoginLink') }}
               </RouterLink>
             </div>
           </form>
@@ -75,12 +75,14 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 import { useRouter } from 'vue-router'
+import { useI18n } from 'vue-i18n'
 import { http } from '../../shared/api/http'
 import { useToastStore } from '../../shared/lib/getApiErrorMessage'
 import { useErrorHandler } from '../../shared/composables/useErrorHandler'
 import PublicLayout from '../../widgets/layout/PublicLayout.vue'
 import AppErrorState from '../../shared/ui/AppErrorState.vue'
 
+const { t } = useI18n()
 const router = useRouter()
 const toastStore = useToastStore()
 const { handleError } = useErrorHandler()
@@ -93,9 +95,9 @@ const showValidation = ref(false)
 const successMessage = ref('')
 
 const emailError = computed(() => {
-  if (!email.value) return 'Введите email'
+  if (!email.value) return t('forgotPassword.emailRequired')
   const valid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value)
-  return valid ? '' : 'Введите корректный email'
+  return valid ? '' : t('forgotPassword.emailInvalid')
 })
 
 const fieldClass = (hasError: boolean) =>
@@ -115,7 +117,7 @@ const handleSubmit = async () => {
       email: email.value,
     })
 
-    toastStore.success('Если email зарегистрирован, код для сброса отправлен.')
+    toastStore.success(t('forgotPassword.successToast'))
 
     setTimeout(async () => {
       await router.push({
@@ -124,7 +126,7 @@ const handleSubmit = async () => {
       })
     }, 1000)
   } catch (error: any) {
-    errorMessage.value = handleError(error, 'Не удалось отправить код для сброса.')
+    errorMessage.value = handleError(error, t('forgotPassword.errorFallback'))
   } finally {
     loading.value = false
   }

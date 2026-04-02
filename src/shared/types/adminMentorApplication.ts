@@ -5,7 +5,7 @@ export interface AdminMentorApplicationListItem {
   id: number
   fullName: string
   email: string
-  specializations: string[]
+  specializations: string[] | null
   status: MentorApplicationStatus
   submittedAt: string
 }
@@ -16,10 +16,10 @@ export interface AdminMentorApplicationDetail {
   status: MentorApplicationStatus
   fullName: string
   email: string
-  phone: string
-  specializations: string[]
-  experience: string
-  motivation: string
+  phone: string | null
+  specializations: string[] | null
+  experience: string | null
+  motivation: string | null
   submittedAt: string
   reviewedAt: string | null
   adminComment: string | null

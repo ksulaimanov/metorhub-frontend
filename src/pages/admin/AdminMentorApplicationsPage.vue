@@ -64,10 +64,10 @@
                   <td class="px-5 py-4 font-medium text-text-primary">{{ item.fullName }}</td>
                   <td class="px-5 py-4 text-text-secondary">{{ item.email }}</td>
                   <td class="px-5 py-4 text-text-secondary">
-                    {{ item.specializations.join(', ') || '—' }}
+                    {{ (item.specializations ?? []).join(', ') || '—' }}
                   </td>
                   <td class="px-5 py-4 text-text-secondary whitespace-nowrap">
-                    {{ formatDateTimeForDisplay(item.submittedAt, false) }}
+                    {{ item.submittedAt ? formatDateTimeForDisplay(item.submittedAt, false) : '—' }}
                   </td>
                   <td class="px-5 py-4">
                     <StatusBadge :status="item.status" />
@@ -99,9 +99,9 @@
               <StatusBadge :status="item.status" />
             </div>
             <div class="mt-2 flex flex-wrap gap-1 text-xs text-text-secondary">
-              <span>{{ formatDateTimeForDisplay(item.submittedAt, false) }}</span>
-              <span v-if="item.specializations.length">
-                · {{ item.specializations.join(', ') }}
+              <span>{{ item.submittedAt ? formatDateTimeForDisplay(item.submittedAt, false) : '—' }}</span>
+              <span v-if="(item.specializations ?? []).length">
+                · {{ (item.specializations ?? []).join(', ') }}
               </span>
             </div>
           </AppCard>

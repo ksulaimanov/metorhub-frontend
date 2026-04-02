@@ -2,22 +2,22 @@
   <PrivateLayout>
     <div class="space-y-8">
       <AppSectionTitle
-          title="Записи учеников"
-          description="Подтверждайте занятия, переносите их при необходимости и отмечайте завершённые уроки."
+          :title="t('mentorBookings.title')"
+          :description="t('mentorBookings.description')"
       />
 
-      <AppLoadingState v-if="loading" text="Загружаем записи..." />
+      <AppLoadingState v-if="loading" :text="t('mentorBookings.loadingBookings')" />
 
       <AppErrorState
           v-else-if="error"
-          title="Не удалось загрузить записи"
+          :title="t('mentorBookings.loadError')"
           :description="error"
       />
 
       <AppEmptyState
           v-else-if="bookings.length === 0"
-          title="Пока нет записей"
-          description="Когда ученики начнут записываться к вам, здесь появится список занятий."
+          :title="t('mentorBookings.emptyTitle')"
+          :description="t('mentorBookings.emptyDesc')"
       />
 
       <div v-else class="grid gap-4">
@@ -41,11 +41,11 @@
 
                 <div class="grid gap-2 text-sm text-slate-600 sm:grid-cols-2">
                   <p>
-                    <span class="font-medium text-slate-800">Начало:</span>
+                    <span class="font-medium text-slate-800">{{ t('mentorBookings.startLabel') }}:</span>
                     {{ formatDateTime(booking.startAt) }}
                   </p>
                   <p>
-                    <span class="font-medium text-slate-800">Окончание:</span>
+                    <span class="font-medium text-slate-800">{{ t('mentorBookings.endLabel') }}:</span>
                     {{ formatDateTime(booking.endAt) }}
                   </p>
                 </div>
@@ -54,14 +54,14 @@
                     v-if="booking.studentNote"
                     class="rounded-2xl bg-slate-50 px-4 py-3 text-sm text-slate-700 ring-1 ring-slate-200"
                 >
-                  <span class="font-medium text-slate-900">Комментарий ученика:</span>
+                  <span class="font-medium text-slate-900">{{ t('mentorBookings.studentNote') }}:</span>
                   {{ booking.studentNote }}
                 </div>
               </div>
 
               <div class="rounded-2xl bg-slate-50 px-4 py-3 text-sm text-slate-600 ring-1 ring-slate-200">
                 <p>
-                  <span class="font-medium text-slate-900">ID записи:</span>
+                  <span class="font-medium text-slate-900">{{ t('mentorBookings.bookingId') }}:</span>
                   #{{ booking.id }}
                 </p>
               </div>
@@ -74,7 +74,7 @@
                   :disabled="updatingId === booking.id"
                   @click="updateStatus(booking.id, 'CONFIRMED')"
               >
-                {{ updatingId === booking.id ? 'Обновление...' : 'Подтвердить' }}
+                {{ updatingId === booking.id ? t('mentorBookings.updating') : t('mentorBookings.confirm') }}
               </button>
 
               <button
@@ -83,7 +83,7 @@
                   :disabled="updatingId === booking.id"
                   @click="updateStatus(booking.id, 'COMPLETED')"
               >
-                {{ updatingId === booking.id ? 'Обновление...' : 'Завершить' }}
+                {{ updatingId === booking.id ? t('mentorBookings.updating') : t('mentorBookings.complete') }}
               </button>
 
               <button
@@ -92,7 +92,7 @@
                   :disabled="updatingId === booking.id"
                   @click="updateStatus(booking.id, 'CANCELLED_BY_MENTOR')"
               >
-                {{ updatingId === booking.id ? 'Обновление...' : 'Отменить' }}
+                {{ updatingId === booking.id ? t('mentorBookings.updating') : t('mentorBookings.cancel') }}
               </button>
             </div>
           </div>
@@ -104,9 +104,10 @@
 
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { http } from '../../shared/api/http'
 import { useErrorHandler } from '../../shared/composables/useErrorHandler'
-import { formatDateTimeForDisplay} from '../../shared/lib/dateFormatter'
+import { formatDateTimeForDisplay } from '../../shared/lib/dateFormatter'
 import PrivateLayout from '../../widgets/layout/PrivateLayout.vue'
 import AppSectionTitle from '../../shared/ui/AppSectionTitle.vue'
 import AppEmptyState from '../../shared/ui/AppEmptyState.vue'
@@ -115,6 +116,7 @@ import AppBadge from '../../shared/ui/AppBadge.vue'
 import AppLoadingState from '../../shared/ui/AppLoadingState.vue'
 import AppErrorState from '../../shared/ui/AppErrorState.vue'
 
+const { t, locale } = useI18n()
 const { handleError } = useErrorHandler()
 
 interface Booking {
@@ -140,7 +142,7 @@ const loadBookings = async () => {
     bookings.value = data
   } catch (e) {
     console.error(e)
-    error.value = 'Попробуйте обновить страницу чуть позже.'
+    error.value = t('mentorBookings.pageLoadError')
   } finally {
     loading.value = false
   }
@@ -148,7 +150,7 @@ const loadBookings = async () => {
 
 const updateStatus = async (bookingId: number, status: string) => {
   if (status === 'CANCELLED_BY_MENTOR') {
-    if (!window.confirm('Вы уверены? Запись будет отменена.')) {
+    if (!window.confirm(t('mentorBookings.confirmCancel'))) {
       return
     }
   }
@@ -162,16 +164,16 @@ const updateStatus = async (bookingId: number, status: string) => {
     })
 
     const statusMessages: Record<string, string> = {
-      CONFIRMED: 'Запись подтверждена.',
-      COMPLETED: 'Запись отмечена как завершённая.',
-      CANCELLED_BY_MENTOR: 'Запись отменена.',
+      CONFIRMED: t('mentorBookings.statusConfirmed'),
+      COMPLETED: t('mentorBookings.statusCompleted'),
+      CANCELLED_BY_MENTOR: t('mentorBookings.statusCancelled'),
     }
 
-    console.log(statusMessages[status] || 'Статус обновлён.')
+    console.log(statusMessages[status] || t('mentorBookings.statusUpdated'))
     await loadBookings()
   } catch (e) {
     console.error(e)
-    handleError(e as any, 'Не удалось обновить статус записи.')
+    handleError(e as any, t('mentorBookings.updateError'))
   } finally {
     updatingId.value = null
   }
@@ -179,21 +181,23 @@ const updateStatus = async (bookingId: number, status: string) => {
 
 const formatDateTime = (value: string) => formatDateTimeForDisplay(value)
 
-const formatTime = (value: string) =>
-    new Date(value).toLocaleTimeString('ru-RU', {
-      hour: '2-digit',
-      minute: '2-digit',
-    })
+
+const formatTime = (value: string) => {
+  const loc = locale.value === 'ky' ? 'ky-KG' : 'ru-RU'
+  return new Date(value).toLocaleTimeString(loc, {
+    hour: '2-digit',
+    minute: '2-digit',
+  })
+}
 
 const formatStatus = (value: string) => {
   const map: Record<string, string> = {
-    PENDING: 'Ожидает подтверждения',
-    CONFIRMED: 'Подтверждено',
-    CANCELLED_BY_STUDENT: 'Отменено учеником',
-    CANCELLED_BY_MENTOR: 'Отменено ментором',
-    COMPLETED: 'Завершено',
+    PENDING: t('mentorBookings.statusPending'),
+    CONFIRMED: t('mentorBookings.statusApproved'),
+    CANCELLED_BY_STUDENT: t('mentorBookings.statusCancelledByStudent'),
+    CANCELLED_BY_MENTOR: t('mentorBookings.statusCancelledByMentor'),
+    COMPLETED: t('mentorBookings.statusDone'),
   }
-
   return map[value] || value
 }
 

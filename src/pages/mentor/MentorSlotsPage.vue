@@ -2,8 +2,8 @@
   <PrivateLayout>
     <div class="space-y-8">
       <AppSectionTitle
-          title="Слоты ментора"
-          description="Управляйте доступным временем для записи учеников. Можно создавать как индивидуальные, так и мини-групповые занятия."
+          :title="t('mentorSlots.title')"
+          :description="t('mentorSlots.description')"
       />
 
       <AppCard>
@@ -23,16 +23,16 @@
           <input
               v-model="form.timezone"
               class="rounded-2xl border border-slate-300 px-4 py-3"
-              placeholder="Часовой пояс"
+              :placeholder="t('mentorSlots.timezonePlaceholder')"
           />
 
           <select
               v-model="form.lessonFormat"
               class="rounded-2xl border border-slate-300 px-4 py-3"
           >
-            <option value="ONLINE">Онлайн</option>
-            <option value="OFFLINE">Офлайн</option>
-            <option value="HYBRID">Гибрид</option>
+            <option value="ONLINE">{{ t('common.lessonFormat.ONLINE') }}</option>
+            <option value="OFFLINE">{{ t('common.lessonFormat.OFFLINE') }}</option>
+            <option value="HYBRID">{{ t('common.lessonFormat.HYBRID') }}</option>
           </select>
 
           <input
@@ -40,23 +40,23 @@
               type="number"
               min="1"
               class="rounded-2xl border border-slate-300 px-4 py-3"
-              placeholder="Количество мест"
+              :placeholder="t('mentorSlots.capacityPlaceholder')"
           />
 
           <div class="rounded-2xl bg-slate-50 px-4 py-3 text-sm text-slate-600 ring-1 ring-slate-200">
-            Укажите 1 для индивидуального занятия или больше 1 для мини-группы.
+            {{ t('mentorSlots.capacityHint') }}
           </div>
 
           <input
               v-model="form.meetingLink"
               class="rounded-2xl border border-slate-300 px-4 py-3 md:col-span-2"
-              placeholder="Ссылка на встречу"
+              :placeholder="t('mentorSlots.meetingLinkPlaceholder')"
           />
 
           <input
               v-model="form.addressText"
               class="rounded-2xl border border-slate-300 px-4 py-3 md:col-span-2"
-              placeholder="Адрес"
+              :placeholder="t('mentorSlots.addressPlaceholder')"
           />
 
           <div v-if="createError" class="md:col-span-2 text-sm font-medium text-red-600">
@@ -71,23 +71,23 @@
               class="rounded-2xl bg-slate-900 px-4 py-3 font-semibold text-white md:col-span-2 disabled:cursor-not-allowed disabled:opacity-50"
               :disabled="creating"
           >
-            {{ creating ? 'Создание...' : 'Создать слот' }}
+            {{ creating ? t('mentorSlots.creating') : t('mentorSlots.createSlot') }}
           </button>
         </form>
       </AppCard>
 
-      <AppLoadingState v-if="loading" text="Загружаем слоты..." />
+      <AppLoadingState v-if="loading" :text="t('mentorSlots.loadingSlots')" />
 
       <AppErrorState
           v-else-if="pageError"
-          title="Не удалось загрузить слоты"
+          :title="t('mentorSlots.loadError')"
           :description="pageError"
       />
 
       <AppEmptyState
           v-else-if="slots.length === 0"
-          title="Слоты пока не созданы"
-          description="Создайте первый слот, чтобы ученики могли записываться на занятия."
+          :title="t('mentorSlots.emptyTitle')"
+          :description="t('mentorSlots.emptyDesc')"
       />
 
       <div v-else class="grid gap-4">
@@ -100,22 +100,22 @@
                 </p>
 
                 <div class="mt-3 flex flex-wrap gap-3">
-                  <AppBadge>{{ formatLessonFormat(slot.lessonFormat) }}</AppBadge>
+                  <AppBadge>{{ t(`common.lessonFormat.${slot.lessonFormat}`, slot.lessonFormat) }}</AppBadge>
 
                   <AppBadge :variant="slot.active ? 'success' : 'danger'">
-                    {{ slot.active ? 'Активен' : 'Неактивен' }}
+                    {{ slot.active ? t('mentorSlots.active') : t('mentorSlots.inactive') }}
                   </AppBadge>
 
                   <AppBadge variant="info">
-                    Мест: {{ slot.capacity }}
+                    {{ t('mentorSlots.seats') }}: {{ slot.capacity }}
                   </AppBadge>
 
                   <AppBadge variant="warning">
-                    Занято: {{ slot.bookedCount }}
+                    {{ t('mentorSlots.booked') }}: {{ slot.bookedCount }}
                   </AppBadge>
 
                   <AppBadge :variant="slot.availableSeats > 0 ? 'success' : 'danger'">
-                    Свободно: {{ slot.availableSeats }}
+                    {{ t('mentorSlots.available') }}: {{ slot.availableSeats }}
                   </AppBadge>
                 </div>
               </div>
@@ -125,7 +125,7 @@
                     class="rounded-2xl border border-slate-300 px-4 py-2 transition hover:bg-slate-100"
                     @click="toggleEdit(slot)"
                 >
-                  {{ editingSlotId === slot.id ? 'Скрыть' : 'Редактировать' }}
+                  {{ editingSlotId === slot.id ? t('mentorSlots.hide') : t('mentorSlots.edit') }}
                 </button>
 
                 <button
@@ -134,7 +134,7 @@
                     :disabled="deactivatingId === slot.id"
                     @click="deactivateSlot(slot.id)"
                 >
-                  {{ deactivatingId === slot.id ? 'Деактивация...' : 'Деактивировать' }}
+                  {{ deactivatingId === slot.id ? t('mentorSlots.deactivating') : t('mentorSlots.deactivate') }}
                 </button>
               </div>
             </div>
@@ -144,71 +144,34 @@
                 class="rounded-2xl border border-slate-200 bg-slate-50 p-4"
             >
               <form class="grid gap-4 md:grid-cols-2" @submit.prevent="updateSlot(slot.id)">
-                <input
-                    v-model="editForm.startAt"
-                    type="datetime-local"
-                    class="rounded-2xl border border-slate-300 px-4 py-3"
-                />
+                <input v-model="editForm.startAt" type="datetime-local" class="rounded-2xl border border-slate-300 px-4 py-3" />
+                <input v-model="editForm.endAt" type="datetime-local" class="rounded-2xl border border-slate-300 px-4 py-3" />
+                <input v-model="editForm.timezone" class="rounded-2xl border border-slate-300 px-4 py-3" :placeholder="t('mentorSlots.timezonePlaceholder')" />
 
-                <input
-                    v-model="editForm.endAt"
-                    type="datetime-local"
-                    class="rounded-2xl border border-slate-300 px-4 py-3"
-                />
-
-                <input
-                    v-model="editForm.timezone"
-                    class="rounded-2xl border border-slate-300 px-4 py-3"
-                    placeholder="Часовой пояс"
-                />
-
-                <select
-                    v-model="editForm.lessonFormat"
-                    class="rounded-2xl border border-slate-300 px-4 py-3"
-                >
-                  <option value="ONLINE">Онлайн</option>
-                  <option value="OFFLINE">Офлайн</option>
-                  <option value="HYBRID">Гибрид</option>
+                <select v-model="editForm.lessonFormat" class="rounded-2xl border border-slate-300 px-4 py-3">
+                  <option value="ONLINE">{{ t('common.lessonFormat.ONLINE') }}</option>
+                  <option value="OFFLINE">{{ t('common.lessonFormat.OFFLINE') }}</option>
+                  <option value="HYBRID">{{ t('common.lessonFormat.HYBRID') }}</option>
                 </select>
 
-                <input
-                    v-model.number="editForm.capacity"
-                    type="number"
-                    min="1"
-                    class="rounded-2xl border border-slate-300 px-4 py-3"
-                    placeholder="Количество мест"
-                />
+                <input v-model.number="editForm.capacity" type="number" min="1" class="rounded-2xl border border-slate-300 px-4 py-3" :placeholder="t('mentorSlots.capacityPlaceholder')" />
 
                 <label class="flex items-center gap-3 rounded-2xl border border-slate-200 bg-white px-4 py-3">
                   <input v-model="editForm.active" type="checkbox" />
-                  <span class="text-sm font-medium text-slate-700">Слот активен</span>
+                  <span class="text-sm font-medium text-slate-700">{{ t('mentorSlots.slotActive') }}</span>
                 </label>
 
-                <input
-                    v-model="editForm.meetingLink"
-                    class="rounded-2xl border border-slate-300 px-4 py-3 md:col-span-2"
-                    placeholder="Ссылка на встречу"
-                />
+                <input v-model="editForm.meetingLink" class="rounded-2xl border border-slate-300 px-4 py-3 md:col-span-2" :placeholder="t('mentorSlots.meetingLinkPlaceholder')" />
+                <input v-model="editForm.addressText" class="rounded-2xl border border-slate-300 px-4 py-3 md:col-span-2" :placeholder="t('mentorSlots.addressPlaceholder')" />
 
-                <input
-                    v-model="editForm.addressText"
-                    class="rounded-2xl border border-slate-300 px-4 py-3 md:col-span-2"
-                    placeholder="Адрес"
-                />
-
-                <div v-if="editError" class="md:col-span-2 text-sm font-medium text-red-600">
-                  {{ editError }}
-                </div>
-
-                <div v-if="editMessage" class="md:col-span-2 text-sm font-medium text-emerald-600">
-                  {{ editMessage }}
-                </div>
+                <div v-if="editError" class="md:col-span-2 text-sm font-medium text-red-600">{{ editError }}</div>
+                <div v-if="editMessage" class="md:col-span-2 text-sm font-medium text-emerald-600">{{ editMessage }}</div>
 
                 <button
                     class="rounded-2xl bg-slate-900 px-4 py-3 font-semibold text-white md:col-span-2 disabled:cursor-not-allowed disabled:opacity-50"
                     :disabled="updatingId === slot.id"
                 >
-                  {{ updatingId === slot.id ? 'Сохранение...' : 'Сохранить изменения' }}
+                  {{ updatingId === slot.id ? t('mentorSlots.saving') : t('mentorSlots.saveChanges') }}
                 </button>
               </form>
             </div>
@@ -221,6 +184,7 @@
 
 <script setup lang="ts">
 import { onMounted, reactive, ref } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { http } from '../../shared/api/http'
 import { useToastStore } from '../../shared/lib/getApiErrorMessage'
 import { useErrorHandler } from '../../shared/composables/useErrorHandler'
@@ -233,6 +197,7 @@ import AppBadge from '../../shared/ui/AppBadge.vue'
 import AppLoadingState from '../../shared/ui/AppLoadingState.vue'
 import AppErrorState from '../../shared/ui/AppErrorState.vue'
 
+const { t } = useI18n()
 const toastStore = useToastStore()
 const { handleError } = useErrorHandler()
 
@@ -305,8 +270,8 @@ const loadSlots = async () => {
     const { data } = await http.get('/api/mentor/availability-slots')
     slots.value = data
   } catch (error) {
-    console.error('Ошибка загрузки слотов:', error)
-    pageError.value = 'Попробуйте обновить страницу чуть позже.'
+    console.error(error)
+    pageError.value = t('mentorSlots.pageLoadError')
   } finally {
     loading.value = false
   }
@@ -319,12 +284,11 @@ const createSlot = async () => {
 
   try {
     await http.post('/api/mentor/availability-slots', form)
-    // ... очистка формы ...
-    toastStore.success('Слот успешно создан.')
+    toastStore.success(t('mentorSlots.createSuccess'))
     await loadSlots()
   } catch (error: any) {
-    console.error('Ошибка создания слота:', error)
-    createError.value = handleError(error, 'Не удалось создать слот.')
+    console.error(error)
+    createError.value = handleError(error, t('mentorSlots.createError'))
   } finally {
     creating.value = false
   }
@@ -357,11 +321,11 @@ const updateSlot = async (slotId: number) => {
 
   try {
     await http.put(`/api/mentor/availability-slots/${slotId}`, editForm)
-    toastStore.success('Слот успешно обновлён.')
+    toastStore.success(t('mentorSlots.updateSuccess'))
     await loadSlots()
   } catch (error: any) {
-    console.error('Ошибка обновления слота:', error)
-    handleError(error, 'Не удалось обновить слот.')
+    console.error(error)
+    handleError(error, t('mentorSlots.updateError'))
   } finally {
     updatingId.value = null
   }
@@ -372,11 +336,11 @@ const deactivateSlot = async (slotId: number) => {
 
   try {
     await http.patch(`/api/mentor/availability-slots/${slotId}/deactivate`)
-    toastStore.success('Слот деактивирован.')
+    toastStore.success(t('mentorSlots.deactivateSuccess'))
     await loadSlots()
   } catch (error) {
-    console.error('Ошибка деактивации слота:', error)
-    handleError(error as any, 'Не удалось деактивировать слот.')
+    console.error(error)
+    handleError(error as any, t('mentorSlots.deactivateError'))
   } finally {
     deactivatingId.value = null
   }
@@ -391,14 +355,6 @@ const toDateTimeLocalValue = (value: string) => {
 
 const formatDateTime = (value: string) => formatDateTimeForDisplay(value)
 
-const formatLessonFormat = (value: string) => {
-  const map: Record<string, string> = {
-    ONLINE: 'Онлайн',
-    OFFLINE: 'Офлайн',
-    HYBRID: 'Гибрид',
-  }
-  return map[value] || value
-}
 
 onMounted(loadSlots)
 </script>

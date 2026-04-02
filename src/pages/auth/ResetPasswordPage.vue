@@ -4,34 +4,34 @@
       <div class="grid w-full gap-8 lg:grid-cols-2 lg:items-center">
         <div class="hidden lg:block">
           <p class="inline-flex rounded-full bg-slate-200 px-4 py-2 text-sm font-medium text-slate-700">
-            Новый пароль
+            {{ t('resetPassword.heroBadge') }}
           </p>
 
           <h1 class="mt-5 max-w-xl text-5xl font-bold leading-tight text-slate-900">
-            Обновите пароль и войдите снова
+            {{ t('resetPassword.heroTitle') }}
           </h1>
 
           <p class="mt-6 max-w-lg text-lg leading-8 text-slate-600">
-            Введите email, код из письма и новый пароль.
+            {{ t('resetPassword.heroSubtitle') }}
           </p>
         </div>
 
         <div class="w-full max-w-md justify-self-center rounded-3xl bg-white p-6 shadow-sm ring-1 ring-slate-200 sm:p-8">
-          <h1 class="text-3xl font-bold text-slate-900">Сброс пароля</h1>
+          <h1 class="text-3xl font-bold text-slate-900">{{ t('resetPassword.title') }}</h1>
           <p class="mt-2 text-sm text-slate-600">
-            Подтвердите код и задайте новый пароль.
+            {{ t('resetPassword.subtitle') }}
           </p>
 
           <form class="mt-8 space-y-5" @submit.prevent="handleSubmit">
             <div>
-              <label class="mb-2 block text-sm font-medium text-slate-700">Email</label>
+              <label class="mb-2 block text-sm font-medium text-slate-700">{{ t('resetPassword.emailLabel') }}</label>
               <input
                   v-model.trim="email"
                   type="email"
                   autocomplete="email"
                   class="w-full rounded-2xl border px-4 py-3 outline-none transition"
                   :class="fieldClass(showValidation && !!emailError)"
-                  placeholder="you@example.com"
+                  :placeholder="t('resetPassword.emailPlaceholder')"
               />
               <p v-if="showValidation && emailError" class="mt-2 text-sm text-red-600">
                 {{ emailError }}
@@ -39,14 +39,14 @@
             </div>
 
             <div>
-              <label class="mb-2 block text-sm font-medium text-slate-700">Код сброса</label>
+              <label class="mb-2 block text-sm font-medium text-slate-700">{{ t('resetPassword.codeLabel') }}</label>
               <input
                   v-model.trim="code"
                   inputmode="numeric"
                   maxlength="6"
                   class="w-full rounded-2xl border px-4 py-3 tracking-[0.35em] outline-none transition"
                   :class="fieldClass(showValidation && !!codeError)"
-                  placeholder="123456"
+                  :placeholder="t('resetPassword.codePlaceholder')"
               />
               <p v-if="showValidation && codeError" class="mt-2 text-sm text-red-600">
                 {{ codeError }}
@@ -54,14 +54,14 @@
             </div>
 
             <div>
-              <label class="mb-2 block text-sm font-medium text-slate-700">Новый пароль</label>
+              <label class="mb-2 block text-sm font-medium text-slate-700">{{ t('resetPassword.newPasswordLabel') }}</label>
               <input
                   v-model="newPassword"
                   :type="showPassword ? 'text' : 'password'"
                   autocomplete="new-password"
                   class="w-full rounded-2xl border px-4 py-3 outline-none transition"
                   :class="fieldClass(showValidation && !!newPasswordError)"
-                  placeholder="Минимум 8 символов"
+                  :placeholder="t('resetPassword.newPasswordPlaceholder')"
               />
               <p v-if="showValidation && newPasswordError" class="mt-2 text-sm text-red-600">
                 {{ newPasswordError }}
@@ -69,14 +69,14 @@
             </div>
 
             <div>
-              <label class="mb-2 block text-sm font-medium text-slate-700">Подтверждение нового пароля</label>
+              <label class="mb-2 block text-sm font-medium text-slate-700">{{ t('resetPassword.confirmPasswordLabel') }}</label>
               <input
                   v-model="confirmPassword"
                   :type="showPassword ? 'text' : 'password'"
                   autocomplete="new-password"
                   class="w-full rounded-2xl border px-4 py-3 outline-none transition"
                   :class="fieldClass(showValidation && !!confirmPasswordError)"
-                  placeholder="Повторите новый пароль"
+                  :placeholder="t('resetPassword.confirmPasswordPlaceholder')"
               />
               <p v-if="showValidation && confirmPasswordError" class="mt-2 text-sm text-red-600">
                 {{ confirmPasswordError }}
@@ -88,12 +88,12 @@
                 class="w-full rounded-2xl border border-slate-300 px-4 py-3 text-sm font-semibold text-slate-700 transition hover:bg-slate-100"
                 @click="showPassword = !showPassword"
             >
-              {{ showPassword ? 'Скрыть пароль' : 'Показать пароль' }}
+              {{ showPassword ? t('resetPassword.hidePassword') : t('resetPassword.showPassword') }}
             </button>
 
             <AppErrorState
                 v-if="errorMessage"
-                title="Не удалось обновить пароль"
+                :title="t('resetPassword.errorTitle')"
                 :description="errorMessage"
             />
 
@@ -109,16 +109,16 @@
                 class="w-full rounded-2xl bg-slate-900 px-4 py-3 font-semibold text-white transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50"
                 :disabled="loading"
             >
-              {{ loading ? 'Сохранение...' : 'Обновить пароль' }}
+              {{ loading ? t('resetPassword.submitLoading') : t('resetPassword.submit') }}
             </button>
 
             <div class="text-center text-sm text-slate-600">
-              Нужен новый код?
+              {{ t('resetPassword.needNewCode') }}
               <RouterLink
                   :to="{ path: '/forgot-password', query: { email } }"
                   class="font-semibold text-slate-900 transition hover:opacity-70"
               >
-                Запросить повторно
+                {{ t('resetPassword.needNewCodeLink') }}
               </RouterLink>
             </div>
           </form>
@@ -131,12 +131,14 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
+import { useI18n } from 'vue-i18n'
 import { http } from '../../shared/api/http'
 import { useToastStore } from '../../shared/lib/getApiErrorMessage'
 import { useErrorHandler } from '../../shared/composables/useErrorHandler'
 import PublicLayout from '../../widgets/layout/PublicLayout.vue'
 import AppErrorState from '../../shared/ui/AppErrorState.vue'
 
+const { t } = useI18n()
 const route = useRoute()
 const router = useRouter()
 const toastStore = useToastStore()
@@ -153,24 +155,24 @@ const loading = ref(false)
 const errorMessage = ref('')
 
 const emailError = computed(() => {
-  if (!email.value) return 'Введите email'
+  if (!email.value) return t('resetPassword.emailRequired')
   const valid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value)
-  return valid ? '' : 'Введите корректный email'
+  return valid ? '' : t('resetPassword.emailInvalid')
 })
 
 const codeError = computed(() => {
-  if (!code.value) return 'Введите код сброса'
-  return /^\d{6}$/.test(code.value) ? '' : 'Код должен содержать 6 цифр'
+  if (!code.value) return t('resetPassword.codeRequired')
+  return /^\d{6}$/.test(code.value) ? '' : t('resetPassword.codeInvalid')
 })
 
 const newPasswordError = computed(() => {
-  if (!newPassword.value) return 'Введите новый пароль'
-  return newPassword.value.length >= 8 ? '' : 'Пароль должен содержать минимум 8 символов'
+  if (!newPassword.value) return t('resetPassword.passwordRequired')
+  return newPassword.value.length >= 8 ? '' : t('resetPassword.passwordMin')
 })
 
 const confirmPasswordError = computed(() => {
-  if (!confirmPassword.value) return 'Подтвердите новый пароль'
-  return confirmPassword.value === newPassword.value ? '' : 'Пароли не совпадают'
+  if (!confirmPassword.value) return t('resetPassword.confirmRequired')
+  return confirmPassword.value === newPassword.value ? '' : t('resetPassword.confirmMismatch')
 })
 
 const fieldClass = (hasError: boolean) =>
@@ -199,13 +201,13 @@ const handleSubmit = async () => {
       newPassword: newPassword.value,
     })
 
-    toastStore.success('Пароль успешно обновлён. Перенаправляем...')
+    toastStore.success(t('resetPassword.successToast'))
 
     setTimeout(async () => {
       await router.push('/login')
     }, 1200)
   } catch (error: any) {
-    errorMessage.value = handleError(error, 'Не удалось обновить пароль.')
+    errorMessage.value = handleError(error, t('resetPassword.errorFallback'))
   } finally {
     loading.value = false
   }

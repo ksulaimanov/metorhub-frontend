@@ -112,7 +112,7 @@ import AppField from '../../shared/ui/AppField.vue'
 import AppInput from '../../shared/ui/AppInput.vue'
 import AppButton from '../../shared/ui/AppButton.vue'
 
-const { t } = useI18n()
+const { t, locale } = useI18n()
 const router = useRouter()
 const toastStore = useToastStore()
 const { handleError } = useErrorHandler()
@@ -157,6 +157,7 @@ const handleRegister = async () => {
     await http.post('/api/auth/register/student', {
       email: email.value,
       password: password.value,
+      locale: locale.value,
     })
 
     toastStore.success(t('auth.registerSuccess'))
