@@ -86,7 +86,7 @@
 
       <p class="text-center text-sm text-text-secondary">
         {{ t('auth.noAccount') }}
-        <RouterLink to="/register" class="font-semibold text-brand transition hover:text-brand-hover">
+        <RouterLink :to="registerLink" class="font-semibold text-brand transition hover:text-brand-hover">
           {{ t('auth.registerSubmit') }}
         </RouterLink>
       </p>
@@ -96,11 +96,12 @@
 
 <script setup lang="ts">
 import { computed, ref } from 'vue'
-import { useRouter } from 'vue-router'
+import { useRoute } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { http } from '../../shared/api/http'
 import { useAuthStore } from '../../stores/authStore'
 import { useErrorHandler } from '../../shared/composables/useErrorHandler'
+import { useAuth } from '../../shared/composables/useAuth'
 import AuthSplitShell from '../../shared/ui/AuthSplitShell.vue'
 import FeatureCard from '../../shared/ui/FeatureCard.vue'
 import InfoPanel from '../../shared/ui/InfoPanel.vue'
@@ -110,9 +111,15 @@ import AppInput from '../../shared/ui/AppInput.vue'
 import AppButton from '../../shared/ui/AppButton.vue'
 
 const { t } = useI18n()
-const router = useRouter()
+const route = useRoute()
 const authStore = useAuthStore()
 const { handleError } = useErrorHandler()
+const { redirectAfterLogin } = useAuth()
+
+const registerLink = computed(() => {
+  const redirect = route.query.redirect as string | undefined
+  return redirect ? { path: '/register', query: { redirect } } : '/register'
+})
 
 const email = ref('')
 const password = ref('')
@@ -161,19 +168,9 @@ const handleLogin = async () => {
 
     errorMessage.value = ''
 
-    if (data.roles.includes('ROLE_MENTOR')) {
-      await router.push('/mentor/dashboard')
-      return
-    }
-
-    if (data.roles.includes('ROLE_STUDENT')) {
-      await router.push('/student/dashboard')
-      return
-    }
-
-    await router.push('/')
+    redirectAfterLogin()
   } catch (error: any) {
-    errorMessage.value = handleError(error, t('auth.loginErrorFallback'))
+    errorMessage.value = handleError(error, t('auth.loginErrorFallback'), { toast: false })
   } finally {
     loading.value = false
   }

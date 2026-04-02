@@ -126,7 +126,7 @@ const handleSubmit = async () => {
       })
     }, 1000)
   } catch (error: any) {
-    errorMessage.value = handleError(error, t('forgotPassword.errorFallback'))
+    errorMessage.value = handleError(error, t('forgotPassword.errorFallback'), { toast: false })
   } finally {
     loading.value = false
   }

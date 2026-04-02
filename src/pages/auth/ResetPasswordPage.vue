@@ -207,7 +207,7 @@ const handleSubmit = async () => {
       await router.push('/login')
     }, 1200)
   } catch (error: any) {
-    errorMessage.value = handleError(error, t('resetPassword.errorFallback'))
+    errorMessage.value = handleError(error, t('resetPassword.errorFallback'), { toast: false })
   } finally {
     loading.value = false
   }

@@ -81,7 +81,7 @@
 
       <p class="text-center text-sm text-text-secondary">
         {{ t('auth.hasAccount') }}
-        <RouterLink to="/login" class="font-semibold text-brand transition hover:text-brand-hover">
+        <RouterLink :to="loginLink" class="font-semibold text-brand transition hover:text-brand-hover">
           {{ t('auth.loginSubmit') }}
         </RouterLink>
       </p>
@@ -99,7 +99,7 @@
 
 <script setup lang="ts">
 import { computed, ref } from 'vue'
-import { useRouter } from 'vue-router'
+import { useRouter, useRoute } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { http } from '../../shared/api/http'
 import { useToastStore } from '../../shared/lib/getApiErrorMessage'
@@ -114,8 +114,14 @@ import AppButton from '../../shared/ui/AppButton.vue'
 
 const { t, locale } = useI18n()
 const router = useRouter()
+const route = useRoute()
 const toastStore = useToastStore()
 const { handleError } = useErrorHandler()
+
+const loginLink = computed(() => {
+  const redirect = route.query.redirect as string | undefined
+  return redirect ? { path: '/login', query: { redirect } } : '/login'
+})
 
 const email = ref('')
 const password = ref('')
@@ -163,13 +169,13 @@ const handleRegister = async () => {
     toastStore.success(t('auth.registerSuccess'))
 
     setTimeout(async () => {
-      await router.push({
-        path: '/verify-email',
-        query: { email: email.value },
-      })
+      const query: Record<string, string> = { email: email.value }
+      const redirect = route.query.redirect as string | undefined
+      if (redirect) query.redirect = redirect
+      await router.push({ path: '/verify-email', query })
     }, 900)
   } catch (error: any) {
-    errorMessage.value = handleError(error, t('auth.registerErrorFallback'))
+    errorMessage.value = handleError(error, t('auth.registerErrorFallback'), { toast: false })
   } finally {
     loading.value = false
   }

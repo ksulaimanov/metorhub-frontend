@@ -108,6 +108,7 @@ import { computed, reactive, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { submitMentorApplication } from '../../shared/api/mentorApplicationApi'
 import { useErrorHandler } from '../../shared/composables/useErrorHandler'
+import { useAuthStore } from '../../stores/authStore'
 import AppField from '../../shared/ui/AppField.vue'
 import AppInput from '../../shared/ui/AppInput.vue'
 import AppTextarea from '../../shared/ui/AppTextarea.vue'
@@ -117,10 +118,11 @@ import InfoPanel from '../../shared/ui/InfoPanel.vue'
 
 const { t, tm } = useI18n()
 const { handleError } = useErrorHandler()
+const authStore = useAuthStore()
 
 const form = reactive({
   name: '',
-  email: '',
+  email: authStore.email || '',
   phone: '',
   motivation: '',
   experience: '',
@@ -215,7 +217,7 @@ const handleSubmit = async () => {
     submittedToken.value = response.token
     submitted.value = true
   } catch (error: any) {
-    errorMessage.value = handleError(error, t('mentorApplication.submitErrorFallback'))
+    errorMessage.value = handleError(error, t('mentorApplication.submitErrorFallback'), { toast: false })
   } finally {
     loading.value = false
   }

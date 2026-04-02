@@ -85,7 +85,7 @@
     <template #footer>
       <p class="text-center text-sm text-text-secondary">
         {{ t('auth.verifyAlreadyDone') }}
-        <RouterLink to="/login" class="font-semibold text-brand transition hover:text-brand-hover">
+        <RouterLink :to="loginLink" class="font-semibold text-brand transition hover:text-brand-hover">
           {{ t('auth.loginSubmit') }}
         </RouterLink>
       </p>
@@ -113,6 +113,11 @@ const route = useRoute()
 const router = useRouter()
 const toastStore = useToastStore()
 const { handleError } = useErrorHandler()
+
+const loginLink = computed(() => {
+  const redirect = route.query.redirect as string | undefined
+  return redirect ? { path: '/login', query: { redirect } } : '/login'
+})
 
 const email = ref(typeof route.query.email === 'string' ? route.query.email : '')
 const code = ref('')
@@ -177,10 +182,13 @@ const handleVerify = async () => {
     toastStore.success(t('auth.verifySuccess'))
 
     setTimeout(async () => {
-      await router.push('/login')
+      const query: Record<string, string> = {}
+      const redirect = route.query.redirect as string | undefined
+      if (redirect) query.redirect = redirect
+      await router.push({ path: '/login', query })
     }, 1200)
   } catch (error: any) {
-    errorMessage.value = handleError(error, t('auth.verifyErrorFallback'))
+    errorMessage.value = handleError(error, t('auth.verifyErrorFallback'), { toast: false })
   } finally {
     verifying.value = false
   }
@@ -204,7 +212,7 @@ const handleResend = async () => {
     toastStore.success(t('auth.verifyResendSuccess'))
     startCooldown(60)
   } catch (error: any) {
-    errorMessage.value = handleError(error, t('auth.verifyResendFailed'))
+    errorMessage.value = handleError(error, t('auth.verifyResendFailed'), { toast: false })
   } finally {
     resending.value = false
   }
