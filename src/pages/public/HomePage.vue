@@ -34,11 +34,21 @@
                 {{ t('home.ctaRegister') }}
               </RouterLink>
             </div>
+
+            <!-- Social proof micro-stats -->
+            <p class="mt-5 flex flex-wrap gap-x-4 gap-y-1 text-sm text-text-secondary">
+              <span class="inline-flex items-center gap-1"><ShieldCheck class="h-3.5 w-3.5 text-brand" /> {{ t('home.proofMentors') }}</span>
+              <span class="inline-flex items-center gap-1"><CalendarDays class="h-3.5 w-3.5 text-brand" /> {{ t('home.proofFormats') }}</span>
+              <span class="inline-flex items-center gap-1"><Star class="h-3.5 w-3.5 text-brand" /> {{ t('home.proofFree') }}</span>
+            </p>
           </div>
 
-          <!-- Right: hero image -->
+          <!-- Right: hero image with Kyrgyz landscape -->
           <div class="relative lg:max-w-sm lg:justify-self-end">
-            <div class="aspect-[4/5] w-full overflow-hidden rounded-3xl md:aspect-[16/9] lg:aspect-[3/4]">
+            <!-- Decorative accent behind image -->
+            <div class="absolute -right-3 -top-3 h-full w-full rounded-3xl bg-gradient-to-br from-brand/10 to-accent/10 lg:-right-4 lg:-top-4" />
+
+            <div class="relative aspect-[4/5] w-full overflow-hidden rounded-3xl ring-1 ring-border-brand/60 md:aspect-[16/9] lg:aspect-[3/4]">
               <AppResponsiveImage
                 :desktop-src="heroDesktopJpg"
                 :desktop-webp="heroDesktopWebp"
@@ -52,8 +62,10 @@
                 decoding="async"
                 :width="1440"
                 :height="810"
-                img-class="h-full w-full object-cover object-top"
+                img-class="h-full w-full object-cover object-center"
               />
+              <!-- Subtle bottom gradient for elegance -->
+              <div class="pointer-events-none absolute inset-x-0 bottom-0 h-1/4 bg-gradient-to-t from-black/15 to-transparent" />
             </div>
           </div>
         </div>
@@ -80,6 +92,10 @@
     </section>
 
     <!-- ─── 3. How It Works ─── -->
+    <div class="mx-auto max-w-6xl px-4 pt-8 sm:px-6">
+      <KyrgyzDivider variant="subtle" />
+    </div>
+
     <section class="mx-auto max-w-6xl px-4 py-6 sm:px-6 sm:py-10">
       <div class="rounded-[1.75rem] bg-brand px-6 py-8 text-white md:px-10 md:py-12">
         <h2 class="mb-8 text-xl font-bold sm:text-2xl">{{ t('home.stepsTitle') }}</h2>
@@ -231,6 +247,10 @@
     </section>
 
     <!-- ─── 7. Closing CTA ─── -->
+    <div class="mx-auto max-w-6xl px-4 pt-4 sm:px-6">
+      <KyrgyzDivider />
+    </div>
+
     <section class="mx-auto max-w-6xl px-4 py-16 sm:px-6 lg:py-24">
       <div class="rounded-[1.75rem] bg-gradient-to-r from-brand to-brand-hover px-6 py-10 text-center text-white sm:px-10 sm:py-14">
         <h2 class="text-2xl font-bold sm:text-3xl">{{ t('home.closingTitle') }}</h2>
@@ -262,6 +282,7 @@ import { useI18n } from 'vue-i18n'
 import PublicLayout from '../../widgets/layout/PublicLayout.vue'
 import FeatureCard from '../../shared/ui/FeatureCard.vue'
 import AppResponsiveImage from '../../shared/ui/AppResponsiveImage.vue'
+import KyrgyzDivider from '../../shared/ui/KyrgyzDivider.vue'
 import { getFeaturedMentors } from '../../shared/api/mentorPublicApi'
 import type { MentorDirectoryItem } from '../../shared/types/mentor'
 

@@ -29,3 +29,6 @@ backend-env.yaml
 
 # TypeScript
 *.tsbuildinfo
+
+# Hero image originals (processed via scripts/)
+src/assets/images/hero/original.*
