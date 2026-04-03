@@ -30,6 +30,9 @@ export interface PublicMentorProfile {
     lessonsCompleted: number | null
     verified: boolean
     hasAvailableSlots: boolean
+    instagramUrl?: string | null
+    telegramUsername?: string | null
+    publicEmail?: string | null
 }
 
 export interface MentorDirectoryItem {

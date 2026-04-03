@@ -1,27 +1,32 @@
 <template>
   <AppCard>
-    <div class="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
-      <div class="flex items-center gap-4">
-        <div class="flex h-24 w-24 items-center justify-center overflow-hidden rounded-full bg-brand-soft text-2xl font-bold text-brand">
-          <img
-              v-if="avatarUrl"
-              :src="avatarUrl"
-              :alt="t('mentorProfile.avatarAlt')"
-              class="h-full w-full object-cover"
-          />
-          <span v-else>{{ initials }}</span>
-        </div>
+    <div class="flex flex-col gap-6 sm:flex-row sm:items-start sm:justify-between">
+      <div class="flex items-center gap-5">
+        <ProfileAvatar
+            :src="avatarUrl"
+            :first-name="firstName"
+            :last-name="lastName"
+            :alt="t('mentorProfile.avatarAlt')"
+            size="lg"
+        />
 
-        <div>
+        <div class="min-w-0">
           <h2 class="text-xl font-semibold text-text-primary">{{ displayName }}</h2>
           <p v-if="headline" class="mt-1 text-sm text-text-secondary">{{ headline }}</p>
-          <div v-if="verified" class="mt-2">
-            <AppBadge variant="success">{{ t('mentorProfile.verified') }}</AppBadge>
+          <div class="mt-2 flex flex-wrap items-center gap-2">
+            <AppBadge v-if="verified" variant="success">{{ t('mentorProfile.verified') }}</AppBadge>
+            <SocialLinks
+                :instagram="instagramUrl"
+                :telegram="telegramUsername"
+                :email="publicEmail"
+            />
           </div>
         </div>
       </div>
 
-      <slot name="actions" />
+      <div class="shrink-0">
+        <slot name="actions" />
+      </div>
     </div>
   </AppCard>
 </template>
@@ -31,6 +36,8 @@ import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import AppCard from '../../shared/ui/AppCard.vue'
 import AppBadge from '../../shared/ui/AppBadge.vue'
+import ProfileAvatar from '../../shared/ui/ProfileAvatar.vue'
+import SocialLinks from '../../shared/ui/SocialLinks.vue'
 
 const { t } = useI18n()
 
@@ -40,17 +47,14 @@ const props = defineProps<{
   avatarUrl?: string
   headline?: string
   verified?: boolean
+  instagramUrl?: string
+  telegramUsername?: string
+  publicEmail?: string
 }>()
 
 const displayName = computed(() => {
   const full = `${props.firstName || ''} ${props.lastName || ''}`.trim()
   return full || t('mentorProfile.newMentor')
-})
-
-const initials = computed(() => {
-  const first = props.firstName?.charAt(0) || ''
-  const last = props.lastName?.charAt(0) || ''
-  return (first + last).toUpperCase() || 'M'
 })
 </script>
 

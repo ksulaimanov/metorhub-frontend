@@ -122,6 +122,30 @@
       </div>
     </AppCard>
 
+    <!-- Social links section -->
+    <AppCard>
+      <div class="space-y-6">
+        <div>
+          <h2 class="text-xl font-semibold text-text-primary">{{ t('mentorProfile.sectionSocial') }}</h2>
+          <p class="mt-1 text-sm text-text-secondary">{{ t('mentorProfile.sectionSocialHint') }}</p>
+        </div>
+
+        <div class="grid gap-4 md:grid-cols-2">
+          <AppField :label="t('mentorProfile.instagramUrl')" :hint="t('mentorProfile.instagramHint')">
+            <AppInput v-model="form.instagramUrl" :placeholder="t('mentorProfile.instagramPlaceholder')" />
+          </AppField>
+
+          <AppField :label="t('mentorProfile.telegramUsername')" :hint="t('mentorProfile.telegramHint')">
+            <AppInput v-model="form.telegramUsername" :placeholder="t('mentorProfile.telegramPlaceholder')" />
+          </AppField>
+
+          <AppField :label="t('mentorProfile.publicEmail')" :hint="t('mentorProfile.publicEmailHint')" class="md:col-span-2">
+            <AppInput v-model="form.publicEmail" :placeholder="t('mentorProfile.publicEmailPlaceholder')" />
+          </AppField>
+        </div>
+      </div>
+    </AppCard>
+
     <!-- Bio section -->
     <AppCard>
       <div class="space-y-6">
@@ -147,9 +171,14 @@
         <p v-else-if="errorMessage" class="text-sm font-medium text-red-600">{{ errorMessage }}</p>
       </div>
 
-      <AppButton type="submit" size="lg" :loading="saving">
-        {{ t('mentorProfile.saveChanges') }}
-      </AppButton>
+      <div class="flex items-center gap-3">
+        <AppButton variant="ghost" size="md" @click="$emit('cancel')">
+          {{ t('common.cancel') }}
+        </AppButton>
+        <AppButton type="submit" size="lg" :loading="saving">
+          {{ t('mentorProfile.saveChanges') }}
+        </AppButton>
+      </div>
     </div>
   </form>
 </template>
@@ -180,6 +209,9 @@ interface MentorProfileFormData {
   meetingLink: string
   pricePerHour: number
   public: boolean
+  instagramUrl: string
+  telegramUsername: string
+  publicEmail: string
 }
 
 const props = defineProps<{
@@ -192,6 +224,7 @@ const props = defineProps<{
 
 defineEmits<{
   (e: 'save'): void
+  (e: 'cancel'): void
 }>()
 
 const formatError = computed(() => {

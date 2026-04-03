@@ -12,133 +12,153 @@
           v-else-if="pageError"
           :title="t('studentProfile.loadError')"
           :description="pageError"
-      />
+      >
+        <template #actions>
+          <AppButton variant="secondary" size="sm" @click="loadProfile">{{ t('common.retry') }}</AppButton>
+        </template>
+      </AppErrorState>
 
       <template v-else>
-        <AppCard>
-          <div class="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
-            <div class="flex items-center gap-4">
-              <div class="flex h-24 w-24 items-center justify-center overflow-hidden rounded-full bg-slate-200 text-2xl font-bold text-slate-600">
-                <img v-if="form.avatarUrl" :src="form.avatarUrl" :alt="t('studentProfile.avatarAlt')" class="h-full w-full object-cover" />
-                <span v-else>{{ avatarInitials }}</span>
+        <!-- VIEW MODE (default) -->
+        <StudentProfileView
+            v-if="mode === 'view'"
+            :profile="form"
+            @edit="mode = 'edit'"
+        />
+
+        <!-- EDIT MODE -->
+        <template v-else>
+          <!-- Profile header with avatar -->
+          <AppCard>
+            <div class="flex flex-col gap-6 sm:flex-row sm:items-start sm:justify-between">
+              <div class="flex items-center gap-5">
+                <ProfileAvatar
+                    :src="form.avatarUrl"
+                    :first-name="form.firstName"
+                    :last-name="form.lastName"
+                    :alt="t('studentProfile.avatarAlt')"
+                    size="lg"
+                />
+
+                <div class="min-w-0">
+                  <h2 class="text-xl font-semibold text-text-primary">{{ fullName }}</h2>
+                  <p class="mt-1 text-sm text-text-secondary">{{ t('studentProfile.avatarHint') }}</p>
+                </div>
               </div>
 
-              <div>
-                <h2 class="text-xl font-semibold text-slate-900">{{ fullName }}</h2>
-                <p class="mt-1 text-sm text-slate-600">{{ t('studentProfile.avatarHint') }}</p>
+              <div class="flex shrink-0 flex-col gap-3 sm:flex-row">
+                <label
+                    class="inline-flex cursor-pointer items-center justify-center rounded-2xl border border-border-brand bg-white px-4 py-3 text-sm font-semibold text-text-primary transition hover:bg-brand-soft disabled:cursor-not-allowed disabled:opacity-50"
+                >
+                  <input type="file" class="hidden" accept="image/png,image/jpeg,image/webp" :disabled="avatarUploading" @change="handleAvatarUpload" />
+                  {{ avatarUploading ? t('studentProfile.uploadingPhoto') : t('studentProfile.uploadPhoto') }}
+                </label>
+
+                <AppButton
+                    v-if="form.avatarUrl"
+                    variant="danger"
+                    size="md"
+                    :loading="avatarDeleting"
+                    @click="confirmAvatarDelete"
+                >
+                  {{ t('studentProfile.deletePhoto') }}
+                </AppButton>
               </div>
             </div>
 
-            <div class="flex flex-col gap-3 sm:flex-row">
-              <label class="inline-flex cursor-pointer items-center justify-center rounded-2xl border border-slate-300 px-4 py-3 text-sm font-semibold text-slate-700 transition hover:bg-slate-100">
-                <input type="file" class="hidden" accept="image/png,image/jpeg,image/webp" :disabled="avatarUploading" @change="handleAvatarUpload" />
-                {{ avatarUploading ? t('studentProfile.uploadingPhoto') : t('studentProfile.uploadPhoto') }}
-              </label>
-
-              <button
-                  v-if="form.avatarUrl"
-                  type="button"
-                  class="inline-flex items-center justify-center rounded-2xl bg-red-600 px-4 py-3 text-sm font-semibold text-white transition hover:bg-red-700 disabled:cursor-not-allowed disabled:opacity-50"
-                  :disabled="avatarDeleting"
-                  @click="confirmAvatarDelete"
-              >
-                {{ avatarDeleting ? t('studentProfile.deletingPhoto') : t('studentProfile.deletePhoto') }}
-              </button>
-            </div>
-          </div>
-
-          <p v-if="avatarMessage" class="mt-4 text-sm font-medium text-emerald-600">{{ avatarMessage }}</p>
-          <p v-if="avatarError" class="mt-4 text-sm font-medium text-red-600">{{ avatarError }}</p>
-        </AppCard>
-
-        <div class="grid gap-4 md:grid-cols-3">
-          <AppCard>
-            <p class="text-sm text-slate-500">{{ t('studentProfile.statName') }}</p>
-            <p class="mt-2 text-lg font-semibold text-slate-900">{{ fullName }}</p>
+            <p v-if="avatarMessage" class="mt-4 text-sm font-medium text-emerald-600">{{ avatarMessage }}</p>
+            <p v-if="avatarError" class="mt-4 text-sm font-medium text-red-600">{{ avatarError }}</p>
           </AppCard>
 
-          <AppCard>
-            <p class="text-sm text-slate-500">{{ t('studentProfile.statCity') }}</p>
-            <p class="mt-2 text-lg font-semibold text-slate-900">{{ form.city || t('studentProfile.notSpecified') }}</p>
-          </AppCard>
-
-          <AppCard>
-            <p class="text-sm text-slate-500">{{ t('studentProfile.statTimezone') }}</p>
-            <p class="mt-2 text-lg font-semibold text-slate-900">{{ form.timezone || t('studentProfile.notSpecified') }}</p>
-          </AppCard>
-        </div>
-
-        <form class="space-y-6" @submit.prevent="saveProfile">
-          <AppCard>
-            <div class="space-y-6">
-              <div>
-                <h2 class="text-xl font-semibold text-slate-900">{{ t('studentProfile.sectionMain') }}</h2>
-                <p class="mt-1 text-sm text-slate-600">{{ t('studentProfile.sectionMainHint') }}</p>
-              </div>
-
-              <div class="grid gap-4 md:grid-cols-2">
+          <form class="space-y-6" @submit.prevent="saveProfile">
+            <!-- Main info -->
+            <AppCard>
+              <div class="space-y-6">
                 <div>
-                  <label class="mb-2 block text-sm font-medium text-slate-700">{{ t('studentProfile.firstName') }}</label>
-                  <input v-model.trim="form.firstName" class="w-full rounded-2xl border border-slate-300 px-4 py-3 outline-none transition focus:border-slate-900" :placeholder="t('studentProfile.firstNamePlaceholder')" />
-                  <p v-if="fieldErrors.firstName" class="mt-2 text-sm text-red-600">{{ fieldErrors.firstName }}</p>
+                  <h2 class="text-xl font-semibold text-text-primary">{{ t('studentProfile.sectionMain') }}</h2>
+                  <p class="mt-1 text-sm text-text-secondary">{{ t('studentProfile.sectionMainHint') }}</p>
                 </div>
 
-                <div>
-                  <label class="mb-2 block text-sm font-medium text-slate-700">{{ t('studentProfile.lastName') }}</label>
-                  <input v-model.trim="form.lastName" class="w-full rounded-2xl border border-slate-300 px-4 py-3 outline-none transition focus:border-slate-900" :placeholder="t('studentProfile.lastNamePlaceholder')" />
-                  <p v-if="fieldErrors.lastName" class="mt-2 text-sm text-red-600">{{ fieldErrors.lastName }}</p>
-                </div>
+                <div class="grid gap-4 md:grid-cols-2">
+                  <AppField :label="t('studentProfile.firstName')" :error="fieldErrors.firstName">
+                    <AppInput v-model="form.firstName" :placeholder="t('studentProfile.firstNamePlaceholder')" />
+                  </AppField>
 
-                <div>
-                  <label class="mb-2 block text-sm font-medium text-slate-700">{{ t('studentProfile.city') }}</label>
-                  <input v-model.trim="form.city" class="w-full rounded-2xl border border-slate-300 px-4 py-3 outline-none transition focus:border-slate-900" :placeholder="t('studentProfile.cityPlaceholder')" />
-                </div>
+                  <AppField :label="t('studentProfile.lastName')" :error="fieldErrors.lastName">
+                    <AppInput v-model="form.lastName" :placeholder="t('studentProfile.lastNamePlaceholder')" />
+                  </AppField>
 
-                <div>
-                  <label class="mb-2 block text-sm font-medium text-slate-700">{{ t('studentProfile.phone') }}</label>
-                  <input v-model.trim="form.phone" class="w-full rounded-2xl border border-slate-300 px-4 py-3 outline-none transition focus:border-slate-900" :placeholder="t('studentProfile.phonePlaceholder')" />
-                  <p class="mt-2 text-xs text-slate-500">{{ t('studentProfile.phoneHint') }}</p>
-                </div>
+                  <AppField :label="t('studentProfile.city')">
+                    <AppInput v-model="form.city" :placeholder="t('studentProfile.cityPlaceholder')" />
+                  </AppField>
 
-                <div class="md:col-span-2">
-                  <label class="mb-2 block text-sm font-medium text-slate-700">{{ t('studentProfile.timezone') }}</label>
-                  <input v-model.trim="form.timezone" class="w-full rounded-2xl border border-slate-300 px-4 py-3 outline-none transition focus:border-slate-900" :placeholder="t('studentProfile.timezonePlaceholder')" />
-                  <p class="mt-2 text-xs text-slate-500">{{ t('studentProfile.timezoneHint') }}</p>
+                  <AppField :label="t('studentProfile.phone')" :hint="t('studentProfile.phoneHint')">
+                    <AppInput v-model="form.phone" :placeholder="t('studentProfile.phonePlaceholder')" />
+                  </AppField>
+
+                  <AppField :label="t('studentProfile.timezone')" :hint="t('studentProfile.timezoneHint')" class="md:col-span-2">
+                    <AppInput v-model="form.timezone" :placeholder="t('studentProfile.timezonePlaceholder')" />
+                  </AppField>
                 </div>
               </div>
-            </div>
-          </AppCard>
+            </AppCard>
 
-          <AppCard>
-            <div class="space-y-6">
-              <div>
-                <h2 class="text-xl font-semibold text-slate-900">{{ t('studentProfile.sectionBio') }}</h2>
-                <p class="mt-1 text-sm text-slate-600">{{ t('studentProfile.sectionBioHint') }}</p>
+            <!-- Bio -->
+            <AppCard>
+              <div class="space-y-6">
+                <div>
+                  <h2 class="text-xl font-semibold text-text-primary">{{ t('studentProfile.sectionBio') }}</h2>
+                  <p class="mt-1 text-sm text-text-secondary">{{ t('studentProfile.sectionBioHint') }}</p>
+                </div>
+
+                <AppField :label="t('studentProfile.bioLabel')" :hint="t('studentProfile.bioHint')">
+                  <AppTextarea v-model="form.bio" :placeholder="t('studentProfile.bioPlaceholder')" rows="5" />
+                </AppField>
+              </div>
+            </AppCard>
+
+            <!-- Social links -->
+            <AppCard>
+              <div class="space-y-6">
+                <div>
+                  <h2 class="text-xl font-semibold text-text-primary">{{ t('studentProfile.sectionSocial') }}</h2>
+                  <p class="mt-1 text-sm text-text-secondary">{{ t('studentProfile.sectionSocialHint') }}</p>
+                </div>
+
+                <div class="grid gap-4 md:grid-cols-2">
+                  <AppField :label="t('studentProfile.instagramUrl')">
+                    <AppInput v-model="form.instagramUrl" :placeholder="t('studentProfile.instagramPlaceholder')" />
+                  </AppField>
+
+                  <AppField :label="t('studentProfile.telegramUsername')">
+                    <AppInput v-model="form.telegramUsername" :placeholder="t('studentProfile.telegramPlaceholder')" />
+                  </AppField>
+
+                  <AppField :label="t('studentProfile.publicEmail')" class="md:col-span-2">
+                    <AppInput v-model="form.publicEmail" :placeholder="t('studentProfile.publicEmailPlaceholder')" />
+                  </AppField>
+                </div>
+              </div>
+            </AppCard>
+
+            <!-- Submit -->
+            <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+              <div class="min-h-[24px]">
+                <p v-if="successMessage" class="text-sm font-medium text-emerald-600">{{ successMessage }}</p>
+                <p v-else-if="saveError" class="text-sm font-medium text-red-600">{{ saveError }}</p>
               </div>
 
-              <div>
-                <label class="mb-2 block text-sm font-medium text-slate-700">{{ t('studentProfile.bioLabel') }}</label>
-                <textarea v-model.trim="form.bio" class="min-h-40 w-full rounded-2xl border border-slate-300 px-4 py-3 outline-none transition focus:border-slate-900" :placeholder="t('studentProfile.bioPlaceholder')" />
-                <p class="mt-2 text-xs text-slate-500">{{ t('studentProfile.bioHint') }}</p>
+              <div class="flex items-center gap-3">
+                <AppButton variant="ghost" size="md" @click="handleCancel">
+                  {{ t('common.cancel') }}
+                </AppButton>
+                <AppButton type="submit" size="lg" :loading="saving">
+                  {{ t('studentProfile.saveChanges') }}
+                </AppButton>
               </div>
             </div>
-          </AppCard>
-
-          <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-            <div class="min-h-[24px]">
-              <p v-if="successMessage" class="text-sm font-medium text-emerald-600">{{ successMessage }}</p>
-              <p v-else-if="saveError" class="text-sm font-medium text-red-600">{{ saveError }}</p>
-            </div>
-
-            <button
-                type="submit"
-                class="inline-flex items-center justify-center rounded-2xl bg-slate-900 px-5 py-3 text-sm font-semibold text-white transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-60"
-                :disabled="saving"
-            >
-              {{ saving ? t('studentProfile.saving') : t('studentProfile.saveChanges') }}
-            </button>
-          </div>
-        </form>
+          </form>
+        </template>
       </template>
     </div>
   </PrivateLayout>
@@ -152,13 +172,21 @@ import { useToastStore } from '../../shared/lib/getApiErrorMessage'
 import { useErrorHandler } from '../../shared/composables/useErrorHandler'
 import PrivateLayout from '../../widgets/layout/PrivateLayout.vue'
 import AppCard from '../../shared/ui/AppCard.vue'
+import AppButton from '../../shared/ui/AppButton.vue'
+import AppField from '../../shared/ui/AppField.vue'
+import AppInput from '../../shared/ui/AppInput.vue'
+import AppTextarea from '../../shared/ui/AppTextarea.vue'
 import AppSectionTitle from '../../shared/ui/AppSectionTitle.vue'
 import AppLoadingState from '../../shared/ui/AppLoadingState.vue'
 import AppErrorState from '../../shared/ui/AppErrorState.vue'
+import ProfileAvatar from '../../shared/ui/ProfileAvatar.vue'
+import StudentProfileView from '../../features/student-profile/StudentProfileView.vue'
 
 const { t } = useI18n()
 const toastStore = useToastStore()
 const { handleError } = useErrorHandler()
+
+const mode = ref<'view' | 'edit'>('view')
 const avatarMessage = ref('')
 const successMessage = ref('')
 const saveError = ref('')
@@ -180,6 +208,9 @@ const form = reactive({
   timezone: '',
   phone: '',
   city: '',
+  instagramUrl: '',
+  telegramUsername: '',
+  publicEmail: '',
 })
 
 const fieldErrors = reactive({
@@ -190,12 +221,6 @@ const fieldErrors = reactive({
 const fullName = computed(() => {
   const full = `${form.firstName} ${form.lastName}`.trim()
   return full || t('studentProfile.notFilled')
-})
-
-const avatarInitials = computed(() => {
-  const first = form.firstName?.trim()?.[0] || ''
-  const last = form.lastName?.trim()?.[0] || ''
-  return (first + last).toUpperCase() || 'U'
 })
 
 const validate = () => {
@@ -245,12 +270,18 @@ const saveProfile = async () => {
     await http.put('/api/student/profile', form)
     successMessage.value = t('studentProfile.saveSuccess')
     toastStore.success(t('studentProfile.saveSuccess'))
+    mode.value = 'view'
   } catch (error) {
     console.error(error)
     saveError.value = handleError(error, t('studentProfile.saveError'))
   } finally {
     saving.value = false
   }
+}
+
+const handleCancel = () => {
+  mode.value = 'view'
+  loadProfile()
 }
 
 const handleAvatarUpload = async (event: Event) => {

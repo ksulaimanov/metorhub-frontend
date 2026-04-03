@@ -19,40 +19,46 @@
       </AppErrorState>
 
       <template v-else>
-        <!-- Profile header with avatar -->
-        <MentorProfileHeader
-            :first-name="form.firstName"
-            :last-name="form.lastName"
-            :avatar-url="form.avatarUrl"
-            :headline="form.headline"
-            :verified="form.verified"
-        >
-          <template #actions>
-            <MentorAvatarUpload
-                :has-avatar="!!form.avatarUrl"
-                @uploaded="onAvatarUploaded"
-                @deleted="onAvatarDeleted"
-            />
-          </template>
-        </MentorProfileHeader>
-
-        <!-- Stats -->
-        <MentorProfileStats
-            :average-rating="form.averageRating"
-            :lessons-completed="form.lessonsCompleted"
-            :is-public="form.public"
-            :verified="form.verified"
+        <!-- VIEW MODE (default) -->
+        <MentorProfileView
+            v-if="mode === 'view'"
+            :profile="form"
+            @edit="mode = 'edit'"
         />
 
-        <!-- Edit form -->
-        <MentorProfileEditForm
-            :form="form"
-            :saving="saving"
-            :success-message="successMessage"
-            :error-message="saveError"
-            :show-validation="showValidation"
-            @save="saveProfile"
-        />
+        <!-- EDIT MODE -->
+        <template v-else>
+          <!-- Profile header with avatar upload -->
+          <MentorProfileHeader
+              :first-name="form.firstName"
+              :last-name="form.lastName"
+              :avatar-url="form.avatarUrl"
+              :headline="form.headline"
+              :verified="form.verified"
+              :instagram-url="form.instagramUrl"
+              :telegram-username="form.telegramUsername"
+              :public-email="form.publicEmail"
+          >
+            <template #actions>
+              <MentorAvatarUpload
+                  :has-avatar="!!form.avatarUrl"
+                  @uploaded="onAvatarUploaded"
+                  @deleted="onAvatarDeleted"
+              />
+            </template>
+          </MentorProfileHeader>
+
+          <!-- Edit form -->
+          <MentorProfileEditForm
+              :form="form"
+              :saving="saving"
+              :success-message="successMessage"
+              :error-message="saveError"
+              :show-validation="showValidation"
+              @save="saveProfile"
+              @cancel="handleCancel"
+          />
+        </template>
       </template>
     </div>
   </PrivateLayout>
@@ -69,8 +75,8 @@ import AppSectionTitle from '../../shared/ui/AppSectionTitle.vue'
 import AppButton from '../../shared/ui/AppButton.vue'
 import AppLoadingState from '../../shared/ui/AppLoadingState.vue'
 import AppErrorState from '../../shared/ui/AppErrorState.vue'
+import MentorProfileView from '../../features/mentor-profile/MentorProfileView.vue'
 import MentorProfileHeader from '../../features/mentor-profile/MentorProfileHeader.vue'
-import MentorProfileStats from '../../features/mentor-profile/MentorProfileStats.vue'
 import MentorAvatarUpload from '../../features/mentor-profile-edit/MentorAvatarUpload.vue'
 import MentorProfileEditForm from '../../features/mentor-profile-edit/MentorProfileEditForm.vue'
 
@@ -78,6 +84,7 @@ const { t } = useI18n()
 const toastStore = useToastStore()
 const { handleError } = useErrorHandler()
 
+const mode = ref<'view' | 'edit'>('view')
 const loading = ref(false)
 const saving = ref(false)
 const pageError = ref('')
@@ -105,6 +112,9 @@ const form = reactive({
   averageRating: 0,
   lessonsCompleted: 0,
   verified: false,
+  instagramUrl: '',
+  telegramUsername: '',
+  publicEmail: '',
 })
 
 const loadProfile = async () => {
@@ -138,11 +148,17 @@ const saveProfile = async () => {
     successMessage.value = t('mentorProfile.saveSuccess')
     toastStore.success(t('mentorProfile.saveSuccessToast'))
     showValidation.value = false
+    mode.value = 'view'
   } catch (e) {
     saveError.value = handleError(e as any, t('mentorProfile.saveError'), { toast: false })
   } finally {
     saving.value = false
   }
+}
+
+const handleCancel = () => {
+  mode.value = 'view'
+  loadProfile()
 }
 
 const onAvatarUploaded = (payload: { avatarKey: string; avatarUrl: string }) => {
