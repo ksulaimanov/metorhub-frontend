@@ -3,18 +3,44 @@
 @theme {
     --color-brand: #5B3FD3;
     --color-brand-hover: #4C31BF;
-    --color-brand-soft: #EEE9FF;
-    --color-accent: #8B7BFF;
-    --color-bg: #F8F8FC;
+    --color-brand-soft: #F0EDFF;
+    --color-accent: #7C6BF0;
+    --color-bg: #FAFAFE;
     --color-surface: #FFFFFF;
-    --color-surface-secondary: #F8F8FC;
+    --color-surface-secondary: #F7F6FB;
     --color-text-primary: #16151D;
     --color-text-secondary: #6F6B7D;
+    --color-text-muted: #9E9AAF;
     --color-border-brand: #E6E2F3;
+    --color-border-subtle: #F0EEF6;
+    --color-sidebar-bg: #1E1B2E;
+    --color-sidebar-hover: #2A2640;
+    --color-sidebar-active: #332E50;
+    --color-sidebar-text: #C4BFD9;
+    --color-sidebar-text-active: #FFFFFF;
 }
 
 html, body, #app {
     margin: 0;
     min-height: 100%;
     font-family: Inter, system-ui, sans-serif;
+}
+
+/* Smooth transitions for sidebar */
+.sidebar-transition {
+    transition: width 200ms ease, padding 200ms ease;
+}
+
+/* Kyrgyz ornament pattern */
+.ornament-divider {
+    background-image: url("data:image/svg+xml,%3Csvg width='120' height='12' viewBox='0 0 120 12' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 6h10l5-5 5 5h10l5 5 5-5h10l5-5 5 5h10l5 5 5-5h10l5-5 5 5h10' stroke='%235B3FD3' stroke-width='1' fill='none' opacity='0.15'/%3E%3C/svg%3E");
+    background-repeat: repeat-x;
+    background-position: center;
+    height: 12px;
+}
+
+/* Subtle ornament background */
+.ornament-bg {
+    background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 5l5 10h10l-8 6 3 10-10-7-10 7 3-10-8-6h10z' fill='%235B3FD3' opacity='0.03'/%3E%3C/svg%3E");
+    background-repeat: repeat;
 }
