@@ -3,28 +3,28 @@
     <section class="mx-auto flex min-h-[calc(100vh-73px)] max-w-7xl items-center px-4 py-10 sm:px-6">
       <div class="grid w-full gap-8 lg:grid-cols-2 lg:items-center">
         <div class="hidden lg:block">
-          <p class="inline-flex rounded-full bg-slate-200 px-4 py-2 text-sm font-medium text-slate-700">
+          <p class="inline-flex rounded-full bg-brand-soft px-4 py-2 text-sm font-medium text-brand">
             {{ t('resetPassword.heroBadge') }}
           </p>
 
-          <h1 class="mt-5 max-w-xl text-5xl font-bold leading-tight text-slate-900">
+          <h1 class="mt-5 max-w-xl text-5xl font-bold leading-tight text-text-primary">
             {{ t('resetPassword.heroTitle') }}
           </h1>
 
-          <p class="mt-6 max-w-lg text-lg leading-8 text-slate-600">
+          <p class="mt-6 max-w-lg text-lg leading-8 text-text-secondary">
             {{ t('resetPassword.heroSubtitle') }}
           </p>
         </div>
 
-        <div class="w-full max-w-md justify-self-center rounded-3xl bg-white p-6 shadow-sm ring-1 ring-slate-200 sm:p-8">
-          <h1 class="text-3xl font-bold text-slate-900">{{ t('resetPassword.title') }}</h1>
-          <p class="mt-2 text-sm text-slate-600">
+        <div class="w-full max-w-md justify-self-center rounded-3xl bg-white p-6 shadow-sm ring-1 ring-border-brand sm:p-8">
+          <h1 class="text-3xl font-bold text-text-primary">{{ t('resetPassword.title') }}</h1>
+          <p class="mt-2 text-sm text-text-secondary">
             {{ t('resetPassword.subtitle') }}
           </p>
 
           <form class="mt-8 space-y-5" @submit.prevent="handleSubmit">
             <div>
-              <label class="mb-2 block text-sm font-medium text-slate-700">{{ t('resetPassword.emailLabel') }}</label>
+              <label class="mb-2 block text-sm font-medium text-text-primary">{{ t('resetPassword.emailLabel') }}</label>
               <input
                   v-model.trim="email"
                   type="email"
@@ -39,7 +39,7 @@
             </div>
 
             <div>
-              <label class="mb-2 block text-sm font-medium text-slate-700">{{ t('resetPassword.codeLabel') }}</label>
+              <label class="mb-2 block text-sm font-medium text-text-primary">{{ t('resetPassword.codeLabel') }}</label>
               <input
                   v-model.trim="code"
                   inputmode="numeric"
@@ -54,7 +54,7 @@
             </div>
 
             <div>
-              <label class="mb-2 block text-sm font-medium text-slate-700">{{ t('resetPassword.newPasswordLabel') }}</label>
+              <label class="mb-2 block text-sm font-medium text-text-primary">{{ t('resetPassword.newPasswordLabel') }}</label>
               <input
                   v-model="newPassword"
                   :type="showPassword ? 'text' : 'password'"
@@ -69,7 +69,7 @@
             </div>
 
             <div>
-              <label class="mb-2 block text-sm font-medium text-slate-700">{{ t('resetPassword.confirmPasswordLabel') }}</label>
+              <label class="mb-2 block text-sm font-medium text-text-primary">{{ t('resetPassword.confirmPasswordLabel') }}</label>
               <input
                   v-model="confirmPassword"
                   :type="showPassword ? 'text' : 'password'"
@@ -85,7 +85,7 @@
 
             <button
                 type="button"
-                class="w-full rounded-2xl border border-slate-300 px-4 py-3 text-sm font-semibold text-slate-700 transition hover:bg-slate-100"
+                class="w-full rounded-2xl border border-border-brand px-4 py-3 text-sm font-semibold text-text-primary transition hover:bg-brand-soft"
                 @click="showPassword = !showPassword"
             >
               {{ showPassword ? t('resetPassword.hidePassword') : t('resetPassword.showPassword') }}
@@ -106,17 +106,17 @@
 
             <button
                 type="submit"
-                class="w-full rounded-2xl bg-slate-900 px-4 py-3 font-semibold text-white transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50"
+class="w-full rounded-2xl bg-brand px-4 py-3 font-semibold text-white transition hover:bg-brand-hover disabled:cursor-not-allowed disabled:opacity-50"
                 :disabled="loading"
             >
               {{ loading ? t('resetPassword.submitLoading') : t('resetPassword.submit') }}
             </button>
 
-            <div class="text-center text-sm text-slate-600">
+            <div class="text-center text-sm text-text-secondary">
               {{ t('resetPassword.needNewCode') }}
               <RouterLink
                   :to="{ path: '/forgot-password', query: { email } }"
-                  class="font-semibold text-slate-900 transition hover:opacity-70"
+                  class="font-semibold text-brand transition hover:text-brand-hover"
               >
                 {{ t('resetPassword.needNewCodeLink') }}
               </RouterLink>
@@ -178,7 +178,7 @@ const confirmPasswordError = computed(() => {
 const fieldClass = (hasError: boolean) =>
     hasError
         ? 'border-red-300 focus:border-red-500'
-        : 'border-slate-300 focus:border-slate-900'
+        : 'border-border-brand focus:border-brand'
 
 const handleSubmit = async () => {
   showValidation.value = true

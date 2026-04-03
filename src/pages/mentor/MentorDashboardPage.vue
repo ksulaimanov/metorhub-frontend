@@ -2,35 +2,35 @@
   <PrivateLayout>
     <div class="space-y-8">
       <div>
-        <h1 class="text-3xl font-bold text-slate-900">{{ t('mentorDashboard.title') }}</h1>
-        <p class="mt-2 text-slate-600">{{ t('mentorDashboard.subtitle') }}</p>
+        <h1 class="text-3xl font-bold text-text-primary">{{ t('mentorDashboard.title') }}</h1>
+        <p class="mt-2 text-text-secondary">{{ t('mentorDashboard.subtitle') }}</p>
       </div>
 
       <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <AppCard>
-          <p class="text-sm text-slate-500">{{ t('mentorDashboard.totalBookings') }}</p>
-          <p class="mt-2 text-3xl font-bold text-slate-900">{{ dashboardData?.totalBookings || 0 }}</p>
+          <p class="text-sm text-text-secondary">{{ t('mentorDashboard.totalBookings') }}</p>
+          <p class="mt-2 text-3xl font-bold text-text-primary">{{ dashboardData?.totalBookings ?? 0 }}</p>
         </AppCard>
 
         <AppCard>
-          <p class="text-sm text-slate-500">{{ t('mentorDashboard.upcoming') }}</p>
+          <p class="text-sm text-text-secondary">{{ t('mentorDashboard.upcoming') }}</p>
           <p class="mt-2 text-3xl font-bold text-emerald-600">
-            {{ dashboardData?.upcomingEvents?.length || 0 }}
+            {{ dashboardData?.upcomingEvents?.length ?? 0 }}
           </p>
         </AppCard>
 
         <AppCard>
-          <p class="text-sm text-slate-500">{{ t('mentorDashboard.completed') }}</p>
-          <p class="mt-2 text-3xl font-bold text-slate-900">{{ dashboardData?.completedBookings || 0 }}</p>
+          <p class="text-sm text-text-secondary">{{ t('mentorDashboard.completed') }}</p>
+          <p class="mt-2 text-3xl font-bold text-text-primary">{{ dashboardData?.completedBookings ?? 0 }}</p>
         </AppCard>
 
         <AppCard>
-          <p class="text-sm text-slate-500">{{ t('mentorDashboard.rating') }}</p>
+          <p class="text-sm text-text-secondary">{{ t('mentorDashboard.rating') }}</p>
           <div class="mt-2 flex items-baseline gap-2">
-            <p class="text-3xl font-bold text-yellow-500">
-              {{ dashboardData?.averageRating ? dashboardData.averageRating.toFixed(1) : '0.0' }}
+            <p class="text-3xl font-bold text-amber-500">
+              {{ dashboardData?.averageRating ? dashboardData.averageRating.toFixed(1) : '—' }}
             </p>
-            <span class="text-sm text-slate-500">/ 5.0</span>
+            <span class="text-sm text-text-secondary">/ 5.0</span>
           </div>
         </AppCard>
       </div>
@@ -51,20 +51,20 @@
       <div class="grid gap-4 sm:grid-cols-2">
         <button
             type="button"
-            class="rounded-2xl border border-slate-200 p-6 text-left transition hover:border-slate-300 hover:bg-slate-50"
+            class="rounded-2xl border border-border-brand p-6 text-left transition hover:border-brand/40 hover:bg-brand-soft/30"
             @click="navigateToSlots"
         >
-          <p class="font-semibold text-slate-900">{{ t('mentorDashboard.manageSlots') }}</p>
-          <p class="mt-1 text-sm text-slate-600">{{ t('mentorDashboard.manageSlotsDesc') }}</p>
+          <p class="font-semibold text-text-primary">{{ t('mentorDashboard.manageSlots') }}</p>
+          <p class="mt-1 text-sm text-text-secondary">{{ t('mentorDashboard.manageSlotsDesc') }}</p>
         </button>
 
         <button
             type="button"
-            class="rounded-2xl border border-slate-200 p-6 text-left transition hover:border-slate-300 hover:bg-slate-50"
+            class="rounded-2xl border border-border-brand p-6 text-left transition hover:border-brand/40 hover:bg-brand-soft/30"
             @click="navigateToProfile"
         >
-          <p class="font-semibold text-slate-900">{{ t('mentorDashboard.mentorProfile') }}</p>
-          <p class="mt-1 text-sm text-slate-600">{{ t('mentorDashboard.mentorProfileDesc') }}</p>
+          <p class="font-semibold text-text-primary">{{ t('mentorDashboard.mentorProfile') }}</p>
+          <p class="mt-1 text-sm text-text-secondary">{{ t('mentorDashboard.mentorProfileDesc') }}</p>
         </button>
       </div>
     </div>

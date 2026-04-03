@@ -11,24 +11,24 @@
           <input
               v-model="form.startAt"
               type="datetime-local"
-              class="rounded-2xl border border-slate-300 px-4 py-3"
+              class="rounded-2xl border border-border-brand px-4 py-3 text-sm outline-none transition focus:border-brand focus:ring-2 focus:ring-brand-soft"
           />
 
           <input
               v-model="form.endAt"
               type="datetime-local"
-              class="rounded-2xl border border-slate-300 px-4 py-3"
+              class="rounded-2xl border border-border-brand px-4 py-3 text-sm outline-none transition focus:border-brand focus:ring-2 focus:ring-brand-soft"
           />
 
           <input
               v-model="form.timezone"
-              class="rounded-2xl border border-slate-300 px-4 py-3"
+              class="rounded-2xl border border-border-brand px-4 py-3 text-sm outline-none transition focus:border-brand focus:ring-2 focus:ring-brand-soft"
               :placeholder="t('mentorSlots.timezonePlaceholder')"
           />
 
           <select
               v-model="form.lessonFormat"
-              class="rounded-2xl border border-slate-300 px-4 py-3"
+              class="rounded-2xl border border-border-brand px-4 py-3 text-sm outline-none transition focus:border-brand focus:ring-2 focus:ring-brand-soft"
           >
             <option value="ONLINE">{{ t('common.lessonFormat.ONLINE') }}</option>
             <option value="OFFLINE">{{ t('common.lessonFormat.OFFLINE') }}</option>
@@ -39,23 +39,23 @@
               v-model.number="form.capacity"
               type="number"
               min="1"
-              class="rounded-2xl border border-slate-300 px-4 py-3"
+              class="rounded-2xl border border-border-brand px-4 py-3 text-sm outline-none transition focus:border-brand focus:ring-2 focus:ring-brand-soft"
               :placeholder="t('mentorSlots.capacityPlaceholder')"
           />
 
-          <div class="rounded-2xl bg-slate-50 px-4 py-3 text-sm text-slate-600 ring-1 ring-slate-200">
+          <div class="rounded-2xl bg-surface-secondary px-4 py-3 text-sm text-text-secondary ring-1 ring-border-brand">
             {{ t('mentorSlots.capacityHint') }}
           </div>
 
           <input
               v-model="form.meetingLink"
-              class="rounded-2xl border border-slate-300 px-4 py-3 md:col-span-2"
+              class="rounded-2xl border border-border-brand px-4 py-3 text-sm outline-none transition focus:border-brand focus:ring-2 focus:ring-brand-soft md:col-span-2"
               :placeholder="t('mentorSlots.meetingLinkPlaceholder')"
           />
 
           <input
               v-model="form.addressText"
-              class="rounded-2xl border border-slate-300 px-4 py-3 md:col-span-2"
+              class="rounded-2xl border border-border-brand px-4 py-3 text-sm outline-none transition focus:border-brand focus:ring-2 focus:ring-brand-soft md:col-span-2"
               :placeholder="t('mentorSlots.addressPlaceholder')"
           />
 
@@ -68,7 +68,7 @@
           </div>
 
           <button
-              class="rounded-2xl bg-slate-900 px-4 py-3 font-semibold text-white md:col-span-2 disabled:cursor-not-allowed disabled:opacity-50"
+              class="rounded-2xl bg-brand px-4 py-3 font-semibold text-white transition hover:bg-brand-hover md:col-span-2 disabled:cursor-not-allowed disabled:opacity-50"
               :disabled="creating"
           >
             {{ creating ? t('mentorSlots.creating') : t('mentorSlots.createSlot') }}
@@ -95,7 +95,7 @@
           <div class="space-y-4">
             <div class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
               <div>
-                <p class="text-lg font-semibold text-slate-900">
+                <p class="text-lg font-semibold text-text-primary">
                   {{ formatDateTime(slot.startAt) }} — {{ formatDateTime(slot.endAt) }}
                 </p>
 
@@ -122,7 +122,7 @@
 
               <div class="flex flex-wrap gap-3">
                 <button
-                    class="rounded-2xl border border-slate-300 px-4 py-2 transition hover:bg-slate-100"
+                    class="rounded-2xl border border-border-brand px-4 py-2 text-sm transition hover:bg-brand-soft"
                     @click="toggleEdit(slot)"
                 >
                   {{ editingSlotId === slot.id ? t('mentorSlots.hide') : t('mentorSlots.edit') }}
@@ -130,7 +130,7 @@
 
                 <button
                     v-if="slot.active"
-                    class="rounded-2xl border border-slate-300 px-4 py-2 transition hover:bg-slate-100 disabled:cursor-not-allowed disabled:opacity-50"
+                    class="rounded-2xl border border-border-brand px-4 py-2 text-sm transition hover:bg-brand-soft disabled:cursor-not-allowed disabled:opacity-50"
                     :disabled="deactivatingId === slot.id"
                     @click="deactivateSlot(slot.id)"
                 >
@@ -141,34 +141,34 @@
 
             <div
                 v-if="editingSlotId === slot.id"
-                class="rounded-2xl border border-slate-200 bg-slate-50 p-4"
+                class="rounded-2xl border border-border-brand bg-surface-secondary p-4"
             >
               <form class="grid gap-4 md:grid-cols-2" @submit.prevent="updateSlot(slot.id)">
-                <input v-model="editForm.startAt" type="datetime-local" class="rounded-2xl border border-slate-300 px-4 py-3" />
-                <input v-model="editForm.endAt" type="datetime-local" class="rounded-2xl border border-slate-300 px-4 py-3" />
-                <input v-model="editForm.timezone" class="rounded-2xl border border-slate-300 px-4 py-3" :placeholder="t('mentorSlots.timezonePlaceholder')" />
+                <input v-model="editForm.startAt" type="datetime-local" class="rounded-2xl border border-border-brand px-4 py-3 text-sm outline-none transition focus:border-brand focus:ring-2 focus:ring-brand-soft" />
+                <input v-model="editForm.endAt" type="datetime-local" class="rounded-2xl border border-border-brand px-4 py-3 text-sm outline-none transition focus:border-brand focus:ring-2 focus:ring-brand-soft" />
+                <input v-model="editForm.timezone" class="rounded-2xl border border-border-brand px-4 py-3 text-sm outline-none transition focus:border-brand focus:ring-2 focus:ring-brand-soft" :placeholder="t('mentorSlots.timezonePlaceholder')" />
 
-                <select v-model="editForm.lessonFormat" class="rounded-2xl border border-slate-300 px-4 py-3">
+                <select v-model="editForm.lessonFormat" class="rounded-2xl border border-border-brand px-4 py-3 text-sm outline-none transition focus:border-brand focus:ring-2 focus:ring-brand-soft">
                   <option value="ONLINE">{{ t('common.lessonFormat.ONLINE') }}</option>
                   <option value="OFFLINE">{{ t('common.lessonFormat.OFFLINE') }}</option>
                   <option value="HYBRID">{{ t('common.lessonFormat.HYBRID') }}</option>
                 </select>
 
-                <input v-model.number="editForm.capacity" type="number" min="1" class="rounded-2xl border border-slate-300 px-4 py-3" :placeholder="t('mentorSlots.capacityPlaceholder')" />
+                <input v-model.number="editForm.capacity" type="number" min="1" class="rounded-2xl border border-border-brand px-4 py-3 text-sm outline-none transition focus:border-brand focus:ring-2 focus:ring-brand-soft" :placeholder="t('mentorSlots.capacityPlaceholder')" />
 
-                <label class="flex items-center gap-3 rounded-2xl border border-slate-200 bg-white px-4 py-3">
-                  <input v-model="editForm.active" type="checkbox" />
-                  <span class="text-sm font-medium text-slate-700">{{ t('mentorSlots.slotActive') }}</span>
+                <label class="flex items-center gap-3 rounded-2xl border border-border-brand bg-white px-4 py-3">
+                  <input v-model="editForm.active" type="checkbox" class="accent-brand" />
+                  <span class="text-sm font-medium text-text-primary">{{ t('mentorSlots.slotActive') }}</span>
                 </label>
 
-                <input v-model="editForm.meetingLink" class="rounded-2xl border border-slate-300 px-4 py-3 md:col-span-2" :placeholder="t('mentorSlots.meetingLinkPlaceholder')" />
-                <input v-model="editForm.addressText" class="rounded-2xl border border-slate-300 px-4 py-3 md:col-span-2" :placeholder="t('mentorSlots.addressPlaceholder')" />
+                <input v-model="editForm.meetingLink" class="rounded-2xl border border-border-brand px-4 py-3 text-sm outline-none transition focus:border-brand focus:ring-2 focus:ring-brand-soft md:col-span-2" :placeholder="t('mentorSlots.meetingLinkPlaceholder')" />
+                <input v-model="editForm.addressText" class="rounded-2xl border border-border-brand px-4 py-3 text-sm outline-none transition focus:border-brand focus:ring-2 focus:ring-brand-soft md:col-span-2" :placeholder="t('mentorSlots.addressPlaceholder')" />
 
                 <div v-if="editError" class="md:col-span-2 text-sm font-medium text-red-600">{{ editError }}</div>
                 <div v-if="editMessage" class="md:col-span-2 text-sm font-medium text-emerald-600">{{ editMessage }}</div>
 
                 <button
-                    class="rounded-2xl bg-slate-900 px-4 py-3 font-semibold text-white md:col-span-2 disabled:cursor-not-allowed disabled:opacity-50"
+                    class="rounded-2xl bg-brand px-4 py-3 font-semibold text-white transition hover:bg-brand-hover md:col-span-2 disabled:cursor-not-allowed disabled:opacity-50"
                     :disabled="updatingId === slot.id"
                 >
                   {{ updatingId === slot.id ? t('mentorSlots.saving') : t('mentorSlots.saveChanges') }}

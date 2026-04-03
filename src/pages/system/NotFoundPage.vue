@@ -6,25 +6,25 @@
           {{ t('notFound.badge') }}
         </p>
 
-        <h1 class="mt-6 text-5xl font-bold tracking-tight text-slate-900 md:text-6xl">
+        <h1 class="mt-6 text-5xl font-bold tracking-tight text-text-primary md:text-6xl">
           {{ t('notFound.title') }}
         </h1>
 
-        <p class="mt-4 max-w-2xl text-lg leading-8 text-slate-600">
+        <p class="mt-4 max-w-2xl text-lg leading-8 text-text-secondary">
           {{ t('notFound.description') }}
         </p>
 
         <div class="mt-8 flex flex-wrap items-center justify-center gap-4">
           <RouterLink
               to="/"
-              class="rounded-2xl bg-slate-900 px-6 py-3 text-base font-semibold text-white transition hover:opacity-90"
+              class="rounded-2xl bg-brand px-6 py-3 text-base font-semibold text-white transition hover:bg-brand-hover"
           >
             {{ t('notFound.goHome') }}
           </RouterLink>
 
           <RouterLink
               to="/mentors"
-              class="rounded-2xl border border-slate-300 bg-white px-6 py-3 text-base font-semibold text-slate-900 transition hover:bg-slate-100"
+              class="rounded-2xl border border-border-brand bg-white px-6 py-3 text-base font-semibold text-text-primary transition hover:bg-brand-soft"
           >
             {{ t('notFound.goMentors') }}
           </RouterLink>

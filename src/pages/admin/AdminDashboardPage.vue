@@ -3,57 +3,57 @@
     <div class="space-y-8">
       <!-- Header -->
       <div>
-        <h1 class="text-3xl font-bold text-slate-900">{{ t('adminDashboard.title') }}</h1>
-        <p class="mt-2 text-slate-600">{{ t('adminDashboard.subtitle') }}</p>
+        <h1 class="text-3xl font-bold text-text-primary">{{ t('adminDashboard.title') }}</h1>
+        <p class="mt-2 text-text-secondary">{{ t('adminDashboard.subtitle') }}</p>
       </div>
 
       <!-- Stats Grid -->
       <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         <AppCard>
-          <p class="text-sm text-slate-500">{{ t('adminDashboard.totalBookings') }}</p>
-          <p class="mt-2 text-3xl font-bold text-slate-900">{{ dashboardData?.stats.totalBookings || 0 }}</p>
-          <p class="mt-2 text-xs text-slate-500">
-            {{ dashboardData?.stats.completedBookings || 0 }} {{ t('adminDashboard.completed') }}
+          <p class="text-sm text-text-secondary">{{ t('adminDashboard.totalBookings') }}</p>
+          <p class="mt-2 text-3xl font-bold text-text-primary">{{ dashboardData?.stats.totalBookings ?? 0 }}</p>
+          <p class="mt-2 text-xs text-text-muted">
+            {{ dashboardData?.stats.completedBookings ?? 0 }} {{ t('adminDashboard.completed') }}
           </p>
         </AppCard>
 
         <AppCard>
-          <p class="text-sm text-slate-500">{{ t('adminDashboard.mentors') }}</p>
-          <p class="mt-2 text-3xl font-bold text-blue-600">{{ dashboardData?.stats.totalMentors || 0 }}</p>
-          <p class="mt-2 text-xs text-slate-500">{{ t('adminDashboard.activeMentors') }}</p>
+          <p class="text-sm text-text-secondary">{{ t('adminDashboard.mentors') }}</p>
+          <p class="mt-2 text-3xl font-bold text-brand">{{ dashboardData?.stats.totalMentors ?? 0 }}</p>
+          <p class="mt-2 text-xs text-text-muted">{{ t('adminDashboard.activeMentors') }}</p>
         </AppCard>
 
         <AppCard>
-          <p class="text-sm text-slate-500">{{ t('adminDashboard.students') }}</p>
-          <p class="mt-2 text-3xl font-bold text-emerald-600">{{ dashboardData?.stats.totalStudents || 0 }}</p>
-          <p class="mt-2 text-xs text-slate-500">{{ t('adminDashboard.activeStudents') }}</p>
+          <p class="text-sm text-text-secondary">{{ t('adminDashboard.students') }}</p>
+          <p class="mt-2 text-3xl font-bold text-emerald-600">{{ dashboardData?.stats.totalStudents ?? 0 }}</p>
+          <p class="mt-2 text-xs text-text-muted">{{ t('adminDashboard.activeStudents') }}</p>
         </AppCard>
 
         <AppCard>
-          <p class="text-sm text-slate-500">{{ t('adminDashboard.avgRating') }}</p>
+          <p class="text-sm text-text-secondary">{{ t('adminDashboard.avgRating') }}</p>
           <div class="mt-2 flex items-baseline gap-2">
-            <p class="text-3xl font-bold text-yellow-500">{{ dashboardData?.stats.averageRating.toFixed(1) || '0.0' }}</p>
-            <span class="text-sm text-slate-500">/ 5.0</span>
+            <p class="text-3xl font-bold text-amber-500">{{ dashboardData?.stats.averageRating?.toFixed(1) ?? '—' }}</p>
+            <span class="text-sm text-text-secondary">/ 5.0</span>
           </div>
         </AppCard>
 
         <AppCard>
-          <p class="text-sm text-slate-500">{{ t('adminDashboard.upcoming') }}</p>
-          <p class="mt-2 text-3xl font-bold text-indigo-600">
-            {{ dashboardData?.stats.upcomingBookings || 0 }}
+          <p class="text-sm text-text-secondary">{{ t('adminDashboard.upcoming') }}</p>
+          <p class="mt-2 text-3xl font-bold text-accent">
+            {{ dashboardData?.stats.upcomingBookings ?? 0 }}
           </p>
-          <p class="mt-2 text-xs text-slate-500">{{ t('adminDashboard.thisWeek') }}</p>
+          <p class="mt-2 text-xs text-text-muted">{{ t('adminDashboard.thisWeek') }}</p>
         </AppCard>
 
         <AppCard>
-          <p class="text-sm text-slate-500">{{ t('adminDashboard.completion') }}</p>
+          <p class="text-sm text-text-secondary">{{ t('adminDashboard.completion') }}</p>
           <div class="mt-2">
             <div class="flex items-baseline gap-2">
-              <p class="text-2xl font-bold text-slate-900">
+              <p class="text-2xl font-bold text-text-primary">
                 {{ calculateCompletion }}%
               </p>
             </div>
-            <div class="mt-2 h-2 w-full overflow-hidden rounded-full bg-slate-200">
+            <div class="mt-2 h-2 w-full overflow-hidden rounded-full bg-brand-soft">
               <div
                   class="h-full bg-gradient-to-r from-emerald-400 to-emerald-600"
                   :style="{ width: `${calculateCompletion}%` }"
@@ -79,30 +79,30 @@
       <!-- Admin Actions -->
       <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         <button
-            class="rounded-2xl border border-slate-200 p-6 text-left transition hover:border-slate-300 hover:bg-slate-50"
+            class="rounded-2xl border border-border-brand p-6 text-left transition hover:border-brand/40 hover:bg-brand-soft/30"
             @click="handleAdminAction('users')"
         >
-          <p class="text-2xl">👥</p>
-          <p class="mt-3 font-semibold text-slate-900">{{ t('adminDashboard.manageUsers') }}</p>
-          <p class="mt-1 text-xs text-slate-600">{{ t('adminDashboard.manageUsersDesc') }}</p>
+          <span class="block text-2xl">👥</span>
+          <span class="mt-3 block font-semibold text-text-primary">{{ t('adminDashboard.manageUsers') }}</span>
+          <span class="mt-1 block text-xs text-text-secondary">{{ t('adminDashboard.manageUsersDesc') }}</span>
         </button>
 
         <button
-            class="rounded-2xl border border-slate-200 p-6 text-left transition hover:border-slate-300 hover:bg-slate-50"
+            class="rounded-2xl border border-border-brand p-6 text-left transition hover:border-brand/40 hover:bg-brand-soft/30"
             @click="handleAdminAction('bookings')"
         >
-          <p class="text-2xl">📅</p>
-          <p class="mt-3 font-semibold text-slate-900">{{ t('adminDashboard.manageBookings') }}</p>
-          <p class="mt-1 text-xs text-slate-600">{{ t('adminDashboard.manageBookingsDesc') }}</p>
+          <span class="block text-2xl">📅</span>
+          <span class="mt-3 block font-semibold text-text-primary">{{ t('adminDashboard.manageBookings') }}</span>
+          <span class="mt-1 block text-xs text-text-secondary">{{ t('adminDashboard.manageBookingsDesc') }}</span>
         </button>
 
         <button
-            class="rounded-2xl border border-slate-200 p-6 text-left transition hover:border-slate-300 hover:bg-slate-50"
+            class="rounded-2xl border border-border-brand p-6 text-left transition hover:border-brand/40 hover:bg-brand-soft/30"
             @click="handleAdminAction('reports')"
         >
-          <p class="text-2xl">📊</p>
-          <p class="mt-3 font-semibold text-slate-900">{{ t('adminDashboard.reports') }}</p>
-          <p class="mt-1 text-xs text-slate-600">{{ t('adminDashboard.reportsDesc') }}</p>
+          <span class="block text-2xl">📊</span>
+          <span class="mt-3 block font-semibold text-text-primary">{{ t('adminDashboard.reports') }}</span>
+          <span class="mt-1 block text-xs text-text-secondary">{{ t('adminDashboard.reportsDesc') }}</span>
         </button>
       </div>
     </div>

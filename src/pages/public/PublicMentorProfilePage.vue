@@ -52,10 +52,13 @@
             <div class="rounded-[2rem] bg-white p-6 shadow-sm ring-1 ring-border-brand/80 md:p-8">
               <div class="flex flex-col gap-6 md:flex-row md:items-start">
                 <!-- Avatar -->
-                <div class="flex h-28 w-28 shrink-0 items-center justify-center overflow-hidden rounded-full bg-brand-soft text-3xl font-bold text-brand">
-                  <img v-if="mentor.avatarUrl" :src="mentor.avatarUrl" :alt="mentorName" class="h-full w-full object-cover" />
-                  <span v-else>{{ mentorInitials }}</span>
-                </div>
+                <ProfileAvatar
+                    :src="mentor.avatarUrl"
+                    :first-name="mentor.firstName"
+                    :last-name="mentor.lastName"
+                    :alt="mentorName"
+                    size="xl"
+                />
 
                 <div class="min-w-0 flex-1">
                   <!-- Name + badge -->
@@ -66,6 +69,15 @@
 
                   <!-- Headline -->
                   <p class="mt-2 text-lg text-text-secondary">{{ mentor.headline || t('publicMentorProfile.defaultHeadline') }}</p>
+
+                  <!-- Social links -->
+                  <div class="mt-3">
+                    <SocialLinks
+                        :instagram="mentor.instagramUrl"
+                        :telegram="mentor.telegramUsername"
+                        :email="mentor.publicEmail"
+                    />
+                  </div>
 
                   <!-- Trust summary line -->
                   <div class="mt-3 flex flex-wrap items-center gap-4 text-sm">
@@ -313,6 +325,8 @@ import AppCard from '../../shared/ui/AppCard.vue'
 import AppBadge from '../../shared/ui/AppBadge.vue'
 import AppErrorState from '../../shared/ui/AppErrorState.vue'
 import StarRating from '../../shared/ui/StarRating.vue'
+import ProfileAvatar from '../../shared/ui/ProfileAvatar.vue'
+import SocialLinks from '../../shared/ui/SocialLinks.vue'
 import ReviewList from '../../features/reviews/ReviewList.vue'
 
 const { t } = useI18n()
@@ -345,12 +359,6 @@ const mentorName = computed(() => {
   return full || t('publicMentorProfile.noName')
 })
 
-const mentorInitials = computed(() => {
-  if (!mentor.value) return 'M'
-  const first = mentor.value.firstName?.trim()?.[0] || ''
-  const last = mentor.value.lastName?.trim()?.[0] || ''
-  return (first + last).toUpperCase() || 'M'
-})
 
 const loadMentor = async () => {
   loading.value = true

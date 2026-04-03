@@ -3,28 +3,28 @@
     <section class="mx-auto flex min-h-[calc(100vh-73px)] max-w-7xl items-center px-4 py-10 sm:px-6">
       <div class="grid w-full gap-8 lg:grid-cols-2 lg:items-center">
         <div class="hidden lg:block">
-          <p class="inline-flex rounded-full bg-slate-200 px-4 py-2 text-sm font-medium text-slate-700">
+          <p class="inline-flex rounded-full bg-brand-soft px-4 py-2 text-sm font-medium text-brand">
             {{ t('forgotPassword.heroBadge') }}
           </p>
 
-          <h1 class="mt-5 max-w-xl text-5xl font-bold leading-tight text-slate-900">
+          <h1 class="mt-5 max-w-xl text-5xl font-bold leading-tight text-text-primary">
             {{ t('forgotPassword.heroTitle') }}
           </h1>
 
-          <p class="mt-6 max-w-lg text-lg leading-8 text-slate-600">
+          <p class="mt-6 max-w-lg text-lg leading-8 text-text-secondary">
             {{ t('forgotPassword.heroSubtitle') }}
           </p>
         </div>
 
-        <div class="w-full max-w-md justify-self-center rounded-3xl bg-white p-6 shadow-sm ring-1 ring-slate-200 sm:p-8">
-          <h1 class="text-3xl font-bold text-slate-900">{{ t('forgotPassword.title') }}</h1>
-          <p class="mt-2 text-sm text-slate-600">
+        <div class="w-full max-w-md justify-self-center rounded-3xl bg-white p-6 shadow-sm ring-1 ring-border-brand sm:p-8">
+          <h1 class="text-3xl font-bold text-text-primary">{{ t('forgotPassword.title') }}</h1>
+          <p class="mt-2 text-sm text-text-secondary">
             {{ t('forgotPassword.subtitle') }}
           </p>
 
           <form class="mt-8 space-y-5" @submit.prevent="handleSubmit">
             <div>
-              <label class="mb-2 block text-sm font-medium text-slate-700">{{ t('forgotPassword.emailLabel') }}</label>
+              <label class="mb-2 block text-sm font-medium text-text-primary">{{ t('forgotPassword.emailLabel') }}</label>
               <input
                   v-model.trim="email"
                   type="email"
@@ -53,15 +53,15 @@
 
             <button
                 type="submit"
-                class="w-full rounded-2xl bg-slate-900 px-4 py-3 font-semibold text-white transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50"
+                class="w-full rounded-2xl bg-brand px-4 py-3 font-semibold text-white transition hover:bg-brand-hover disabled:cursor-not-allowed disabled:opacity-50"
                 :disabled="loading"
             >
               {{ loading ? t('forgotPassword.submitLoading') : t('forgotPassword.submit') }}
             </button>
 
-            <div class="text-center text-sm text-slate-600">
+            <div class="text-center text-sm text-text-secondary">
               {{ t('forgotPassword.backToLogin') }}
-              <RouterLink to="/login" class="font-semibold text-slate-900 transition hover:opacity-70">
+              <RouterLink to="/login" class="font-semibold text-brand transition hover:text-brand-hover">
                 {{ t('forgotPassword.backToLoginLink') }}
               </RouterLink>
             </div>
@@ -103,7 +103,7 @@ const emailError = computed(() => {
 const fieldClass = (hasError: boolean) =>
     hasError
         ? 'border-red-300 focus:border-red-500'
-        : 'border-slate-300 focus:border-slate-900'
+        : 'border-border-brand focus:border-brand'
 
 const handleSubmit = async () => {
   showValidation.value = true

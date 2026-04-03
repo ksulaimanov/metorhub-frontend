@@ -3,27 +3,27 @@
     <div class="space-y-8">
       <!-- Header -->
       <div>
-        <h1 class="text-3xl font-bold text-slate-900">{{ t('studentDashboard.greeting', { name: firstName }) }}</h1>
-        <p class="mt-2 text-slate-600">{{ t('studentDashboard.subtitle') }}</p>
+        <h1 class="text-3xl font-bold text-text-primary">{{ t('studentDashboard.greeting', { name: firstName }) }}</h1>
+        <p class="mt-2 text-text-secondary">{{ t('studentDashboard.subtitle') }}</p>
       </div>
 
       <!-- Stats Cards -->
       <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         <AppCard>
-          <p class="text-sm text-slate-500">{{ t('studentDashboard.totalBookings') }}</p>
-          <p class="mt-2 text-3xl font-bold text-slate-900">{{ dashboardData?.totalBookings || 0 }}</p>
+          <p class="text-sm text-text-secondary">{{ t('studentDashboard.totalBookings') }}</p>
+          <p class="mt-2 text-3xl font-bold text-text-primary">{{ dashboardData?.totalBookings ?? 0 }}</p>
         </AppCard>
 
         <AppCard>
-          <p class="text-sm text-slate-500">{{ t('studentDashboard.upcoming') }}</p>
+          <p class="text-sm text-text-secondary">{{ t('studentDashboard.upcoming') }}</p>
           <p class="mt-2 text-3xl font-bold text-emerald-600">
-            {{ dashboardData?.upcomingEvents?.length || 0 }}
+            {{ dashboardData?.upcomingEvents?.length ?? 0 }}
           </p>
         </AppCard>
 
         <AppCard>
-          <p class="text-sm text-slate-500">{{ t('studentDashboard.completed') }}</p>
-          <p class="mt-2 text-3xl font-bold text-slate-900">{{ dashboardData?.completedBookings || 0 }}</p>
+          <p class="text-sm text-text-secondary">{{ t('studentDashboard.completed') }}</p>
+          <p class="mt-2 text-3xl font-bold text-text-primary">{{ dashboardData?.completedBookings ?? 0 }}</p>
         </AppCard>
       </div>
 
@@ -42,11 +42,11 @@
       />
 
       <!-- CTA to Find Mentors -->
-      <div v-if="(dashboardData?.upcomingEvents.length || 0) === 0" class="rounded-2xl bg-gradient-to-r from-blue-50 to-indigo-50 p-6 ring-1 ring-blue-200">
-        <h3 class="text-lg font-semibold text-slate-900">{{ t('studentDashboard.ctaTitle') }}</h3>
-        <p class="mt-2 text-slate-600">{{ t('studentDashboard.ctaDesc') }}</p>
+      <div v-if="(dashboardData?.upcomingEvents.length ?? 0) === 0" class="rounded-2xl bg-gradient-to-r from-brand-soft/60 to-brand-soft/20 p-6 ring-1 ring-border-brand">
+        <h3 class="text-lg font-semibold text-text-primary">{{ t('studentDashboard.ctaTitle') }}</h3>
+        <p class="mt-2 text-text-secondary">{{ t('studentDashboard.ctaDesc') }}</p>
         <button
-            class="mt-4 inline-flex items-center justify-center rounded-2xl bg-indigo-600 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-indigo-700 active:bg-indigo-800"
+            class="mt-4 inline-flex items-center justify-center rounded-2xl bg-brand px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-brand-hover active:scale-[0.98]"
             @click="navigateToMentors"
         >
           {{ t('studentDashboard.ctaButton') }}
@@ -105,4 +105,3 @@ const navigateToMentors = () => {
 
 onMounted(loadDashboard)
 </script>
-
