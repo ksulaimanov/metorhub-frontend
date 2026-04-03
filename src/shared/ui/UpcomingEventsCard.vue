@@ -3,10 +3,10 @@
     <!-- Header -->
     <div class="flex items-center justify-between gap-3 mb-6">
       <div>
-        <h2 class="text-xl font-semibold text-slate-900">{{ title }}</h2>
-        <p class="mt-1 text-sm text-slate-600">{{ subtitle }}</p>
+        <h2 class="text-xl font-semibold text-text-primary">{{ title }}</h2>
+        <p class="mt-1 text-sm text-text-secondary">{{ subtitle }}</p>
       </div>
-      <div v-if="!loading && events.length > 0" class="text-sm font-semibold text-slate-500">
+      <div v-if="!loading && events.length > 0" class="text-sm font-semibold text-text-muted">
         {{ events.length }} {{ t('common.ofMax') }} 5
       </div>
     </div>
@@ -31,9 +31,9 @@
     <!-- Empty State -->
     <div
         v-else-if="events.length === 0"
-        class="rounded-2xl border border-dashed border-slate-300 p-6 text-center"
+        class="rounded-2xl border border-dashed border-border-brand p-6 text-center"
     >
-      <p class="text-sm font-medium text-slate-600">{{ emptyMessage }}</p>
+      <p class="text-sm font-medium text-text-secondary">{{ emptyMessage }}</p>
     </div>
 
     <!-- Events List -->
@@ -41,15 +41,15 @@
       <div
           v-for="(event) in events"
           :key="event.id"
-          class="rounded-2xl border border-slate-200 p-4 transition hover:border-slate-300 hover:bg-slate-50"
+          class="rounded-2xl border border-border-brand p-4 transition hover:border-brand/30 hover:bg-brand-soft/20"
       >
         <!-- Event Header -->
         <div class="flex items-start justify-between gap-3 mb-3">
           <div class="min-w-0 flex-1">
-            <h3 class="truncate text-sm font-semibold text-slate-900">
+            <h3 class="truncate text-sm font-semibold text-text-primary">
               {{ event.title }}
             </h3>
-            <p class="mt-1 truncate text-xs text-slate-500">
+            <p class="mt-1 truncate text-xs text-text-muted">
               {{ event.studentName || event.mentorName }}
             </p>
           </div>
@@ -59,22 +59,22 @@
         </div>
 
         <!-- Event Details Grid -->
-        <div class="space-y-2 text-xs text-slate-600">
+        <div class="space-y-2 text-xs text-text-secondary">
           <!-- Date/Time -->
           <div class="flex items-center gap-2">
-            <span class="font-medium text-slate-700">🕒</span>
+            <span class="font-medium text-text-primary">🕒</span>
             <span>{{ formatDateTime(event.startAt) }}</span>
           </div>
 
           <!-- Format -->
           <div class="flex items-center gap-2">
-            <span class="font-medium text-slate-700">📍</span>
+            <span class="font-medium text-text-primary">📍</span>
             <span>{{ t(`common.lessonFormat.${event.lessonFormat}`, event.lessonFormat) }}</span>
           </div>
 
           <!-- Capacity (for mentors) -->
           <div v-if="event.capacity" class="flex items-center gap-2">
-            <span class="font-medium text-slate-700">👥</span>
+            <span class="font-medium text-text-primary">👥</span>
             <span>
               {{ event.bookedCount }}/{{ event.capacity }} ({{ t('common.free') }}: {{ event.availableSeats }})
             </span>
@@ -84,7 +84,7 @@
         <!-- Action Button -->
         <button
             v-if="actionButtonVisible"
-            class="mt-3 w-full rounded-lg bg-slate-100 px-3 py-2 text-xs font-semibold text-slate-700 transition hover:bg-slate-200 active:bg-slate-300"
+            class="mt-3 w-full rounded-lg bg-brand-soft/50 px-3 py-2 text-xs font-semibold text-brand transition hover:bg-brand-soft active:bg-brand-soft/80"
             @click="$emit('event-click', event)"
         >
           {{ actionButtonLabel }}
@@ -94,7 +94,7 @@
       <!-- View All Button -->
       <button
           v-if="events.length > 0 && showViewAll"
-          class="w-full rounded-lg border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-700 transition hover:bg-slate-50 active:bg-slate-100"
+          class="w-full rounded-lg border border-border-brand px-4 py-2 text-sm font-semibold text-text-primary transition hover:bg-brand-soft/30 active:bg-brand-soft/50"
           @click="$emit('view-all')"
       >
         {{ t('common.viewAllEvents') }}

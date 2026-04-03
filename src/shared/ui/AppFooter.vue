@@ -82,8 +82,31 @@
         </div>
       </div>
 
+      <!-- Support -->
+      <div class="mt-10 flex flex-col items-center gap-2 border-t border-border-brand/60 pt-6 sm:flex-row sm:justify-between">
+        <p class="text-sm text-text-secondary">{{ t('support.title') }}</p>
+        <div class="flex items-center gap-3">
+          <a
+              href="https://t.me/ksulaimanov"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="inline-flex items-center gap-1.5 text-sm text-text-secondary transition hover:text-brand"
+          >
+            <Send class="h-4 w-4" />
+            Telegram
+          </a>
+          <a
+              href="mailto:ksulaimanov.dev@gmail.com"
+              class="inline-flex items-center gap-1.5 text-sm text-text-secondary transition hover:text-brand"
+          >
+            <Mail class="h-4 w-4" />
+            Email
+          </a>
+        </div>
+      </div>
+
       <!-- Bottom -->
-      <div class="mt-10 border-t border-border-brand/60 pt-6">
+      <div class="mt-6 border-t border-border-brand/60 pt-6">
         <p class="text-center text-xs text-text-secondary">
           © {{ new Date().getFullYear() }} JaiMentorship. {{ t('footer.rights') }}
         </p>
@@ -94,6 +117,7 @@
 
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n'
+import { Send, Mail } from 'lucide-vue-next'
 
 const { t } = useI18n()
 </script>

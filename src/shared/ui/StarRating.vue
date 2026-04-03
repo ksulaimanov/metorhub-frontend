@@ -4,7 +4,7 @@
         v-for="i in 5"
         :key="i"
         class="h-[1em] w-[1em] shrink-0"
-        :class="i <= roundedRating ? 'text-amber-400' : 'text-slate-200'"
+        :class="i <= roundedRating ? 'text-amber-400' : 'text-border-brand'"
         viewBox="0 0 20 20"
         fill="currentColor"
         aria-hidden="true"
