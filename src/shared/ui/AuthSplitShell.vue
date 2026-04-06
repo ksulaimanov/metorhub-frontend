@@ -1,5 +1,5 @@
 <template>
-  <PublicLayout>
+  <PublicLayout footer-variant="compact">
     <section class="mx-auto flex min-h-[calc(100vh-64px)] max-w-6xl items-start px-4 py-8 sm:px-6 lg:items-center lg:py-14">
       <div class="grid w-full gap-10 lg:grid-cols-2 lg:gap-16">
 

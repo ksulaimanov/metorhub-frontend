@@ -97,7 +97,7 @@
     </div>
 
     <!-- ─── Footer ─── -->
-    <AppFooter />
+    <AppFooter :variant="footerVariant" />
   </div>
 </template>
 
@@ -111,6 +111,12 @@ import KyrgyzDivider from '../../shared/ui/KyrgyzDivider.vue'
 
 const { t } = useI18n()
 const authStore = useAuthStore()
+
+withDefaults(defineProps<{
+  footerVariant?: 'full' | 'compact'
+}>(), {
+  footerVariant: 'full',
+})
 
 const dashboardRoute = computed(() => {
   if (authStore.isAdmin) return '/admin/dashboard'
