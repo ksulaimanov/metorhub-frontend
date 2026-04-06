@@ -59,9 +59,9 @@
             {{ mentor.pricePerHour ? `${mentor.pricePerHour} ${t('mentorDirectory.priceSuffix')}` : t('mentorDirectory.priceNotSet') }}
           </p>
         </div>
-        <div>
+        <div class="min-w-0">
           <p class="text-xs text-text-secondary">{{ t('mentorDirectory.ratingLabel') }}</p>
-          <div class="mt-0.5 flex items-center gap-1">
+          <div class="mt-0.5 overflow-hidden">
             <StarRating :rating="mentor.averageRating" class="text-xs" />
           </div>
         </div>

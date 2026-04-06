@@ -49,7 +49,9 @@
           <!-- ═══ Left column ═══ -->
           <div class="space-y-6">
             <!-- ── Profile hero card ── -->
-            <div class="rounded-[2rem] bg-white p-6 shadow-sm ring-1 ring-border-brand/80 md:p-8">
+            <div class="relative rounded-[2rem] bg-white p-6 shadow-sm ring-1 ring-border-brand/80 md:p-8">
+              <KyrgyzCornerAccent position="top-right" size="md" />
+              <KyrgyzCornerAccent position="bottom-left" size="sm" />
               <div class="flex flex-col gap-6 md:flex-row md:items-start">
                 <!-- Avatar -->
                 <ProfileAvatar
@@ -80,13 +82,13 @@
                   </div>
 
                   <!-- Trust summary line -->
-                  <div class="mt-3 flex flex-wrap items-center gap-4 text-sm">
-                    <div v-if="mentor.averageRating" class="flex items-center gap-1.5">
+                  <div class="mt-3 flex flex-wrap items-center gap-x-4 gap-y-1.5 text-sm">
+                    <div class="flex items-center gap-1.5">
                       <StarRating :rating="mentor.averageRating" :show-value="false" class="text-sm" />
-                      <span class="font-semibold text-text-primary">{{ (mentor.averageRating).toFixed(1) }}</span>
-                      <span v-if="reviews.length" class="text-text-secondary">({{ t('publicMentorProfile.reviewCount', { count: reviews.length }) }})</span>
+                      <span class="shrink-0 font-semibold tabular-nums text-text-primary">{{ (mentor.averageRating ?? 0).toFixed(1) }}</span>
+                      <span v-if="reviews.length" class="shrink-0 whitespace-nowrap text-text-secondary">({{ t('publicMentorProfile.reviewCount', { count: reviews.length }) }})</span>
                     </div>
-                    <span v-if="mentor.lessonsCompleted" class="text-text-secondary">
+                    <span v-if="mentor.lessonsCompleted" class="shrink-0 whitespace-nowrap text-text-secondary">
                       {{ mentor.lessonsCompleted }} {{ t('publicMentorProfile.lessonsUnit') }}
                     </span>
                   </div>
@@ -108,9 +110,11 @@
                       <p class="text-xs text-text-secondary">{{ t('publicMentorProfile.experience') }}</p>
                       <p class="mt-0.5 text-sm font-semibold text-text-primary">{{ mentor.yearsExperience ?? 0 }} {{ t('publicMentorProfile.yearsUnit') }}</p>
                     </div>
-                    <div class="rounded-xl bg-surface-secondary p-3.5">
+                    <div class="min-w-0 rounded-xl bg-surface-secondary p-3.5">
                       <p class="text-xs text-text-secondary">{{ t('publicMentorProfile.rating') }}</p>
-                      <StarRating :rating="mentor.averageRating" class="mt-0.5 text-sm" />
+                      <div class="mt-0.5 overflow-hidden">
+                        <StarRating :rating="mentor.averageRating" class="text-sm" />
+                      </div>
                     </div>
                     <div class="rounded-xl bg-surface-secondary p-3.5">
                       <p class="text-xs text-text-secondary">{{ t('publicMentorProfile.lessonsCompleted') }}</p>
@@ -127,6 +131,8 @@
               <p class="mt-4 whitespace-pre-line leading-8 text-text-secondary">{{ mentor.bio || t('publicMentorProfile.noBio') }}</p>
             </AppCard>
 
+            <KyrgyzDivider variant="subtle" size="sm" />
+
             <!-- ── Lesson details ── -->
             <AppCard>
               <h2 class="text-xl font-semibold text-text-primary">{{ t('publicMentorProfile.lessonDetails') }}</h2>
@@ -134,10 +140,6 @@
                 <div>
                   <p class="text-sm text-text-secondary">{{ t('publicMentorProfile.city') }}</p>
                   <p class="mt-1 font-medium text-text-primary">{{ mentor.city || t('publicMentorProfile.cityNotSet') }}</p>
-                </div>
-                <div>
-                  <p class="text-sm text-text-secondary">{{ t('publicMentorProfile.price') }}</p>
-                  <p class="mt-1 font-medium text-text-primary">{{ mentor.pricePerHour ? `${mentor.pricePerHour} ${t('publicMentorProfile.priceSuffix')}` : t('publicMentorProfile.priceNotSet') }}</p>
                 </div>
               </div>
             </AppCard>
@@ -155,7 +157,8 @@
           <!-- ═══ Right column ═══ -->
           <div class="space-y-6 lg:sticky lg:top-6 lg:self-start">
             <!-- ── Booking CTA card ── -->
-            <div class="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-border-brand/80">
+            <div class="ornament-bg relative rounded-2xl bg-white p-6 shadow-sm ring-1 ring-border-brand/80">
+              <KyrgyzCornerAccent position="top-left" size="sm" />
               <h2 class="text-xl font-semibold text-text-primary">{{ t('publicMentorProfile.bookingTitle') }}</h2>
               <p class="mt-2 text-sm text-text-secondary">{{ t('publicMentorProfile.bookingDesc') }}</p>
 
@@ -328,6 +331,8 @@ import StarRating from '../../shared/ui/StarRating.vue'
 import ProfileAvatar from '../../shared/ui/ProfileAvatar.vue'
 import SocialLinks from '../../shared/ui/SocialLinks.vue'
 import ReviewList from '../../features/reviews/ReviewList.vue'
+import KyrgyzCornerAccent from '../../shared/ui/KyrgyzCornerAccent.vue'
+import KyrgyzDivider from '../../shared/ui/KyrgyzDivider.vue'
 
 const { t } = useI18n()
 const toastStore = useToastStore()
