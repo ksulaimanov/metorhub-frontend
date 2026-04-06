@@ -1,73 +1,108 @@
 <template>
   <div class="space-y-6">
     <!-- Profile header card -->
-    <AppCard>
-      <div class="flex flex-col gap-6 sm:flex-row sm:items-start sm:justify-between">
-        <div class="flex items-center gap-5">
-          <ProfileAvatar
-              :src="profile.avatarUrl"
-              :first-name="profile.firstName"
-              :last-name="profile.lastName"
-              :alt="t('mentorProfile.avatarAlt')"
-              size="xl"
-          />
+    <AppCard padding="none" radius="lg">
+      <!-- Decorative gradient banner -->
+      <div class="h-20 rounded-t-3xl bg-gradient-to-r from-brand/5 via-accent/5 to-brand-soft/40" />
 
-          <div class="min-w-0">
-            <h2 class="text-2xl font-bold text-text-primary">{{ displayName }}</h2>
-            <p class="mt-1 text-sm text-text-secondary">
-              {{ profile.headline || t('mentorProfile.viewHeadlineNotSet') }}
-            </p>
-            <div class="mt-3 flex flex-wrap items-center gap-2">
-              <AppBadge v-if="profile.verified" variant="success">{{ t('mentorProfile.verified') }}</AppBadge>
-              <AppBadge :variant="profile.public ? 'success' : 'default'">
-                {{ profile.public ? t('mentorProfile.publicProfile') : t('mentorProfile.hiddenProfile') }}
-              </AppBadge>
+      <div class="-mt-10 px-6 pb-6">
+        <div class="flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
+          <div class="flex items-end gap-5">
+            <div class="ring-4 ring-white rounded-full shadow-lg">
+              <ProfileAvatar
+                  :src="profile.avatarUrl"
+                  :first-name="profile.firstName"
+                  :last-name="profile.lastName"
+                  :alt="t('mentorProfile.avatarAlt')"
+                  size="xl"
+              />
             </div>
-            <SocialLinks
-                v-if="hasAnySocial"
-                :instagram="profile.instagramUrl"
-                :telegram="profile.telegramUsername"
-                :email="profile.publicEmail"
-                class="mt-3"
-            />
-          </div>
-        </div>
 
-        <AppButton variant="secondary" size="md" @click="$emit('edit')">
-          <Pencil class="h-4 w-4" />
-          {{ t('mentorProfile.editProfile') }}
-        </AppButton>
+            <div class="min-w-0 pb-1">
+              <h2 class="text-2xl font-bold text-text-primary">{{ displayName }}</h2>
+              <p class="mt-1 text-sm text-text-secondary">
+                {{ profile.headline || t('mentorProfile.viewHeadlineNotSet') }}
+              </p>
+              <div class="mt-3 flex flex-wrap items-center gap-2">
+                <AppBadge v-if="profile.verified" variant="success">{{ t('mentorProfile.verified') }}</AppBadge>
+                <AppBadge :variant="profile.public ? 'success' : 'default'">
+                  {{ profile.public ? t('mentorProfile.publicProfile') : t('mentorProfile.hiddenProfile') }}
+                </AppBadge>
+              </div>
+              <SocialLinks
+                  v-if="hasAnySocial"
+                  :instagram="profile.instagramUrl"
+                  :telegram="profile.telegramUsername"
+                  :email="profile.publicEmail"
+                  class="mt-3"
+              />
+            </div>
+          </div>
+
+          <AppButton variant="secondary" size="md" @click="$emit('edit')">
+            <Pencil class="h-4 w-4" />
+            {{ t('mentorProfile.editProfile') }}
+          </AppButton>
+        </div>
       </div>
     </AppCard>
 
     <!-- Stats row -->
     <div class="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
       <AppCard>
-        <p class="text-sm text-text-secondary">{{ t('mentorProfile.statRating') }}</p>
-        <div class="mt-2">
-          <StarRating :rating="profile.averageRating" class="text-xl" />
+        <div class="flex items-start gap-3">
+          <div class="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-amber-50 text-amber-500">
+            <StarIcon class="h-4 w-4" />
+          </div>
+          <div class="min-w-0">
+            <p class="text-sm text-text-secondary">{{ t('mentorProfile.statRating') }}</p>
+            <div class="mt-1">
+              <StarRating :rating="profile.averageRating" class="text-xl" />
+            </div>
+          </div>
         </div>
       </AppCard>
 
       <AppCard>
-        <p class="text-sm text-text-secondary">{{ t('mentorProfile.statLessons') }}</p>
-        <p class="mt-2 text-2xl font-bold text-text-primary">{{ profile.lessonsCompleted }}</p>
+        <div class="flex items-start gap-3">
+          <div class="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-brand-soft text-brand">
+            <BookOpenIcon class="h-4 w-4" />
+          </div>
+          <div class="min-w-0">
+            <p class="text-sm text-text-secondary">{{ t('mentorProfile.statLessons') }}</p>
+            <p class="mt-1 text-2xl font-bold text-text-primary">{{ profile.lessonsCompleted }}</p>
+          </div>
+        </div>
       </AppCard>
 
       <AppCard>
-        <p class="text-sm text-text-secondary">{{ t('mentorProfile.viewSpecialization') }}</p>
-        <p class="mt-2 text-base font-semibold text-text-primary">
-          {{ profile.specialization || t('mentorProfile.viewNotSpecified') }}
-        </p>
+        <div class="flex items-start gap-3">
+          <div class="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-brand-soft text-accent">
+            <BriefcaseIcon class="h-4 w-4" />
+          </div>
+          <div class="min-w-0">
+            <p class="text-sm text-text-secondary">{{ t('mentorProfile.viewSpecialization') }}</p>
+            <p class="mt-1 text-base font-semibold text-text-primary">
+              {{ profile.specialization || t('mentorProfile.viewNotSpecified') }}
+            </p>
+          </div>
+        </div>
       </AppCard>
 
       <AppCard>
-        <p class="text-sm text-text-secondary">{{ t('mentorProfile.viewExperience') }}</p>
-        <p class="mt-2 text-base font-semibold text-text-primary">
-          {{ profile.yearsExperience
-              ? t('mentorProfile.viewExperienceYears', { years: profile.yearsExperience })
-              : t('mentorProfile.viewNotSpecified') }}
-        </p>
+        <div class="flex items-start gap-3">
+          <div class="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-emerald-50 text-emerald-600">
+            <ClockIcon class="h-4 w-4" />
+          </div>
+          <div class="min-w-0">
+            <p class="text-sm text-text-secondary">{{ t('mentorProfile.viewExperience') }}</p>
+            <p class="mt-1 text-base font-semibold text-text-primary">
+              {{ profile.yearsExperience
+                  ? t('mentorProfile.viewExperienceYears', { years: profile.yearsExperience })
+                  : t('mentorProfile.viewNotSpecified') }}
+            </p>
+          </div>
+        </div>
       </AppCard>
     </div>
 
@@ -156,7 +191,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { Pencil, Instagram, Send, Mail } from 'lucide-vue-next'
+import { Pencil, Instagram, Send, Mail, Star as StarIcon, BookOpen as BookOpenIcon, Briefcase as BriefcaseIcon, Clock as ClockIcon } from 'lucide-vue-next'
 import AppCard from '../../shared/ui/AppCard.vue'
 import AppButton from '../../shared/ui/AppButton.vue'
 import AppBadge from '../../shared/ui/AppBadge.vue'
