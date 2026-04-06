@@ -1,5 +1,5 @@
 /**
- * MentorHub Hero Image Processor
+ * JaiMentorship Hero Image Processor
  *
  * Takes the original Unsplash download and produces:
  *   - Desktop: 1440×810 (16:9) — AVIF, WebP, JPEG
