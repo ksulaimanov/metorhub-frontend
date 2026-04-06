@@ -191,7 +191,7 @@
     </section>
 
     <!-- ─── 5. Why JaiMentorship ─── -->
-    <section class="mx-auto max-w-6xl px-4 py-14 sm:px-6 lg:py-20">
+    <section class="ornament-bg mx-auto max-w-6xl px-4 py-14 sm:px-6 lg:py-20">
       <div class="mb-10 max-w-lg">
         <h2 class="text-2xl font-bold text-text-primary sm:text-3xl">{{ t('home.whyTitle') }}</h2>
         <p class="mt-3 text-base leading-7 text-text-secondary">{{ t('home.whySubtitle') }}</p>
@@ -215,7 +215,8 @@
     <section class="mx-auto max-w-6xl px-4 sm:px-6">
       <div class="grid gap-4 md:grid-cols-2">
         <!-- Student path -->
-        <div class="rounded-[1.75rem] bg-white p-6 shadow-sm shadow-brand/5 ring-1 ring-border-brand/80 sm:p-8">
+        <div class="relative rounded-[1.75rem] bg-white p-6 shadow-sm shadow-brand/5 ring-1 ring-border-brand/80 sm:p-8">
+          <KyrgyzCornerAccent position="top-right" size="sm" />
           <span class="inline-flex rounded-full bg-brand-soft px-3 py-1 text-xs font-semibold text-brand">
             {{ t('home.studentBadge') }}
           </span>
@@ -230,7 +231,8 @@
         </div>
 
         <!-- Mentor path -->
-        <div class="rounded-[1.75rem] bg-white p-6 shadow-sm shadow-brand/5 ring-1 ring-border-brand/80 sm:p-8">
+        <div class="relative rounded-[1.75rem] bg-white p-6 shadow-sm shadow-brand/5 ring-1 ring-border-brand/80 sm:p-8">
+          <KyrgyzCornerAccent position="top-right" size="sm" />
           <span class="inline-flex rounded-full bg-accent/15 px-3 py-1 text-xs font-semibold text-accent">
             {{ t('home.mentorBadge') }}
           </span>
@@ -283,6 +285,7 @@ import PublicLayout from '../../widgets/layout/PublicLayout.vue'
 import FeatureCard from '../../shared/ui/FeatureCard.vue'
 import AppResponsiveImage from '../../shared/ui/AppResponsiveImage.vue'
 import KyrgyzDivider from '../../shared/ui/KyrgyzDivider.vue'
+import KyrgyzCornerAccent from '../../shared/ui/KyrgyzCornerAccent.vue'
 import { getFeaturedMentors } from '../../shared/api/mentorPublicApi'
 import type { MentorDirectoryItem } from '../../shared/types/mentor'
 
