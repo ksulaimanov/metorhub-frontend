@@ -22,6 +22,20 @@ export const useAuthStore = defineStore('auth', {
         isStudent: (state) => state.roles.includes('ROLE_STUDENT'),
         isMentor: (state) => state.roles.includes('ROLE_MENTOR'),
         isAdmin: (state) => state.roles.includes('ROLE_ADMIN'),
+
+        /** Derive a presentable name from email (e.g. "ksulaimanov" → "Ksulaimanov") */
+        displayName: (state): string => {
+            const local = (state.email || '').split('@')[0] || ''
+            if (!local) return ''
+            const capitalized = local.charAt(0).toUpperCase() + local.slice(1)
+            return capitalized.length > 18 ? capitalized.slice(0, 18) + '…' : capitalized
+        },
+
+        /** Single uppercase initial for avatar fallback */
+        initials: (state): string => {
+            const local = (state.email || '').split('@')[0] || ''
+            return (local.charAt(0) || 'U').toUpperCase()
+        },
     },
 
     actions: {

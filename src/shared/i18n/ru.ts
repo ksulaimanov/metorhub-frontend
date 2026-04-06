@@ -424,6 +424,15 @@ export default {
         browseMentors: 'Каталог менторов',
         support: 'Поддержка',
         collapse: 'Свернуть',
+        sectionMain: 'Основное',
+        sectionManagement: 'Управление',
+        sectionActivity: 'Активность',
+    },
+
+    roles: {
+        student: 'Ученик',
+        mentor: 'Ментор',
+        admin: 'Админ',
     },
 
     privateNav: {

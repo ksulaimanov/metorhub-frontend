@@ -424,6 +424,15 @@ export default {
         browseMentors: 'Менторлор каталогу',
         support: 'Колдоо',
         collapse: 'Жыйнаштыруу',
+        sectionMain: 'Негизги',
+        sectionManagement: 'Башкаруу',
+        sectionActivity: 'Активдүүлүк',
+    },
+
+    roles: {
+        student: 'Окуучу',
+        mentor: 'Ментор',
+        admin: 'Админ',
     },
 
     privateNav: {
