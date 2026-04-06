@@ -30,9 +30,14 @@
         <div class="flex items-center gap-2">
           <LanguageSwitcher />
 
-          <div class="hidden items-center gap-2 sm:flex">
+          <div class="hidden items-center gap-2.5 sm:flex">
             <div class="h-5 w-px bg-border-brand/60" />
-            <span class="text-sm text-text-secondary">{{ displayEmail }}</span>
+            <div class="flex items-center gap-2">
+              <div class="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-brand-soft text-xs font-bold text-brand">
+                {{ authStore.initials }}
+              </div>
+              <span class="max-w-[140px] truncate text-sm font-medium text-text-primary">{{ authStore.displayName }}</span>
+            </div>
           </div>
 
           <button
@@ -76,7 +81,6 @@ const currentRole = computed<'student' | 'mentor' | 'admin'>(() => {
   return 'student'
 })
 
-const displayEmail = computed(() => authStore.email || '')
 
 const logout = async () => {
   authStore.logout()

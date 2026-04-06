@@ -3,27 +3,48 @@
     <div class="space-y-8">
       <!-- Header -->
       <div>
-        <h1 class="text-3xl font-bold text-text-primary">{{ t('studentDashboard.greeting', { name: firstName }) }}</h1>
+        <h1 class="text-3xl font-bold text-text-primary">{{ t('studentDashboard.greeting', { name: displayName }) }}</h1>
         <p class="mt-2 text-text-secondary">{{ t('studentDashboard.subtitle') }}</p>
       </div>
 
       <!-- Stats Cards -->
       <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         <AppCard>
-          <p class="text-sm text-text-secondary">{{ t('studentDashboard.totalBookings') }}</p>
-          <p class="mt-2 text-3xl font-bold text-text-primary">{{ dashboardData?.totalBookings ?? 0 }}</p>
+          <div class="flex items-start gap-4">
+            <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-brand-soft text-brand">
+              <Calendar class="h-5 w-5" />
+            </div>
+            <div class="min-w-0">
+              <p class="text-sm text-text-secondary">{{ t('studentDashboard.totalBookings') }}</p>
+              <p class="mt-1 text-3xl font-bold text-text-primary">{{ dashboardData?.totalBookings ?? 0 }}</p>
+            </div>
+          </div>
         </AppCard>
 
         <AppCard>
-          <p class="text-sm text-text-secondary">{{ t('studentDashboard.upcoming') }}</p>
-          <p class="mt-2 text-3xl font-bold text-emerald-600">
-            {{ dashboardData?.upcomingEvents?.length ?? 0 }}
-          </p>
+          <div class="flex items-start gap-4">
+            <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-emerald-50 text-emerald-600">
+              <Clock class="h-5 w-5" />
+            </div>
+            <div class="min-w-0">
+              <p class="text-sm text-text-secondary">{{ t('studentDashboard.upcoming') }}</p>
+              <p class="mt-1 text-3xl font-bold text-emerald-600">
+                {{ dashboardData?.upcomingEvents?.length ?? 0 }}
+              </p>
+            </div>
+          </div>
         </AppCard>
 
         <AppCard>
-          <p class="text-sm text-text-secondary">{{ t('studentDashboard.completed') }}</p>
-          <p class="mt-2 text-3xl font-bold text-text-primary">{{ dashboardData?.completedBookings ?? 0 }}</p>
+          <div class="flex items-start gap-4">
+            <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-brand-soft text-accent">
+              <CheckCircle2 class="h-5 w-5" />
+            </div>
+            <div class="min-w-0">
+              <p class="text-sm text-text-secondary">{{ t('studentDashboard.completed') }}</p>
+              <p class="mt-1 text-3xl font-bold text-text-primary">{{ dashboardData?.completedBookings ?? 0 }}</p>
+            </div>
+          </div>
         </AppCard>
       </div>
 
@@ -60,6 +81,7 @@
 import { onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
+import { Calendar, Clock, CheckCircle2 } from 'lucide-vue-next'
 import { useAuthStore } from '../../stores/authStore'
 import { getStudentDashboard } from '../../shared/api/dashboardApi'
 import { getApiErrorMessage } from '../../shared/lib/getApiErrorMessage'
@@ -76,7 +98,7 @@ const dashboardData = ref<StudentDashboard | null>(null)
 const loading = ref(false)
 const error = ref('')
 
-const firstName = ref(authStore.email?.split('@')[0] || 'Student')
+const displayName = authStore.displayName || t('roles.student')
 
 const loadDashboard = async () => {
   loading.value = true

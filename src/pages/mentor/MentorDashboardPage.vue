@@ -8,29 +8,57 @@
 
       <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <AppCard>
-          <p class="text-sm text-text-secondary">{{ t('mentorDashboard.totalBookings') }}</p>
-          <p class="mt-2 text-3xl font-bold text-text-primary">{{ dashboardData?.totalBookings ?? 0 }}</p>
+          <div class="flex items-start gap-4">
+            <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-brand-soft text-brand">
+              <Calendar class="h-5 w-5" />
+            </div>
+            <div class="min-w-0">
+              <p class="text-sm text-text-secondary">{{ t('mentorDashboard.totalBookings') }}</p>
+              <p class="mt-1 text-3xl font-bold text-text-primary">{{ dashboardData?.totalBookings ?? 0 }}</p>
+            </div>
+          </div>
         </AppCard>
 
         <AppCard>
-          <p class="text-sm text-text-secondary">{{ t('mentorDashboard.upcoming') }}</p>
-          <p class="mt-2 text-3xl font-bold text-emerald-600">
-            {{ dashboardData?.upcomingEvents?.length ?? 0 }}
-          </p>
+          <div class="flex items-start gap-4">
+            <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-emerald-50 text-emerald-600">
+              <Clock class="h-5 w-5" />
+            </div>
+            <div class="min-w-0">
+              <p class="text-sm text-text-secondary">{{ t('mentorDashboard.upcoming') }}</p>
+              <p class="mt-1 text-3xl font-bold text-emerald-600">
+                {{ dashboardData?.upcomingEvents?.length ?? 0 }}
+              </p>
+            </div>
+          </div>
         </AppCard>
 
         <AppCard>
-          <p class="text-sm text-text-secondary">{{ t('mentorDashboard.completed') }}</p>
-          <p class="mt-2 text-3xl font-bold text-text-primary">{{ dashboardData?.completedBookings ?? 0 }}</p>
+          <div class="flex items-start gap-4">
+            <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-brand-soft text-accent">
+              <CheckCircle2 class="h-5 w-5" />
+            </div>
+            <div class="min-w-0">
+              <p class="text-sm text-text-secondary">{{ t('mentorDashboard.completed') }}</p>
+              <p class="mt-1 text-3xl font-bold text-text-primary">{{ dashboardData?.completedBookings ?? 0 }}</p>
+            </div>
+          </div>
         </AppCard>
 
         <AppCard>
-          <p class="text-sm text-text-secondary">{{ t('mentorDashboard.rating') }}</p>
-          <div class="mt-2 flex items-baseline gap-2">
-            <p class="text-3xl font-bold text-amber-500">
-              {{ dashboardData?.averageRating ? dashboardData.averageRating.toFixed(1) : '—' }}
-            </p>
-            <span class="text-sm text-text-secondary">/ 5.0</span>
+          <div class="flex items-start gap-4">
+            <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-amber-50 text-amber-500">
+              <Star class="h-5 w-5" />
+            </div>
+            <div class="min-w-0">
+              <p class="text-sm text-text-secondary">{{ t('mentorDashboard.rating') }}</p>
+              <div class="mt-1 flex items-baseline gap-2">
+                <p class="text-3xl font-bold text-amber-500">
+                  {{ dashboardData?.averageRating ? dashboardData.averageRating.toFixed(1) : '—' }}
+                </p>
+                <span class="text-sm text-text-secondary">/ 5.0</span>
+              </div>
+            </div>
           </div>
         </AppCard>
       </div>
@@ -51,20 +79,30 @@
       <div class="grid gap-4 sm:grid-cols-2">
         <button
             type="button"
-            class="rounded-2xl border border-border-brand p-6 text-left transition hover:border-brand/40 hover:bg-brand-soft/30"
+            class="flex items-start gap-4 rounded-2xl border border-border-brand p-6 text-left transition hover:border-brand/40 hover:bg-brand-soft/30"
             @click="navigateToSlots"
         >
-          <p class="font-semibold text-text-primary">{{ t('mentorDashboard.manageSlots') }}</p>
-          <p class="mt-1 text-sm text-text-secondary">{{ t('mentorDashboard.manageSlotsDesc') }}</p>
+          <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-brand-soft text-brand">
+            <CalendarDays class="h-5 w-5" />
+          </div>
+          <div>
+            <p class="font-semibold text-text-primary">{{ t('mentorDashboard.manageSlots') }}</p>
+            <p class="mt-1 text-sm text-text-secondary">{{ t('mentorDashboard.manageSlotsDesc') }}</p>
+          </div>
         </button>
 
         <button
             type="button"
-            class="rounded-2xl border border-border-brand p-6 text-left transition hover:border-brand/40 hover:bg-brand-soft/30"
+            class="flex items-start gap-4 rounded-2xl border border-border-brand p-6 text-left transition hover:border-brand/40 hover:bg-brand-soft/30"
             @click="navigateToProfile"
         >
-          <p class="font-semibold text-text-primary">{{ t('mentorDashboard.mentorProfile') }}</p>
-          <p class="mt-1 text-sm text-text-secondary">{{ t('mentorDashboard.mentorProfileDesc') }}</p>
+          <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-brand-soft text-brand">
+            <User class="h-5 w-5" />
+          </div>
+          <div>
+            <p class="font-semibold text-text-primary">{{ t('mentorDashboard.mentorProfile') }}</p>
+            <p class="mt-1 text-sm text-text-secondary">{{ t('mentorDashboard.mentorProfileDesc') }}</p>
+          </div>
         </button>
       </div>
     </div>
@@ -74,6 +112,7 @@
 import { onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
+import { Calendar, Clock, CheckCircle2, Star, CalendarDays, User } from 'lucide-vue-next'
 import { getMentorDashboard } from '../../shared/api/dashboardApi'
 import { getApiErrorMessage } from '../../shared/lib/getApiErrorMessage'
 import type { MentorDashboard } from '../../shared/types/dashboard'
