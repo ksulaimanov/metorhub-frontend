@@ -9,8 +9,8 @@
         ← {{ t('common.back') }}
       </router-link>
 
-      <!-- Loading -->
-      <AppLoadingState v-if="loading" :text="t('common.loading')" />
+      <!-- Loading skeleton -->
+      <AppDetailSkeleton v-if="loading" :sections="2" :rows-per-section="6" />
 
       <!-- Error -->
       <AppErrorState
@@ -90,60 +90,40 @@
             {{ t('admin.applications.sectionActions') }}
           </h2>
 
-          <!-- Reject reason input (shown when rejecting) -->
-          <div v-if="showRejectForm" class="mb-4 space-y-3">
-            <label class="block text-sm font-medium text-text-primary">
-              {{ t('admin.applications.rejectReasonLabel') }}
-            </label>
-            <AppTextarea
-              v-model="rejectionReason"
-              :placeholder="t('admin.applications.rejectReasonPlaceholder')"
-              rows="3"
-            />
-            <p v-if="rejectValidationError" class="text-sm text-red-600">
-              {{ rejectValidationError }}
-            </p>
-          </div>
-
           <div class="flex flex-wrap gap-3">
-            <template v-if="!showRejectForm">
-              <AppButton
-                variant="primary"
-                :loading="approving"
-                :disabled="rejecting"
-                @click="handleApprove"
-              >
-                {{ t('admin.applications.actionApprove') }}
-              </AppButton>
-              <AppButton
-                variant="danger"
-                :disabled="approving"
-                @click="showRejectForm = true"
-              >
-                {{ t('admin.applications.actionReject') }}
-              </AppButton>
-            </template>
-
-            <template v-else>
-              <AppButton
-                variant="danger"
-                :loading="rejecting"
-                :disabled="approving"
-                @click="handleReject"
-              >
-                {{ t('admin.applications.actionConfirmReject') }}
-              </AppButton>
-              <AppButton
-                variant="ghost"
-                :disabled="rejecting"
-                @click="cancelReject"
-              >
-                {{ t('common.cancel') }}
-              </AppButton>
-            </template>
+            <AppButton
+              variant="primary"
+              :disabled="approving || rejecting"
+              @click="showApproveModal = true"
+            >
+              {{ t('admin.applications.actionApprove') }}
+            </AppButton>
+            <AppButton
+              variant="danger"
+              :disabled="approving || rejecting"
+              @click="showRejectModal = true"
+            >
+              {{ t('admin.applications.actionReject') }}
+            </AppButton>
           </div>
         </AppCard>
       </template>
+
+      <!-- Confirmation Modals -->
+      <ConfirmApproveModal
+        v-if="application"
+        v-model="showApproveModal"
+        :applicant-name="application.fullName"
+        :loading="approving"
+        @confirm="handleApprove"
+      />
+      <ConfirmRejectModal
+        v-if="application"
+        v-model="showRejectModal"
+        :applicant-name="application.fullName"
+        :loading="rejecting"
+        @confirm="handleReject"
+      />
     </div>
   </PrivateLayout>
 </template>
@@ -154,11 +134,12 @@ import { useI18n } from 'vue-i18n'
 import PrivateLayout from '@/widgets/layout/PrivateLayout.vue'
 import AppCard from '@/shared/ui/AppCard.vue'
 import AppButton from '@/shared/ui/AppButton.vue'
-import AppTextarea from '@/shared/ui/AppTextarea.vue'
-import AppLoadingState from '@/shared/ui/AppLoadingState.vue'
+import AppDetailSkeleton from '@/shared/ui/AppDetailSkeleton.vue'
 import AppErrorState from '@/shared/ui/AppErrorState.vue'
 import StatusBadge from '@/shared/ui/StatusBadge.vue'
 import AdminDataRow from '@/shared/ui/AdminDataRow.vue'
+import ConfirmApproveModal from '@/features/mentor-application/ConfirmApproveModal.vue'
+import ConfirmRejectModal from '@/features/mentor-application/ConfirmRejectModal.vue'
 import {
   getAdminMentorApplicationById,
   approveApplication,
@@ -183,9 +164,8 @@ const error = ref('')
 
 const approving = ref(false)
 const rejecting = ref(false)
-const showRejectForm = ref(false)
-const rejectionReason = ref('')
-const rejectValidationError = ref('')
+const showApproveModal = ref(false)
+const showRejectModal = ref(false)
 
 async function loadApplication() {
   const numericId = Number(props.id)
@@ -211,6 +191,7 @@ async function handleApprove() {
   try {
     await approveApplication(Number(props.id))
     toast.success(t('admin.applications.approveSuccess'))
+    showApproveModal.value = false
     await loadApplication()
   } catch (err) {
     handleError(err, t('admin.applications.approveFailed'))
@@ -219,22 +200,14 @@ async function handleApprove() {
   }
 }
 
-async function handleReject() {
-  rejectValidationError.value = ''
-
-  if (!rejectionReason.value.trim()) {
-    rejectValidationError.value = t('admin.applications.rejectReasonRequired')
-    return
-  }
-
+async function handleReject(reason: string) {
   rejecting.value = true
   try {
     await rejectApplication(Number(props.id), {
-      rejectionReason: rejectionReason.value.trim(),
+      rejectionReason: reason,
     })
     toast.success(t('admin.applications.rejectSuccess'))
-    showRejectForm.value = false
-    rejectionReason.value = ''
+    showRejectModal.value = false
     await loadApplication()
   } catch (err) {
     handleError(err, t('admin.applications.rejectFailed'))
@@ -243,11 +216,6 @@ async function handleReject() {
   }
 }
 
-function cancelReject() {
-  showRejectForm.value = false
-  rejectionReason.value = ''
-  rejectValidationError.value = ''
-}
 
 onMounted(loadApplication)
 </script>

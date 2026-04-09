@@ -1,4 +1,6 @@
 import axios from 'axios'
+import i18n from '../i18n'
+import { useToastStore } from '../lib/getApiErrorMessage'
 
 const baseURL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080'
 
@@ -39,6 +41,14 @@ http.interceptors.response.use(
     (response) => response,
     async (error) => {
         const original = error.config
+
+        // --- Handle 429 Too Many Requests (rate limiting) ---
+        if (error.response?.status === 429) {
+            const t = i18n.global.t as (key: string) => string
+            const toastStore = useToastStore()
+            toastStore.warning(t('errors.rateLimited'))
+            return Promise.reject(error)
+        }
 
         // Skip refresh for login/register/refresh endpoints themselves
         if (

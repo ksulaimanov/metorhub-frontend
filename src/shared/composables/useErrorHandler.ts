@@ -1,4 +1,5 @@
 import { useToastStore } from '../lib/getApiErrorMessage'
+import { useI18n } from 'vue-i18n'
 
 export interface HandleErrorOptions {
   /** Show toast notification. Default: true. Set to false for inline-only error display. */
@@ -34,6 +35,7 @@ function isRawNetworkMessage(msg: string): boolean {
  */
 export const useErrorHandler = () => {
   const toastStore = useToastStore()
+  const { t } = useI18n()
 
   const handleError = (
       error: any,
@@ -42,6 +44,15 @@ export const useErrorHandler = () => {
   ): string => {
     const { toast = true } = options
     let errorMessage = fallbackMessage
+
+    // Rate limiting — always show i18n message, skip backend body parsing
+    if (error?.response?.status === 429) {
+      errorMessage = t('errors.rateLimited')
+      if (toast) {
+        toastStore.warning(errorMessage)
+      }
+      return errorMessage
+    }
 
     if (error?.response?.data?.detail && typeof error.response.data.detail === 'string') {
       errorMessage = error.response.data.detail

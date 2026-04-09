@@ -8,7 +8,8 @@
       </div>
 
       <!-- Stats Grid -->
-      <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      <AppStatCardSkeleton v-if="loading && !dashboardData" :count="6" />
+      <div v-else class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         <AppCard>
           <div class="flex items-start gap-4">
             <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-brand-soft text-brand">
@@ -172,6 +173,7 @@ import { getApiErrorMessage, useToastStore } from '../../shared/lib/getApiErrorM
 import type { AdminDashboard } from '../../shared/types/dashboard'
 import PrivateLayout from '../../widgets/layout/PrivateLayout.vue'
 import AppCard from '../../shared/ui/AppCard.vue'
+import AppStatCardSkeleton from '../../shared/ui/AppStatCardSkeleton.vue'
 import UpcomingEventsCard from '../../shared/ui/UpcomingEventsCard.vue'
 
 const { t } = useI18n()
