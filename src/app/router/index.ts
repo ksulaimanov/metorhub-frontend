@@ -1,26 +1,26 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import HomePage from '../../pages/public/HomePage.vue'
-import AboutPage from '../../pages/public/AboutPage.vue'
-import NotFoundPage from '../../pages/system/NotFoundPage.vue'
-import LoginPage from '../../pages/auth/LoginPage.vue'
-import RegisterPage from '../../pages/auth/RegisterPage.vue'
-import MentorDirectoryPage from '../../pages/public/MentorDirectoryPage.vue'
-import PublicMentorProfilePage from '../../pages/public/PublicMentorProfilePage.vue'
-import StudentProfilePage from '../../pages/student/StudentProfilePage.vue'
-import StudentBookingsPage from '../../pages/student/StudentBookingsPage.vue'
-import StudentDashboardPage from '../../pages/student/StudentDashboardPage.vue'
-import MentorProfilePage from '../../pages/mentor/MentorProfilePage.vue'
-import MentorSlotsPage from '../../pages/mentor/MentorSlotsPage.vue'
-import MentorBookingsPage from '../../pages/mentor/MentorBookingsPage.vue'
-import MentorDashboardPage from '../../pages/mentor/MentorDashboardPage.vue'
-import AdminDashboardPage from '../../pages/admin/AdminDashboardPage.vue'
-import AdminMentorApplicationsPage from '../../pages/admin/AdminMentorApplicationsPage.vue'
-import AdminMentorApplicationDetailPage from '../../pages/admin/AdminMentorApplicationDetailPage.vue'
-import VerifyEmailPage from '../../pages/auth/VerifyEmailPage.vue'
-import ForgotPasswordPage from '../../pages/auth/ForgotPasswordPage.vue'
-import ResetPasswordPage from '../../pages/auth/ResetPasswordPage.vue'
-import MentorApplyPage from '../../pages/public/MentorApplyPage.vue'
-import MentorApplicationStatusPage from '../../pages/public/MentorApplicationStatusPage.vue'
+const HomePage = () => import('../../pages/public/HomePage.vue')
+const AboutPage = () => import('../../pages/public/AboutPage.vue')
+const NotFoundPage = () => import('../../pages/system/NotFoundPage.vue')
+const LoginPage = () => import('../../pages/auth/LoginPage.vue')
+const RegisterPage = () => import('../../pages/auth/RegisterPage.vue')
+const MentorDirectoryPage = () => import('../../pages/public/MentorDirectoryPage.vue')
+const PublicMentorProfilePage = () => import('../../pages/public/PublicMentorProfilePage.vue')
+const StudentProfilePage = () => import('../../pages/student/StudentProfilePage.vue')
+const StudentBookingsPage = () => import('../../pages/student/StudentBookingsPage.vue')
+const StudentDashboardPage = () => import('../../pages/student/StudentDashboardPage.vue')
+const MentorProfilePage = () => import('../../pages/mentor/MentorProfilePage.vue')
+const MentorSlotsPage = () => import('../../pages/mentor/MentorSlotsPage.vue')
+const MentorBookingsPage = () => import('../../pages/mentor/MentorBookingsPage.vue')
+const MentorDashboardPage = () => import('../../pages/mentor/MentorDashboardPage.vue')
+const AdminDashboardPage = () => import('../../pages/admin/AdminDashboardPage.vue')
+const AdminMentorApplicationsPage = () => import('../../pages/admin/AdminMentorApplicationsPage.vue')
+const AdminMentorApplicationDetailPage = () => import('../../pages/admin/AdminMentorApplicationDetailPage.vue')
+const VerifyEmailPage = () => import('../../pages/auth/VerifyEmailPage.vue')
+const ForgotPasswordPage = () => import('../../pages/auth/ForgotPasswordPage.vue')
+const ResetPasswordPage = () => import('../../pages/auth/ResetPasswordPage.vue')
+const MentorApplyPage = () => import('../../pages/public/MentorApplyPage.vue')
+const MentorApplicationStatusPage = () => import('../../pages/public/MentorApplicationStatusPage.vue')
 
 const router = createRouter({
     history: createWebHistory(),

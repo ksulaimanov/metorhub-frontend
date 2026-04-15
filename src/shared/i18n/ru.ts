@@ -157,6 +157,7 @@ export default {
         phoneInvalid: 'Введите корректный номер телефона',
         minLength: 'Минимум {min} символов',
         selectAtLeastOne: 'Выберите хотя бы один вариант',
+        urlInvalid: 'Неверный формат URL',
     },
 
     mentorGate: {
@@ -194,6 +195,8 @@ export default {
         motivationPlaceholder: 'Расскажите, что вас мотивирует делиться знаниями...',
         experience: 'Опыт работы и преподавания',
         experiencePlaceholder: 'Кратко опишите ваш профессиональный опыт...',
+        portfolioUrl: 'Ссылка на портфолио',
+        portfolioUrlPlaceholder: 'https://...',
         specializations: 'Специализации',
         specializationOptions: {
             programming: 'Программирование',
@@ -211,6 +214,7 @@ export default {
         submitSuccessDesc: 'Мы рассмотрим вашу заявку и свяжемся с вами по email. Вы можете проверить статус заявки по ссылке ниже.',
         submitFailed: 'Не удалось отправить заявку',
         submitErrorFallback: 'Попробуйте отправить заявку позже.',
+        alreadySubmitted: 'Заявка уже отправлена',
         checkStatus: 'Проверить статус заявки',
         hasAccount: 'Уже есть аккаунт ментора?',
         hasAccountLink: 'Войти',

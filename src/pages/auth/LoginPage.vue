@@ -37,7 +37,7 @@
           />
           <button
               type="button"
-              class="absolute right-3 top-1/2 -translate-y-1/2 rounded-xl px-3 py-1.5 text-sm font-medium text-text-secondary transition hover:bg-brand-soft hover:text-brand"
+              class="absolute right-3 top-1/2 -translate-y-1/2 rounded-xl px-3 py-1.5 text-sm font-medium text-text-muted transition-colors hover:bg-surface hover:text-text-primary"
               @click="showPassword = !showPassword"
           >
             {{ showPassword ? t('auth.hidePassword') : t('auth.showPassword') }}

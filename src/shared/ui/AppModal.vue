@@ -11,7 +11,7 @@
 
         <!-- Modal panel -->
         <div
-            class="relative w-full max-w-md rounded-[1.75rem] bg-white p-6 shadow-xl ring-1 ring-border-brand/80 sm:p-8"
+            class="relative w-full max-w-md rounded-[1.75rem] bg-surface p-6 shadow-xl ring-1 ring-border-brand/80 sm:p-8"
             role="dialog"
             aria-modal="true"
         >
@@ -58,7 +58,7 @@
 </template>
 
 <script setup lang="ts">
-import { watch } from 'vue'
+import { watch, onUnmounted } from 'vue'
 import { X } from 'lucide-vue-next'
 
 const props = defineProps<{
@@ -76,6 +76,10 @@ const close = () => emit('update:modelValue', false)
 // Lock body scroll when modal is open
 watch(() => props.modelValue, (open) => {
   document.body.style.overflow = open ? 'hidden' : ''
+}, { immediate: true })
+
+onUnmounted(() => {
+  document.body.style.overflow = ''
 })
 </script>
 
@@ -89,4 +93,3 @@ watch(() => props.modelValue, (open) => {
   opacity: 0;
 }
 </style>
-

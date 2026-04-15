@@ -46,7 +46,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { GraduationCap } from 'lucide-vue-next'
 import { useAuthStore } from '../../stores/authStore'
@@ -58,14 +58,13 @@ import MentorApplyGate from '../../features/mentor-application/MentorApplyGate.v
 const { t } = useI18n()
 const authStore = useAuthStore()
 
-const isAuthenticated = authStore.isAuthenticated
+const isAuthenticated = computed(() => authStore.isAuthenticated)
 const showGate = ref(false)
 
 // Auto-show gate modal for guests after a brief moment
 onMounted(() => {
-  if (!isAuthenticated) {
+  if (!isAuthenticated.value) {
     setTimeout(() => { showGate.value = true }, 600)
   }
 })
 </script>
-

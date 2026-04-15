@@ -16,7 +16,7 @@
           </p>
         </div>
 
-        <div class="w-full max-w-md justify-self-center rounded-3xl bg-white p-6 shadow-sm ring-1 ring-border-brand sm:p-8">
+        <div class="w-full max-w-md justify-self-center rounded-3xl bg-surface p-6 shadow-sm ring-1 ring-border-brand sm:p-8">
           <h1 class="text-3xl font-bold text-text-primary">{{ t('resetPassword.title') }}</h1>
           <p class="mt-2 text-sm text-text-secondary">
             {{ t('resetPassword.subtitle') }}

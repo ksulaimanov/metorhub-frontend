@@ -24,7 +24,7 @@
 
           <RouterLink
               to="/mentors"
-              class="rounded-2xl border border-border-brand bg-white px-6 py-3 text-base font-semibold text-text-primary transition hover:bg-brand-soft"
+              class="rounded-2xl border border-border-brand bg-surface px-6 py-3 text-base font-semibold text-text-primary transition hover:bg-brand-soft"
           >
             {{ t('notFound.goMentors') }}
           </RouterLink>

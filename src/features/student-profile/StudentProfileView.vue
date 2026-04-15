@@ -8,13 +8,14 @@
       <div class="-mt-10 px-6 pb-6">
         <div class="flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
           <div class="flex items-end gap-5">
-            <div class="rounded-full ring-4 ring-white shadow-lg">
+            <div class="-my-4 rounded-3xl ring-4 ring-surface shadow-lg z-10 bg-surface">
               <ProfileAvatar
                   :src="profile.avatarUrl"
                   :first-name="profile.firstName"
                   :last-name="profile.lastName"
                   :alt="t('studentProfile.avatarAlt')"
                   size="xl"
+                  class="h-28 w-28 !rounded-3xl"
               />
             </div>
 

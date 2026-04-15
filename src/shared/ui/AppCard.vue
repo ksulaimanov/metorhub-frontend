@@ -1,5 +1,5 @@
 <template>
-  <div :class="['bg-white shadow-sm ring-1 ring-border-brand', radiusClass, paddingClass]">
+  <div :class="['bg-surface shadow-sm ring-1 ring-border-brand', radiusClass, paddingClass]">
     <slot />
   </div>
 </template>

@@ -2,7 +2,7 @@
   <PublicLayout>
     <section class="mx-auto flex min-h-[calc(100vh-64px)] max-w-6xl items-start px-4 py-10 sm:items-center sm:px-6 lg:py-16">
       <div class="mx-auto w-full max-w-lg">
-        <div class="rounded-[1.75rem] bg-white p-6 shadow-sm shadow-brand/5 ring-1 ring-border-brand/80 sm:p-8">
+        <div class="rounded-[1.75rem] bg-surface p-6 shadow-sm shadow-slate-900/10 ring-1 ring-border-brand/80 sm:p-8">
           <h1 class="text-2xl font-bold text-text-primary sm:text-3xl">{{ t('mentorApplication.statusPageTitle') }}</h1>
           <p class="mt-2 text-sm text-text-secondary">
             {{ t('mentorApplication.statusPageSubtitle') }}

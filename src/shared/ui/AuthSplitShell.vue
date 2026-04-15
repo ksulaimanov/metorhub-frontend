@@ -1,6 +1,6 @@
 <template>
   <PublicLayout footer-variant="compact">
-    <section class="mx-auto flex min-h-[calc(100vh-64px)] max-w-6xl items-start px-4 py-8 sm:px-6 lg:items-center lg:py-14">
+    <section class="mx-auto flex min-h-screen max-w-7xl items-start px-4 py-8 sm:px-6 lg:py-14">
       <div class="grid w-full gap-10 lg:grid-cols-2 lg:gap-16">
 
         <!-- Left: info panel (desktop only) -->
@@ -28,7 +28,7 @@
 
         <!-- Right: form surface -->
         <div class="w-full max-w-xl justify-self-center lg:justify-self-end">
-          <div class="rounded-[1.75rem] bg-white p-6 shadow-sm shadow-brand/5 ring-1 ring-border-brand/80 sm:p-8">
+          <div class="rounded-[1.75rem] bg-surface p-6 shadow-xl shadow-slate-900/10 ring-1 ring-border-brand/80 sm:p-10">
             <slot />
           </div>
 
@@ -51,4 +51,3 @@ defineProps<{
   subtitle?: string
 }>()
 </script>
-

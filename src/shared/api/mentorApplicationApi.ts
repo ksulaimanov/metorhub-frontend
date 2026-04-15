@@ -1,14 +1,19 @@
 import { http } from './http'
 import type {
-    MentorApplicationRequest,
+    SubmitMentorApplicationRequest,
     MentorApplicationStatusResponse,
     MentorApplicationSubmitResponse,
 } from '../types/mentorApplication'
 
 export const submitMentorApplication = async (
-    payload: MentorApplicationRequest,
+    payload: SubmitMentorApplicationRequest,
 ): Promise<MentorApplicationSubmitResponse> => {
-    const { data } = await http.post('/api/mentor-applications', payload)
+    const { data } = await http.post('/api/student/mentor-application', payload)
+    return data
+}
+
+export const getMyMentorApplicationStatus = async (): Promise<MentorApplicationStatusResponse> => {
+    const { data } = await http.get('/api/student/mentor-application/me')
     return data
 }
 
@@ -21,4 +26,3 @@ export const getMentorApplicationStatus = async (
     })
     return data
 }
-

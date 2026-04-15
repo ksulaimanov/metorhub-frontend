@@ -4,11 +4,10 @@
       :value="modelValue"
       @input="$emit('update:modelValue', ($event.target as HTMLInputElement).value)"
       :class="[
-        'w-full rounded-2xl border px-4 py-3 text-sm outline-none transition',
-        'placeholder:text-text-secondary/60',
+        'w-full rounded-xl px-4 py-3 text-sm outline-none transition-all duration-300 text-text-primary placeholder:text-text-secondary ring-1',
         error
-          ? 'border-red-500 bg-red-50 focus:border-red-500 focus:ring-2 focus:ring-red-200'
-          : 'border-border-brand bg-white focus:border-brand focus:ring-2 focus:ring-brand-soft',
+          ? 'ring-red-500 bg-red-50/50 focus:ring-red-500 focus:ring-2 focus:ring-offset-2 focus:ring-offset-surface text-red-900 dark:text-red-100'
+          : 'ring-border-brand bg-surface-secondary hover:ring-text-muted/50 focus:bg-surface focus:ring-brand focus:ring-2',
       ]"
   />
 </template>

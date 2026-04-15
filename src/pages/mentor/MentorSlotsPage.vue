@@ -156,7 +156,7 @@
 
                 <input v-model.number="editForm.capacity" type="number" min="1" class="rounded-2xl border border-border-brand px-4 py-3 text-sm outline-none transition focus:border-brand focus:ring-2 focus:ring-brand-soft" :placeholder="t('mentorSlots.capacityPlaceholder')" />
 
-                <label class="flex items-center gap-3 rounded-2xl border border-border-brand bg-white px-4 py-3">
+                <label class="flex items-center gap-3 rounded-2xl border border-border-brand bg-surface px-4 py-3">
                   <input v-model="editForm.active" type="checkbox" class="accent-brand" />
                   <span class="text-sm font-medium text-text-primary">{{ t('mentorSlots.slotActive') }}</span>
                 </label>

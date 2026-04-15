@@ -15,11 +15,11 @@
             class="rounded-full px-4 py-2 text-sm font-medium transition"
             :class="activeTab === tab.value
               ? 'bg-brand text-white'
-              : 'bg-white text-text-secondary ring-1 ring-border-brand hover:bg-brand-soft'"
+              : 'bg-surface text-text-secondary ring-1 ring-border-brand hover:bg-brand-soft'"
             @click="activeTab = tab.value"
         >
           {{ tab.label }}
-          <span v-if="tab.count > 0" class="ml-1.5 rounded-full bg-white/20 px-1.5 text-xs">{{ tab.count }}</span>
+          <span v-if="tab.count > 0" class="ml-1.5 rounded-full bg-surface/20 px-1.5 text-xs">{{ tab.count }}</span>
         </button>
       </div>
 
@@ -38,7 +38,7 @@
       </AppErrorState>
 
       <!-- ─── Empty ─── -->
-      <div v-else-if="filteredBookings.length === 0" class="rounded-3xl bg-white p-10 text-center shadow-sm ring-1 ring-border-brand">
+      <div v-else-if="filteredBookings.length === 0" class="rounded-3xl bg-surface p-10 text-center shadow-sm ring-1 ring-border-brand">
         <div class="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-brand-soft">
           <CalendarX class="h-6 w-6 text-brand" />
         </div>

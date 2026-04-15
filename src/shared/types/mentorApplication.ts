@@ -1,10 +1,7 @@
-export interface MentorApplicationRequest {
-    name: string
-    email: string
-    phone: string
-    motivation: string
-    experience: string
-    specializations: string[]
+export interface SubmitMentorApplicationRequest {
+    motivationText: string
+    experienceSummary: string
+    portfolioUrl?: string
 }
 
 export type MentorApplicationStatus = 'PENDING' | 'APPROVED' | 'REJECTED'
@@ -20,4 +17,3 @@ export interface MentorApplicationSubmitResponse {
     token: string
     message: string
 }
-

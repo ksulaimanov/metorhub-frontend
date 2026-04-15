@@ -1,13 +1,19 @@
 <template>
   <PublicLayout>
     <!-- ─── 1. Hero ─── -->
-    <section class="relative overflow-hidden bg-gradient-to-b from-brand-soft/40 to-bg">
-      <div class="mx-auto max-w-6xl px-4 pb-14 pt-14 sm:px-6 lg:pb-20 lg:pt-20">
+    <section class="relative overflow-hidden bg-gradient-to-b from-brand-soft/40 to-bg border-b border-border-brand/40">
+      <!-- Full background subtle pattern for the hero section -->
+      <KyrgyzOrnamentPattern :opacity="0.08" :scale="0.8" />
+
+      <!-- Elegant corner borders inspired by embroidery -->
+      <KyrgyzCornerOrnament position="top-left" :opacity="0.10" />
+      <KyrgyzCornerOrnament position="top-right" :opacity="0.10" />
+      <div class="relative mx-auto max-w-7xl px-4 pb-20 pt-16 sm:px-6 lg:pb-28 lg:pt-24">
         <div class="grid gap-10 lg:grid-cols-[1fr_0.72fr] lg:items-center lg:gap-12">
 
           <!-- Left: copy + CTAs -->
           <div>
-            <p class="inline-flex rounded-full bg-brand-soft px-4 py-1.5 text-sm font-medium text-brand">
+            <p class="inline-flex rounded-full bg-brand-soft px-4 py-1.5 text-sm font-semibold text-brand">
               {{ t('home.heroBadge') }}
             </p>
 
@@ -19,24 +25,24 @@
               {{ t('home.heroSubtitle') }}
             </p>
 
-            <div class="mt-8 flex flex-wrap gap-3">
+            <div class="mt-8 flex flex-col sm:flex-row flex-wrap gap-4">
               <RouterLink
                   to="/mentors"
-                  class="rounded-2xl bg-brand px-6 py-3.5 text-base font-semibold text-white shadow-md shadow-brand/20 transition hover:bg-brand-hover active:scale-[0.98]"
+                  class="inline-flex justify-center items-center rounded-2xl bg-brand px-8 py-4 text-base font-semibold text-white shadow-md shadow-brand/10 transition hover:bg-brand-hover active:scale-[0.98]"
               >
                 {{ t('home.ctaFindMentor') }}
               </RouterLink>
 
               <RouterLink
                   to="/register"
-                  class="rounded-2xl border border-border-brand bg-white px-6 py-3.5 text-base font-semibold text-text-primary transition hover:bg-brand-soft active:scale-[0.98]"
+                  class="inline-flex justify-center items-center rounded-2xl border-2 border-border-brand bg-surface px-8 py-4 text-base font-semibold text-text-primary transition hover:border-brand/40 hover:bg-surface-secondary active:scale-[0.98]"
               >
                 {{ t('home.ctaRegister') }}
               </RouterLink>
             </div>
 
             <!-- Social proof micro-stats -->
-            <p class="mt-5 flex flex-wrap gap-x-4 gap-y-1 text-sm text-text-secondary">
+            <p class="mt-6 flex flex-wrap gap-x-6 gap-y-2 text-sm font-medium text-text-secondary">
               <span class="inline-flex items-center gap-1"><ShieldCheck class="h-3.5 w-3.5 text-brand" /> {{ t('home.proofMentors') }}</span>
               <span class="inline-flex items-center gap-1"><CalendarDays class="h-3.5 w-3.5 text-brand" /> {{ t('home.proofFormats') }}</span>
               <span class="inline-flex items-center gap-1"><Star class="h-3.5 w-3.5 text-brand" /> {{ t('home.proofFree') }}</span>
@@ -65,7 +71,7 @@
                 img-class="h-full w-full object-cover object-center"
               />
               <!-- Subtle bottom gradient for elegance -->
-              <div class="pointer-events-none absolute inset-x-0 bottom-0 h-1/4 bg-gradient-to-t from-black/15 to-transparent" />
+              <div class="pointer-events-none absolute inset-x-0 bottom-0 h-1/4 bg-gradient-to-t from-bg to-transparent lg:hidden" />
             </div>
           </div>
         </div>
@@ -73,51 +79,56 @@
     </section>
 
     <!-- ─── 2. Trust Bar ─── -->
-    <section class="mx-auto -mt-4 max-w-6xl px-4 sm:px-6 lg:-mt-6">
-      <div class="grid gap-3 sm:grid-cols-3">
+    <section class="relative z-10 mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:py-24">
+      <div class="grid gap-6 sm:grid-cols-2 md:grid-cols-3">
         <div
             v-for="(item, i) in trustItems"
             :key="i"
-            class="flex items-start gap-3.5 rounded-2xl bg-white p-5 shadow-sm shadow-brand/5 ring-1 ring-border-brand/80"
+            class="flex items-start gap-4 rounded-2xl bg-surface p-6 shadow-sm shadow-slate-900/10 ring-1 ring-border-brand hover:shadow-md transition-shadow"
         >
-          <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-brand-soft text-brand">
-            <component :is="item.icon" class="h-5 w-5" />
+          <div class="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-brand-soft text-brand">
+            <component :is="item.icon" class="h-6 w-6" />
           </div>
           <div>
-            <p class="text-sm font-semibold leading-snug text-text-primary">{{ item.title }}</p>
-            <p class="mt-0.5 text-xs leading-relaxed text-text-secondary">{{ item.desc }}</p>
+            <p class="text-base font-bold leading-snug text-text-primary">{{ item.title }}</p>
+            <p class="mt-1.5 text-sm leading-relaxed text-text-secondary">{{ item.desc }}</p>
           </div>
         </div>
       </div>
     </section>
 
     <!-- ─── 3. How It Works ─── -->
-    <div class="mx-auto max-w-6xl px-4 pt-8 sm:px-6">
-      <KyrgyzDivider variant="subtle" />
+    <div class="mx-auto max-w-7xl px-4 sm:px-6">
+      <OrnamentDivider :opacity="0.25" />
     </div>
 
-    <section class="mx-auto max-w-6xl px-4 py-6 sm:px-6 sm:py-10">
-      <div class="rounded-[1.75rem] bg-brand px-6 py-8 text-white md:px-10 md:py-12">
-        <h2 class="mb-8 text-xl font-bold sm:text-2xl">{{ t('home.stepsTitle') }}</h2>
-        <div class="grid gap-6 md:grid-cols-3">
-          <div v-for="(step, i) in steps" :key="i">
-            <span class="inline-flex h-8 w-8 items-center justify-center rounded-lg bg-white/15">
-              <component :is="step.icon" class="h-4 w-4" />
-            </span>
-            <h3 class="mt-3 text-lg font-semibold">{{ step.title }}</h3>
-            <p class="mt-2 text-sm leading-7 text-white/70">{{ step.desc }}</p>
+    <section class="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:py-24">
+      <div class="relative overflow-hidden rounded-[2rem] bg-brand text-white shadow-xl shadow-brand/10">
+        <KyrgyzOrnamentPattern :opacity="0.08" :scale="1.2" class="text-white mix-blend-overlay" />
+        <div class="relative z-10 px-6 py-12 md:px-12 md:py-20">
+          <div class="text-center mb-12">
+            <h2 class="text-2xl font-extrabold sm:text-3xl lg:text-4xl">{{ t('home.stepsTitle') }}</h2>
+          </div>
+          <div class="grid gap-8 md:grid-cols-3 md:gap-12">
+            <div v-for="(step, i) in steps" :key="i" class="flex flex-col items-center text-center">
+              <span class="inline-flex h-16 w-16 items-center justify-center rounded-2xl bg-surface/20 backdrop-blur-sm mx-auto">
+                <component :is="step.icon" class="h-8 w-8 text-white" />
+              </span>
+              <h3 class="mt-6 text-xl font-bold">{{ step.title }}</h3>
+              <p class="mt-3 text-base leading-relaxed text-white/80 max-w-xs">{{ step.desc }}</p>
+            </div>
           </div>
         </div>
       </div>
     </section>
 
     <!-- ─── 4. Featured Mentors ─── -->
-    <section class="mx-auto max-w-6xl px-4 py-10 sm:px-6 lg:py-14">
-      <div class="mb-8 flex items-end justify-between gap-4">
-        <h2 class="text-2xl font-bold text-text-primary sm:text-3xl">{{ t('home.featuredTitle') }}</h2>
+    <section class="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:py-24">
+      <div class="mb-10 flex flex-col sm:flex-row sm:items-end justify-between gap-4">
+        <h2 class="text-3xl font-extrabold text-text-primary sm:text-4xl">{{ t('home.featuredTitle') }}</h2>
         <RouterLink
             to="/mentors"
-            class="shrink-0 text-sm font-semibold text-brand transition hover:text-brand-hover"
+            class="inline-flex shrink-0 items-center justify-center rounded-xl bg-brand-soft px-5 py-2.5 text-sm font-bold text-brand transition hover:bg-brand/10"
         >
           {{ t('home.featuredViewAll') }}
         </RouterLink>
@@ -125,7 +136,7 @@
 
       <!-- Loading skeleton -->
       <div v-if="featuredLoading" class="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-        <div v-for="i in 4" :key="i" class="animate-pulse rounded-2xl bg-white p-5 ring-1 ring-border-brand/80">
+        <div v-for="i in 4" :key="i" class="animate-pulse rounded-2xl bg-surface p-5 ring-1 ring-border-brand/80">
           <div class="flex items-center gap-3">
             <div class="h-12 w-12 rounded-full bg-brand-soft" />
             <div class="flex-1 space-y-2">
@@ -144,19 +155,17 @@
             v-for="mentor in featuredMentors"
             :key="mentor.id"
             :to="`/mentors/${mentor.id}`"
-            class="group rounded-2xl bg-white p-5 shadow-sm shadow-brand/5 ring-1 ring-border-brand/80 transition hover:-translate-y-0.5 hover:shadow-md"
+            class="group rounded-2xl bg-surface p-5 shadow-sm shadow-slate-900/10 ring-1 ring-border-brand/80 transition hover:-translate-y-0.5 hover:shadow-md"
         >
           <!-- Avatar + Name -->
           <div class="flex items-center gap-3">
-            <div class="flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-full bg-brand-soft text-sm font-bold text-brand">
-              <img
-                  v-if="mentor.avatarUrl"
-                  :src="mentor.avatarUrl"
-                  :alt="mentorName(mentor)"
-                  class="h-full w-full object-cover"
-              />
-              <span v-else>{{ mentorInitials(mentor) }}</span>
-            </div>
+            <ProfileAvatar
+              :src="mentor.avatarUrl"
+              :first-name="mentor.firstName"
+              :last-name="mentor.lastName"
+              size="md"
+              class="h-12 w-12"
+            />
             <div class="min-w-0">
               <p class="truncate text-sm font-semibold text-text-primary group-hover:text-brand">
                 {{ mentorName(mentor) }}
@@ -185,19 +194,42 @@
       </div>
 
       <!-- Empty state -->
-      <div v-else class="rounded-2xl bg-white p-8 text-center ring-1 ring-border-brand/80">
-        <p class="text-sm text-text-secondary">{{ t('home.featuredEmpty') }}</p>
+      <div v-else class="relative w-full overflow-hidden rounded-[2rem] bg-surface ring-1 ring-border-brand px-6 py-20 sm:px-12 flex flex-col items-center">
+        <!-- Visual Ghost Profile Grid as Background Hint -->
+        <div class="absolute inset-0 flex items-center justify-center gap-6 opacity-20 dark:opacity-[0.08] pointer-events-none" aria-hidden="true">
+          <div v-for="i in 3" :key="i" class="hidden sm:block w-64 rounded-2xl bg-slate-100 dark:bg-slate-800 p-5 ring-1 ring-slate-200 dark:ring-slate-700">
+            <div class="flex items-center gap-4">
+              <div class="h-16 w-16 rounded-full bg-slate-200 dark:bg-slate-700" />
+              <div class="space-y-3 flex-1">
+                <div class="h-4 w-3/4 rounded bg-slate-200 dark:bg-slate-700" />
+                <div class="h-3 w-1/2 rounded bg-slate-200 dark:bg-slate-700" />
+              </div>
+            </div>
+            <div class="mt-8 flex gap-3">
+              <div class="h-8 w-16 rounded bg-slate-200 dark:bg-slate-700" />
+              <div class="h-8 w-24 rounded bg-slate-200 dark:bg-slate-700" />
+            </div>
+          </div>
+        </div>
+
+        <div class="relative z-10 flex flex-col items-center justify-center text-center">
+          <div class="mb-6 flex h-24 w-24 items-center justify-center rounded-full bg-gradient-to-br from-brand/10 to-brand/5 dark:from-brand/20 dark:to-transparent ring-4 ring-surface shadow-sm">
+            <UserCheck class="h-10 w-10 text-brand opacity-80" />
+          </div>
+          <h3 class="text-2xl font-extrabold text-text-primary mb-3">{{ t('home.featuredEmpty') }}</h3>
+          <p class="text-base text-text-muted max-w-md">Менторлор базасы жакында жаңыланат. Бир аз күтө тұруңузду суранабыз.</p>
+        </div>
       </div>
     </section>
 
     <!-- ─── 5. Why JaiMentorship ─── -->
-    <section class="ornament-bg mx-auto max-w-6xl px-4 py-14 sm:px-6 lg:py-20">
-      <div class="mb-10 max-w-lg">
-        <h2 class="text-2xl font-bold text-text-primary sm:text-3xl">{{ t('home.whyTitle') }}</h2>
-        <p class="mt-3 text-base leading-7 text-text-secondary">{{ t('home.whySubtitle') }}</p>
+    <section class="relative mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:py-24">
+      <div class="mb-12 max-w-2xl">
+        <h2 class="text-3xl font-extrabold text-text-primary sm:text-4xl">{{ t('home.whyTitle') }}</h2>
+        <p class="mt-4 text-lg leading-relaxed text-text-secondary">{{ t('home.whySubtitle') }}</p>
       </div>
 
-      <div class="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+      <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
         <FeatureCard
             v-for="(feature, i) in features"
             :key="i"
@@ -205,42 +237,42 @@
             :description="feature.desc"
         >
           <template #icon>
-            <component :is="feature.icon" class="h-5 w-5" />
+            <component :is="feature.icon" class="h-6 w-6" />
           </template>
         </FeatureCard>
       </div>
     </section>
 
     <!-- ─── 6. Dual-path CTA ─── -->
-    <section class="mx-auto max-w-6xl px-4 sm:px-6">
-      <div class="grid gap-4 md:grid-cols-2">
+    <section class="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:py-24">
+      <div class="grid gap-6 md:grid-cols-2">
         <!-- Student path -->
-        <div class="relative rounded-[1.75rem] bg-white p-6 shadow-sm shadow-brand/5 ring-1 ring-border-brand/80 sm:p-8">
-          <KyrgyzCornerAccent position="top-right" size="sm" />
-          <span class="inline-flex rounded-full bg-brand-soft px-3 py-1 text-xs font-semibold text-brand">
+        <div class="relative rounded-[2rem] overflow-hidden bg-surface p-8 shadow-sm shadow-slate-900/10 ring-1 ring-border-brand sm:p-10 flex flex-col items-start hover:shadow-md transition-shadow">
+          <KyrgyzCornerOrnament position="top-right" :opacity="0.10" />
+          <span class="inline-flex rounded-full bg-brand-soft px-4 py-1.5 text-sm font-bold text-brand">
             {{ t('home.studentBadge') }}
           </span>
-          <h3 class="mt-4 text-xl font-bold text-text-primary">{{ t('home.studentTitle') }}</h3>
-          <p class="mt-2 text-sm leading-relaxed text-text-secondary">{{ t('home.studentDesc') }}</p>
+          <h3 class="mt-6 text-2xl font-extrabold text-text-primary">{{ t('home.studentTitle') }}</h3>
+          <p class="mt-3 text-base leading-relaxed text-text-secondary flex-grow">{{ t('home.studentDesc') }}</p>
           <RouterLink
               to="/register"
-              class="mt-6 inline-flex rounded-xl bg-brand px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-brand-hover"
+              class="mt-8 inline-flex items-center justify-center rounded-xl bg-brand px-6 py-3.5 text-base font-bold text-white transition hover:bg-brand-hover hover:-translate-y-0.5"
           >
             {{ t('home.studentCta') }}
           </RouterLink>
         </div>
 
         <!-- Mentor path -->
-        <div class="relative rounded-[1.75rem] bg-white p-6 shadow-sm shadow-brand/5 ring-1 ring-border-brand/80 sm:p-8">
-          <KyrgyzCornerAccent position="top-right" size="sm" />
-          <span class="inline-flex rounded-full bg-accent/15 px-3 py-1 text-xs font-semibold text-accent">
+        <div class="relative rounded-[2rem] overflow-hidden bg-surface p-8 shadow-sm shadow-slate-900/10 ring-1 ring-border-brand sm:p-10 flex flex-col items-start hover:shadow-md transition-shadow">
+          <KyrgyzCornerOrnament position="top-right" :opacity="0.10" />
+          <span class="inline-flex rounded-full bg-accent/15 px-4 py-1.5 text-sm font-bold text-accent">
             {{ t('home.mentorBadge') }}
           </span>
-          <h3 class="mt-4 text-xl font-bold text-text-primary">{{ t('home.mentorTitle') }}</h3>
-          <p class="mt-2 text-sm leading-relaxed text-text-secondary">{{ t('home.mentorDesc') }}</p>
+          <h3 class="mt-6 text-2xl font-extrabold text-text-primary">{{ t('home.mentorTitle') }}</h3>
+          <p class="mt-3 text-base leading-relaxed text-text-secondary flex-grow">{{ t('home.mentorDesc') }}</p>
           <RouterLink
               to="/mentor/apply"
-              class="mt-6 inline-flex rounded-xl border border-border-brand px-5 py-2.5 text-sm font-semibold text-text-primary transition hover:bg-brand-soft"
+              class="mt-8 inline-flex items-center justify-center rounded-xl border-2 border-border-brand px-6 py-3.5 text-base font-bold text-text-primary transition hover:border-brand/40 hover:bg-surface-secondary hover:-translate-y-0.5"
           >
             {{ t('home.mentorCta') }}
           </RouterLink>
@@ -249,29 +281,33 @@
     </section>
 
     <!-- ─── 7. Closing CTA ─── -->
-    <div class="mx-auto max-w-6xl px-4 pt-4 sm:px-6">
-      <KyrgyzDivider />
+    <div class="mx-auto max-w-7xl px-4 sm:px-6">
+      <OrnamentDivider :opacity="0.3" />
     </div>
 
-    <section class="mx-auto max-w-6xl px-4 py-16 sm:px-6 lg:py-24">
-      <div class="rounded-[1.75rem] bg-gradient-to-r from-brand to-brand-hover px-6 py-10 text-center text-white sm:px-10 sm:py-14">
-        <h2 class="text-2xl font-bold sm:text-3xl">{{ t('home.closingTitle') }}</h2>
-        <p class="mx-auto mt-3 max-w-md text-sm leading-relaxed text-white/80 sm:text-base">
-          {{ t('home.closingSubtitle') }}
-        </p>
-        <div class="mt-8 flex flex-wrap items-center justify-center gap-3">
-          <RouterLink
-              to="/mentors"
-              class="rounded-2xl bg-white px-6 py-3 text-base font-semibold text-brand transition hover:bg-white/90"
-          >
-            {{ t('home.closingCtaMentors') }}
-          </RouterLink>
-          <RouterLink
-              to="/register"
-              class="rounded-2xl border border-white/40 px-6 py-3 text-base font-semibold text-white transition hover:bg-white/10"
-          >
-            {{ t('home.closingCtaRegister') }}
-          </RouterLink>
+    <section class="mx-auto px-4 py-20 sm:px-6 lg:py-32 flex justify-center">
+      <div class="relative w-full max-w-4xl overflow-hidden rounded-[2.5rem] bg-sidebar-bg px-6 py-20 text-center shadow-xl shadow-brand/10 sm:px-16 sm:py-20 flex flex-col items-center">
+        <KyrgyzOrnamentPattern :opacity="0.08" :scale="1.5" class="text-white mix-blend-overlay" />
+
+        <div class="relative z-10 max-w-xl">
+          <h2 class="text-3xl font-extrabold text-white sm:text-4xl lg:text-5xl leading-tight">{{ t('home.closingTitle') }}</h2>
+          <p class="mx-auto mt-5 text-base leading-relaxed text-sidebar-text sm:text-lg">
+            {{ t('home.closingSubtitle') }}
+          </p>
+          <div class="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
+            <RouterLink
+                to="/register"
+                class="w-full sm:w-auto inline-flex items-center justify-center rounded-2xl bg-brand px-8 py-4 text-base font-bold text-white shadow-md transition hover:bg-brand-hover hover:-translate-y-0.5 active:scale-95"
+            >
+              {{ t('home.closingCtaRegister') }}
+            </RouterLink>
+            <RouterLink
+                to="/mentors"
+                class="w-full sm:w-auto inline-flex items-center justify-center rounded-2xl border-2 border-sidebar-text/40 px-8 py-4 text-base font-bold text-white transition hover:border-white hover:bg-surface/10 hover:-translate-y-0.5 active:scale-95"
+            >
+              {{ t('home.closingCtaMentors') }}
+            </RouterLink>
+          </div>
         </div>
       </div>
     </section>
@@ -284,8 +320,10 @@ import { useI18n } from 'vue-i18n'
 import PublicLayout from '../../widgets/layout/PublicLayout.vue'
 import FeatureCard from '../../shared/ui/FeatureCard.vue'
 import AppResponsiveImage from '../../shared/ui/AppResponsiveImage.vue'
-import KyrgyzDivider from '../../shared/ui/KyrgyzDivider.vue'
-import KyrgyzCornerAccent from '../../shared/ui/KyrgyzCornerAccent.vue'
+import OrnamentDivider from '../../components/ui/OrnamentDivider.vue'
+import KyrgyzCornerOrnament from '../../components/ui/KyrgyzCornerOrnament.vue'
+import KyrgyzOrnamentPattern from '../../components/ui/KyrgyzOrnamentPattern.vue'
+import ProfileAvatar from '../../shared/ui/ProfileAvatar.vue'
 import { getFeaturedMentors } from '../../shared/api/mentorPublicApi'
 import type { MentorDirectoryItem } from '../../shared/types/mentor'
 
@@ -346,11 +384,6 @@ const mentorName = (m: MentorDirectoryItem) => {
   return full || t('home.featuredNoName')
 }
 
-const mentorInitials = (m: MentorDirectoryItem) => {
-  const first = m.firstName?.trim()?.[0] || ''
-  const last = m.lastName?.trim()?.[0] || ''
-  return (first + last).toUpperCase() || 'J'
-}
 
 onMounted(async () => {
   try {

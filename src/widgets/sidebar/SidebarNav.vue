@@ -7,17 +7,19 @@
       ]"
   >
     <!-- Brand -->
-    <div class="flex h-16 items-center gap-2.5 border-b border-white/5 px-4">
-      <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-brand text-sm font-bold text-white">J</span>
+    <div class="flex h-16 items-center gap-2.5 border-b border-white/5 px-4" :class="collapsed ? 'justify-center' : ''">
+      <AppLogo class="h-8 w-8 shrink-0 text-white" />
       <span v-if="!collapsed" class="text-base font-extrabold tracking-tight text-white">JaiMentorship</span>
     </div>
 
     <!-- User identity block -->
     <div :class="['border-b border-white/5', collapsed ? 'px-3 py-3' : 'px-4 py-4']">
       <div :class="['flex items-center', collapsed ? 'justify-center' : 'gap-3']">
-        <div class="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-brand-soft/15 text-sm font-bold text-accent">
-          {{ authStore.initials }}
-        </div>
+        <ProfileAvatar
+          :first-name="authStore.initials"
+          size="sm"
+          class="shrink-0 ring-offset-sidebar-bg"
+        />
         <div v-if="!collapsed" class="min-w-0 flex-1">
           <p class="truncate text-sm font-medium text-white">{{ authStore.displayName }}</p>
           <span class="mt-0.5 inline-block rounded bg-sidebar-active px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-sidebar-text">
@@ -33,7 +35,7 @@
         <p v-if="!collapsed" class="mb-1.5 px-3 text-[10px] font-semibold uppercase tracking-widest text-sidebar-text/40">
           {{ t(group.labelKey) }}
         </p>
-        <div v-else-if="gi > 0" class="mx-auto mb-2 mt-2 h-px w-6 bg-white/10" />
+        <div v-else-if="gi > 0" class="mx-auto mb-2 mt-2 h-px w-6 bg-surface/10" />
         <div class="space-y-0.5">
           <SidebarNavItem
               v-for="item in group.items"
@@ -78,7 +80,7 @@
           <!-- Brand -->
           <div class="flex h-16 items-center justify-between border-b border-white/5 px-4">
             <div class="flex items-center gap-2.5">
-              <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-brand text-sm font-bold text-white">J</span>
+              <AppLogo class="h-8 w-8 shrink-0 text-white" />
               <span class="text-base font-extrabold tracking-tight text-white">JaiMentorship</span>
             </div>
             <button @click="$emit('close-mobile')" class="rounded-lg p-1 text-sidebar-text hover:text-white">
@@ -89,9 +91,11 @@
           <!-- Mobile user identity -->
           <div class="border-b border-white/5 px-4 py-4">
             <div class="flex items-center gap-3">
-              <div class="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-brand-soft/15 text-sm font-bold text-accent">
-                {{ authStore.initials }}
-              </div>
+              <ProfileAvatar
+                :first-name="authStore.initials"
+                size="sm"
+                class="shrink-0 ring-offset-sidebar-bg"
+              />
               <div class="min-w-0 flex-1">
                 <p class="truncate text-sm font-medium text-white">{{ authStore.displayName }}</p>
                 <span class="mt-0.5 inline-block rounded bg-sidebar-active px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-sidebar-text">
@@ -139,6 +143,8 @@ import { useLocalStorage } from '@vueuse/core'
 import { Search, ChevronsLeft, ChevronsRight, X } from 'lucide-vue-next'
 import { useAuthStore } from '../../stores/authStore'
 import SidebarNavItem from './SidebarNavItem.vue'
+import AppLogo from '../../components/AppLogo.vue'
+import ProfileAvatar from '../../shared/ui/ProfileAvatar.vue'
 import {
   studentNavGroups,
   mentorNavGroups,

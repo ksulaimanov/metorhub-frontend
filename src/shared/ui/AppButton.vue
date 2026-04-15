@@ -36,13 +36,13 @@ withDefaults(defineProps<Props>(), {
 })
 
 const base =
-    'inline-flex items-center justify-center gap-2 rounded-2xl font-semibold transition active:scale-[0.98] disabled:pointer-events-none disabled:opacity-50'
+    'inline-flex items-center justify-center gap-2 rounded-2xl font-semibold transition-all duration-200 active:scale-[0.98] disabled:pointer-events-none disabled:opacity-50'
 
 const variants = {
-  primary: 'bg-brand text-white hover:bg-brand-hover',
-  secondary: 'border border-border-brand bg-white text-text-primary hover:bg-brand-soft',
+  primary: 'bg-brand text-white shadow-sm shadow-brand/10 hover:bg-brand-hover hover:shadow-md hover:-translate-y-0.5 active:bg-brand-active',
+  secondary: 'border border-border-brand bg-surface text-text-primary hover:border-brand/40 hover:bg-surface-secondary hover:text-brand',
   danger: 'bg-red-600 text-white hover:bg-red-700',
-  ghost: 'text-text-secondary hover:bg-brand-soft',
+  ghost: 'text-text-secondary hover:bg-surface-secondary hover:text-brand',
 } as const
 
 const sizes = {

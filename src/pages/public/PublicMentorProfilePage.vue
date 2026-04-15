@@ -4,7 +4,7 @@
       <!-- ─── Loading skeleton ─── -->
       <div v-if="loading" class="grid gap-8 lg:grid-cols-[1.15fr_0.85fr]">
         <div class="space-y-6">
-          <div class="animate-pulse rounded-[2rem] bg-white p-6 ring-1 ring-border-brand/80 md:p-8">
+          <div class="animate-pulse rounded-[2rem] bg-surface p-6 ring-1 ring-border-brand/80 md:p-8">
             <div class="flex flex-col gap-6 md:flex-row md:items-start">
               <div class="h-28 w-28 shrink-0 rounded-full bg-brand-soft" />
               <div class="flex-1 space-y-3">
@@ -20,7 +20,7 @@
               </div>
             </div>
           </div>
-          <div class="animate-pulse rounded-2xl bg-white p-6 ring-1 ring-border-brand/80">
+          <div class="animate-pulse rounded-2xl bg-surface p-6 ring-1 ring-border-brand/80">
             <div class="h-5 w-32 rounded bg-brand-soft" />
             <div class="mt-4 space-y-2">
               <div class="h-3 w-full rounded bg-brand-soft/40" />
@@ -29,7 +29,7 @@
             </div>
           </div>
         </div>
-        <div class="animate-pulse rounded-2xl bg-white p-6 ring-1 ring-border-brand/80">
+        <div class="animate-pulse rounded-2xl bg-surface p-6 ring-1 ring-border-brand/80">
           <div class="h-5 w-40 rounded bg-brand-soft" />
           <div class="mt-4 h-3 w-full rounded bg-brand-soft/40" />
           <div class="mt-6 h-12 w-full rounded-xl bg-brand-soft" />
@@ -49,7 +49,7 @@
           <!-- ═══ Left column ═══ -->
           <div class="space-y-6">
             <!-- ── Profile hero card ── -->
-            <div class="relative rounded-[2rem] bg-white p-6 shadow-sm ring-1 ring-border-brand/80 md:p-8">
+            <div class="relative rounded-[2rem] bg-surface p-6 shadow-sm ring-1 ring-border-brand/80 md:p-8">
               <KyrgyzCornerAccent position="top-right" size="md" />
               <KyrgyzCornerAccent position="bottom-left" size="sm" />
               <div class="flex flex-col gap-6 md:flex-row md:items-start">
@@ -157,7 +157,7 @@
           <!-- ═══ Right column ═══ -->
           <div class="space-y-6 lg:sticky lg:top-6 lg:self-start">
             <!-- ── Booking CTA card ── -->
-            <div class="ornament-bg relative rounded-2xl bg-white p-6 shadow-sm ring-1 ring-border-brand/80">
+            <div class="ornament-bg relative rounded-2xl bg-surface p-6 shadow-sm ring-1 ring-border-brand/80">
               <KyrgyzCornerAccent position="top-left" size="sm" />
               <h2 class="text-xl font-semibold text-text-primary">{{ t('publicMentorProfile.bookingTitle') }}</h2>
               <p class="mt-2 text-sm text-text-secondary">{{ t('publicMentorProfile.bookingDesc') }}</p>
@@ -179,7 +179,7 @@
 
               <button
                   type="button"
-                  class="mt-6 w-full rounded-xl bg-brand px-5 py-3 text-sm font-semibold text-white shadow-md shadow-brand/20 transition hover:bg-brand-hover active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50"
+                  class="mt-6 w-full rounded-xl bg-brand px-5 py-3 text-sm font-semibold text-white shadow-md shadow-brand/10 transition hover:bg-brand-hover active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50"
                   :disabled="!mentor.hasAvailableSlots"
                   @click="scrollToSlots"
               >
@@ -188,7 +188,7 @@
             </div>
 
             <!-- ── Slots section ── -->
-            <div id="slots" class="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-border-brand/80">
+            <div id="slots" class="rounded-2xl bg-surface p-6 shadow-sm ring-1 ring-border-brand/80">
               <h2 class="text-xl font-semibold text-text-primary">{{ t('publicMentorProfile.slotsTitle') }}</h2>
 
               <!-- Slots loading skeleton -->
@@ -282,11 +282,11 @@
                   </div>
 
                   <!-- Booking form -->
-                  <div v-else-if="activeBookingFormId === slot.id && slot.bookable && !isSlotPast(slot)" class="mt-4 rounded-xl border border-border-brand bg-white p-4">
+                  <div v-else-if="activeBookingFormId === slot.id && slot.bookable && !isSlotPast(slot)" class="mt-4 rounded-xl border border-border-brand bg-surface p-4">
                     <label class="mb-1.5 block text-sm font-medium text-text-primary">{{ t('publicMentorProfile.noteLabel') }}</label>
                     <textarea
                         v-model.trim="studentNotes[slot.id]"
-                        class="min-h-24 w-full rounded-xl border border-border-brand bg-white px-4 py-3 text-sm outline-none transition placeholder:text-text-secondary/60 focus:border-brand focus:ring-2 focus:ring-brand/20"
+                        class="min-h-24 w-full rounded-xl border border-border-brand bg-surface px-4 py-3 text-sm outline-none transition placeholder:text-text-secondary/60 focus:border-brand focus:ring-2 focus:ring-brand/20"
                         :placeholder="t('publicMentorProfile.notePlaceholder')"
                     />
 

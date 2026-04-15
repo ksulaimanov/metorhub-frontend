@@ -1,7 +1,7 @@
 <template>
   <div class="flex flex-col gap-3 sm:flex-row">
     <label
-        class="inline-flex cursor-pointer items-center justify-center rounded-2xl border border-border-brand bg-white px-4 py-3 text-sm font-semibold text-text-primary transition hover:bg-brand-soft disabled:cursor-not-allowed disabled:opacity-50"
+        class="inline-flex cursor-pointer items-center justify-center rounded-2xl border border-border-brand bg-surface px-4 py-3 text-sm font-semibold text-text-primary transition hover:bg-brand-soft disabled:cursor-not-allowed disabled:opacity-50"
     >
       <input
           type="file"

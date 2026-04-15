@@ -47,9 +47,9 @@ const resolvedLoadingLabel = computed(() => props.loadingLabel || t('common.load
 const variantClasses = computed(() => {
   switch (props.variant) {
     case 'secondary':
-      return 'border border-border-brand bg-white text-text-primary hover:bg-brand-soft'
+      return 'border border-border-brand bg-surface text-text-primary hover:bg-brand-soft'
     case 'danger':
-      return 'border border-red-300 bg-white text-red-600 hover:bg-red-50'
+      return 'border border-red-300 bg-surface text-red-600 hover:bg-red-50'
     case 'primary':
     default:
       return 'bg-brand text-white hover:bg-brand-hover'

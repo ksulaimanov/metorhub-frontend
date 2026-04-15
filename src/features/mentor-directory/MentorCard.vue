@@ -1,19 +1,17 @@
 <template>
   <RouterLink
       :to="`/mentors/${mentor.id}`"
-      class="group flex flex-col rounded-2xl bg-white p-5 shadow-sm shadow-brand/5 ring-1 ring-border-brand/80 transition hover:-translate-y-0.5 hover:shadow-md"
+      class="group flex flex-col rounded-2xl bg-surface p-5 shadow-sm shadow-slate-900/10 ring-1 ring-border-brand/80 transition hover:-translate-y-0.5 hover:shadow-md"
   >
     <!-- Top: Avatar + Name + Badge -->
-    <div class="flex items-start gap-3.5">
-      <div class="flex h-14 w-14 shrink-0 items-center justify-center overflow-hidden rounded-full bg-brand-soft text-base font-bold text-brand">
-        <img
-            v-if="mentor.avatarUrl"
-            :src="mentor.avatarUrl"
-            :alt="name"
-            class="h-full w-full object-cover"
-        />
-        <span v-else>{{ initials }}</span>
-      </div>
+    <div class="flex items-start gap-4">
+      <ProfileAvatar
+        :src="mentor.avatarUrl"
+        :first-name="mentor.firstName"
+        :last-name="mentor.lastName"
+        size="md"
+        class="h-14 w-14 ring-1 ring-border-brand"
+      />
 
       <div class="min-w-0 flex-1">
         <div class="flex items-start justify-between gap-2">
@@ -90,6 +88,7 @@ import { useI18n } from 'vue-i18n'
 import type { MentorDirectoryItem } from '../../shared/types/mentor'
 import AppBadge from '../../shared/ui/AppBadge.vue'
 import StarRating from '../../shared/ui/StarRating.vue'
+import ProfileAvatar from '../../shared/ui/ProfileAvatar.vue'
 
 const { t } = useI18n()
 
@@ -100,12 +99,6 @@ const props = defineProps<{
 const name = computed(() => {
   const full = `${props.mentor.firstName || ''} ${props.mentor.lastName || ''}`.trim()
   return full || t('mentorDirectory.noName')
-})
-
-const initials = computed(() => {
-  const first = props.mentor.firstName?.trim()?.[0] || ''
-  const last = props.mentor.lastName?.trim()?.[0] || ''
-  return (first + last).toUpperCase() || 'M'
 })
 </script>
 

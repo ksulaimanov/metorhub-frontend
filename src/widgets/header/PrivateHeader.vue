@@ -1,8 +1,9 @@
 <template>
-  <header class="sticky top-0 z-30 border-b border-border-brand bg-white/90 backdrop-blur">
+  <header class="sticky top-0 z-30 border-b border-border-brand bg-surface/90 backdrop-blur">
     <div class="mx-auto flex max-w-7xl flex-col gap-4 px-4 py-4 sm:px-6 md:flex-row md:items-center md:justify-between">
       <div class="flex items-center justify-between">
-        <RouterLink to="/" class="text-2xl font-bold tracking-tight text-text-primary">
+        <RouterLink to="/" class="flex items-center gap-2 text-xl font-bold tracking-tight text-text-primary sm:text-2xl">
+          <AppLogo class="h-8 w-8" />
           JaiMentorship
         </RouterLink>
 
@@ -66,6 +67,7 @@
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { useAuthStore } from '../../stores/authStore'
+import AppLogo from '../../components/AppLogo.vue'
 
 const { t } = useI18n()
 const router = useRouter()
