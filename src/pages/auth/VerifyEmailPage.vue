@@ -166,6 +166,7 @@ const startCooldown = (seconds: number) => {
 
 const handleVerify = async () => {
   showValidation.value = true
+  errorMessage.value = ''
 
   if (emailError.value || codeError.value) {
     return
@@ -196,6 +197,7 @@ const handleVerify = async () => {
 
 const handleResend = async () => {
   showValidation.value = true
+  errorMessage.value = ''
 
   if (emailError.value) {
     return

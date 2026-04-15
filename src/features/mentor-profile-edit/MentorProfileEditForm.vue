@@ -34,7 +34,7 @@
                 v-model.number="form.yearsExperience"
                 type="number"
                 min="0"
-                class="w-full rounded-2xl border border-border-brand bg-white px-4 py-3 text-sm outline-none transition placeholder:text-text-secondary/60 focus:border-brand focus:ring-2 focus:ring-brand-soft"
+                class="w-full rounded-2xl border border-border-brand bg-surface px-4 py-3 text-sm outline-none transition placeholder:text-text-secondary/60 focus:border-brand focus:ring-2 focus:ring-brand-soft"
                 :placeholder="t('mentorProfile.yearsExperiencePlaceholder')"
             />
           </AppField>
@@ -44,7 +44,7 @@
                 v-model.number="form.pricePerHour"
                 type="number"
                 min="0"
-                class="w-full rounded-2xl border border-border-brand bg-white px-4 py-3 text-sm outline-none transition placeholder:text-text-secondary/60 focus:border-brand focus:ring-2 focus:ring-brand-soft"
+                class="w-full rounded-2xl border border-border-brand bg-surface px-4 py-3 text-sm outline-none transition placeholder:text-text-secondary/60 focus:border-brand focus:ring-2 focus:ring-brand-soft"
                 :placeholder="t('mentorProfile.pricePerHourPlaceholder')"
             />
           </AppField>

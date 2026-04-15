@@ -1,14 +1,17 @@
 <template>
   <PrivateLayout>
-    <div class="space-y-8">
+    <div class="relative space-y-8 rounded-2xl p-6 bg-surface shadow-sm ring-1 ring-border-brand/80 overflow-hidden dark:bg-zinc-950">
+      <KyrgyzOrnamentPattern :opacity="0.08" :scale="1.2" />
+      <KyrgyzCornerOrnament position="top-right" :opacity="0.1" />
+
       <!-- Header -->
-      <div>
+      <div class="relative">
         <h1 class="text-3xl font-bold text-text-primary">{{ t('studentDashboard.greeting', { name: displayName }) }}</h1>
         <p class="mt-2 text-text-secondary">{{ t('studentDashboard.subtitle') }}</p>
       </div>
 
       <!-- Stats Cards -->
-      <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      <div class="relative grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         <AppCard>
           <div class="flex items-start gap-4">
             <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-brand-soft text-brand">
@@ -49,21 +52,24 @@
       </div>
 
       <!-- Upcoming Events -->
-      <UpcomingEventsCard
-          :title="t('studentDashboard.upcomingTitle')"
-          :subtitle="t('studentDashboard.upcomingSubtitle')"
-          :events="dashboardData?.upcomingEvents || []"
-          :loading="loading"
-          :error="error"
-          :empty-message="t('studentDashboard.noUpcoming')"
-          :action-button-label="t('studentDashboard.goToLesson')"
-          @retry="loadDashboard"
-          @event-click="handleEventClick"
-          @view-all="navigateToBookings"
-      />
+      <div class="relative">
+        <UpcomingEventsCard
+            :title="t('studentDashboard.upcomingTitle')"
+            :subtitle="t('studentDashboard.upcomingSubtitle')"
+            :events="dashboardData?.upcomingEvents || []"
+            :loading="loading"
+            :error="error"
+            :empty-message="t('studentDashboard.noUpcoming')"
+            :action-button-label="t('studentDashboard.goToLesson')"
+            @retry="loadDashboard"
+            @event-click="handleEventClick"
+            @view-all="navigateToBookings"
+        />
+      </div>
 
       <!-- CTA to Find Mentors -->
-      <div v-if="(dashboardData?.upcomingEvents.length ?? 0) === 0" class="rounded-2xl bg-gradient-to-r from-brand-soft/60 to-brand-soft/20 p-6 ring-1 ring-border-brand">
+      <div v-if="(dashboardData?.upcomingEvents.length ?? 0) === 0" class="relative rounded-2xl bg-gradient-to-r from-brand-soft/60 to-brand-soft/20 p-6 ring-1 ring-border-brand">
+
         <h3 class="text-lg font-semibold text-text-primary">{{ t('studentDashboard.ctaTitle') }}</h3>
         <p class="mt-2 text-text-secondary">{{ t('studentDashboard.ctaDesc') }}</p>
         <button
@@ -72,6 +78,40 @@
         >
           {{ t('studentDashboard.ctaButton') }}
         </button>
+      </div>
+
+      <!-- Application Status Widget -->
+      <div class="relative space-y-4">
+        <InfoPanel v-if="appStatus && appStatus.status === 'PENDING'" variant="muted">
+          <h3 class="text-lg font-semibold text-text-primary">{{ t('mentorApplication.widgetTitle') }}</h3>
+          <p class="mt-2 text-text-secondary">
+            {{ t('mentorApplication.widgetUnderReview') }}
+          </p>
+        </InfoPanel>
+        <InfoPanel v-else-if="appStatus && appStatus.status === 'APPROVED'" variant="success">
+          <h3 class="text-lg font-semibold">{{ t('mentorApplication.widgetApproved') }}</h3>
+          <p class="mt-2 text-sm">
+            {{ t('mentorApplication.widgetApprovedDesc') }}
+          </p>
+          <button
+              class="mt-4 inline-flex rounded-xl bg-brand px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-brand-hover"
+              @click="switchToMentor"
+          >
+            {{ t('mentorApplication.widgetSwitch') }}
+          </button>
+        </InfoPanel>
+        <InfoPanel v-else-if="appStatus && appStatus.status === 'REJECTED'" variant="error">
+          <h3 class="text-lg font-semibold text-danger">{{ t('mentorApplication.widgetRejected') }}</h3>
+          <p class="mt-2 text-sm text-danger/80">
+            {{ appStatus.reviewComment || t('mentorApplication.widgetRejectedDesc') }}
+          </p>
+          <button
+              class="mt-4 inline-flex rounded-xl bg-danger px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-danger/80"
+              @click="reapply"
+          >
+            {{ t('mentorApplication.widgetReapply') }}
+          </button>
+        </InfoPanel>
       </div>
     </div>
   </PrivateLayout>
@@ -84,17 +124,23 @@ import { useI18n } from 'vue-i18n'
 import { Calendar, Clock, CheckCircle2 } from 'lucide-vue-next'
 import { useAuthStore } from '../../stores/authStore'
 import { getStudentDashboard } from '../../shared/api/dashboardApi'
+import { getMyMentorApplicationStatus } from '../../shared/api/mentorApplicationApi'
 import { getApiErrorMessage } from '../../shared/lib/getApiErrorMessage'
 import type { StudentDashboard } from '../../shared/types/dashboard'
+import type { MentorApplicationStatusResponse } from '../../shared/types/mentorApplication'
 import PrivateLayout from '../../widgets/layout/PrivateLayout.vue'
 import AppCard from '../../shared/ui/AppCard.vue'
 import UpcomingEventsCard from '../../shared/ui/UpcomingEventsCard.vue'
+import InfoPanel from '../../shared/ui/InfoPanel.vue'
+import KyrgyzCornerOrnament from '../../components/ui/KyrgyzCornerOrnament.vue'
+import KyrgyzOrnamentPattern from '../../components/ui/KyrgyzOrnamentPattern.vue'
 
 const { t } = useI18n()
 const router = useRouter()
 const authStore = useAuthStore()
 
 const dashboardData = ref<StudentDashboard | null>(null)
+const appStatus = ref<MentorApplicationStatusResponse | null>(null)
 const loading = ref(false)
 const error = ref('')
 
@@ -111,6 +157,24 @@ const loadDashboard = async () => {
   } finally {
     loading.value = false
   }
+
+  try {
+    appStatus.value = await getMyMentorApplicationStatus()
+  } catch (err: any) {
+    // Ignore 404, it means the user hasn't successfully submitted an application or it was deleted
+    if (err?.response?.status !== 404) {
+      console.error('Error fetching mentor application status:', err)
+    }
+  }
+}
+
+const switchToMentor = async () => {
+  await authStore.fetchProfile()
+  router.push('/mentor/dashboard')
+}
+
+const reapply = () => {
+  router.push('/mentor/apply')
 }
 
 const handleEventClick = (event: any) => {

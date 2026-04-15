@@ -15,11 +15,11 @@
             class="rounded-full px-4 py-2 text-sm font-medium transition"
             :class="activeTab === tab.value
               ? 'bg-brand text-white'
-              : 'bg-white text-text-secondary ring-1 ring-border-brand hover:bg-brand-soft'"
+              : 'bg-surface text-text-secondary ring-1 ring-border-brand hover:bg-brand-soft'"
             @click="activeTab = tab.value"
         >
           {{ tab.label }}
-          <span v-if="tab.count > 0" class="ml-1.5 rounded-full bg-white/20 px-1.5 text-xs">{{ tab.count }}</span>
+          <span v-if="tab.count > 0" class="ml-1.5 rounded-full bg-surface/20 px-1.5 text-xs">{{ tab.count }}</span>
         </button>
       </div>
 
@@ -38,7 +38,7 @@
       </AppErrorState>
 
       <!-- ─── Empty ─── -->
-      <div v-else-if="filteredBookings.length === 0" class="rounded-3xl bg-white p-10 text-center shadow-sm ring-1 ring-border-brand">
+      <div v-else-if="filteredBookings.length === 0" class="rounded-3xl bg-surface p-10 text-center shadow-sm ring-1 ring-border-brand">
         <div class="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-brand-soft">
           <CalendarX class="h-6 w-6 text-brand" />
         </div>
@@ -148,7 +148,7 @@
               <div class="mt-4 grid gap-4">
                 <select
                     v-model="reviewForms[booking.id].rating"
-                    class="rounded-xl border border-border-brand bg-white px-4 py-2.5 text-sm outline-none transition focus:border-brand focus:ring-2 focus:ring-brand/20"
+                    class="rounded-xl border border-border-brand bg-surface px-4 py-2.5 text-sm outline-none transition focus:border-brand focus:ring-2 focus:ring-brand/20"
                 >
                   <option :value="5">{{ t('studentBookings.rating5') }}</option>
                   <option :value="4">{{ t('studentBookings.rating4') }}</option>
@@ -159,7 +159,7 @@
 
                 <textarea
                     v-model="reviewForms[booking.id].comment"
-                    class="min-h-24 rounded-xl border border-border-brand bg-white px-4 py-3 text-sm outline-none transition placeholder:text-text-secondary/60 focus:border-brand focus:ring-2 focus:ring-brand/20"
+                    class="min-h-24 rounded-xl border border-border-brand bg-surface px-4 py-3 text-sm outline-none transition placeholder:text-text-secondary/60 focus:border-brand focus:ring-2 focus:ring-brand/20"
                     :placeholder="t('studentBookings.reviewPlaceholder')"
                 />
 

@@ -4,7 +4,7 @@
       <div
           v-for="toast in toastStore.toasts"
           :key="toast.id"
-          class="pointer-events-auto overflow-hidden rounded-2xl border bg-white shadow-lg ring-1"
+          class="pointer-events-auto overflow-hidden rounded-2xl border bg-surface shadow-lg ring-1"
           :class="toastClass(toast.type)"
       >
         <div class="flex items-start justify-between gap-3 px-4 py-3">

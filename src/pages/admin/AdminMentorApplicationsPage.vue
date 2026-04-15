@@ -21,8 +21,8 @@
         </AppSelect>
       </div>
 
-      <!-- Loading -->
-      <AppLoadingState v-if="loading" :text="t('common.loading')" />
+      <!-- Loading skeleton -->
+      <AppTableSkeleton v-if="loading" :columns="6" :rows="5" />
 
       <!-- Error -->
       <AppErrorState
@@ -108,29 +108,15 @@
         </div>
 
         <!-- Pagination -->
-        <div v-if="totalPages > 1" class="flex items-center justify-center gap-2 pt-2">
-          <AppButton
-            variant="ghost"
-            size="sm"
-            :disabled="currentPage === 0"
-            @click="goToPage(currentPage - 1)"
-          >
-            {{ t('common.back') }}
-          </AppButton>
-
-          <span class="text-sm text-text-secondary">
-            {{ currentPage + 1 }} / {{ totalPages }}
-          </span>
-
-          <AppButton
-            variant="ghost"
-            size="sm"
-            :disabled="currentPage >= totalPages - 1"
-            @click="goToPage(currentPage + 1)"
-          >
-            {{ t('common.next') }}
-          </AppButton>
-        </div>
+        <AppPagination
+          v-if="totalPages > 1"
+          :current-page="currentPage"
+          :total-pages="totalPages"
+          :total-elements="totalElements"
+          :page-size="pageSize"
+          @update:current-page="goToPage"
+          @update:page-size="onPageSizeChange"
+        />
       </template>
     </div>
   </PrivateLayout>
@@ -144,8 +130,8 @@ import PrivateLayout from '@/widgets/layout/PrivateLayout.vue'
 import AdminPageHeader from '@/shared/ui/AdminPageHeader.vue'
 import AppCard from '@/shared/ui/AppCard.vue'
 import AppSelect from '@/shared/ui/AppSelect.vue'
-import AppButton from '@/shared/ui/AppButton.vue'
-import AppLoadingState from '@/shared/ui/AppLoadingState.vue'
+import AppTableSkeleton from '@/shared/ui/AppTableSkeleton.vue'
+import AppPagination from '@/shared/ui/AppPagination.vue'
 import AppErrorState from '@/shared/ui/AppErrorState.vue'
 import AppEmptyState from '@/shared/ui/AppEmptyState.vue'
 import StatusBadge from '@/shared/ui/StatusBadge.vue'
@@ -163,7 +149,8 @@ const error = ref('')
 const statusFilter = ref<MentorApplicationStatus | ''>('')
 const currentPage = ref(0)
 const totalPages = ref(0)
-const PAGE_SIZE = 10
+const totalElements = ref(0)
+const pageSize = ref(10)
 
 async function loadApplications() {
   loading.value = true
@@ -173,10 +160,11 @@ async function loadApplications() {
     const page = await getAdminMentorApplications({
       status: statusFilter.value || undefined,
       page: currentPage.value,
-      size: PAGE_SIZE,
+      size: pageSize.value,
     })
     items.value = page.content
     totalPages.value = page.totalPages
+    totalElements.value = page.totalElements
     currentPage.value = page.number
   } catch (err: any) {
     error.value = err?.response?.data?.message || t('admin.applications.loadError')
@@ -193,6 +181,12 @@ function onStatusChange(val: string) {
 
 function goToPage(page: number) {
   currentPage.value = page
+  loadApplications()
+}
+
+function onPageSizeChange(size: number) {
+  pageSize.value = size
+  currentPage.value = 0
   loadApplications()
 }
 

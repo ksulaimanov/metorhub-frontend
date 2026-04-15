@@ -1,5 +1,5 @@
 <template>
-  <div class="rounded-2xl bg-white p-5 ring-1 ring-border-brand/80">
+  <div class="rounded-2xl bg-surface p-5 ring-1 ring-border-brand/80">
     <div class="flex items-start justify-between gap-3">
       <div class="flex items-center gap-3">
         <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-brand-soft text-sm font-bold text-brand">

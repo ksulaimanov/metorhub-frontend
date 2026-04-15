@@ -33,6 +33,13 @@ export default {
             OFFLINE: 'Офлайн',
             HYBRID: 'Гибрид',
         },
+        pagination: {
+            showing: 'Көрсөтүлүүдө',
+            of: 'ичинен',
+            perPage: 'Бетте',
+            prevPage: 'Мурунку бет',
+            nextPage: 'Кийинки бет',
+        },
     },
 
     auth: {
@@ -148,8 +155,9 @@ export default {
         passwordMismatch: 'Сырсөздөр дал келбейт',
         codeInvalid: 'Код 6 сандан турушу керек',
         phoneInvalid: 'Туура телефон номерин киргизиңиз',
-        minLength: 'Минимум {min} символ',
-        selectAtLeastOne: 'Жок дегенде бир вариант тандаңыз',
+        minLength: 'Кеминде {min} белги',
+        selectAtLeastOne: 'Кеминде бир вариантты тандаңыз',
+        urlInvalid: 'Жараксыз URL форматы',
     },
 
     mentorGate: {
@@ -187,6 +195,8 @@ export default {
         motivationPlaceholder: 'Билим бөлүшүүгө эмне мотивация берерин айтып бериңиз...',
         experience: 'Иш жана окутуу тажрыйбасы',
         experiencePlaceholder: 'Профессионалдуу тажрыйбаңызды кыскача сүрөттөңүз...',
+        portfolioUrl: 'Портфолио шилтемеси',
+        portfolioUrlPlaceholder: 'https://...',
         specializations: 'Адистиктер',
         specializationOptions: {
             programming: 'Программалоо',
@@ -204,6 +214,7 @@ export default {
         submitSuccessDesc: 'Биз арызыңызды карап чыгып, email аркылуу байланышабыз. Арыздын статусун төмөнкү шилтеме аркылуу текшере аласыз.',
         submitFailed: 'Арызды жөнөтүү мүмкүн болгон жок',
         submitErrorFallback: 'Арызды кийинчерээк жөнөтүп көрүңүз.',
+        alreadySubmitted: 'Сиз буга чейин билдирүү жөнөткөнсүз',
         checkStatus: 'Арыздын статусун текшерүү',
         hasAccount: 'Ментор аккаунтуңуз барбы?',
         hasAccountLink: 'Кирүү',
@@ -268,6 +279,12 @@ export default {
             approveFailed: 'Арызды макулдоо мүмкүн болгон жок',
             rejectSuccess: 'Арыз четке кагылды',
             rejectFailed: 'Арызды четке кагуу мүмкүн болгон жок',
+            confirmApproveTitle: 'Арызды макулдоо?',
+            confirmApproveDescription: '{name} арызын макулдоого ишенимдүүсүзбү? Талапкер ментор статусун алат.',
+            confirmApproveButton: 'Ооба, макулдоо',
+            confirmRejectTitle: 'Арызды четке кагуу?',
+            confirmRejectDescription: '{name} арызын четке кагуу себебин көрсөтүңүз.',
+            confirmRejectButton: 'Арызды четке кагуу',
         },
     },
 
@@ -277,6 +294,7 @@ export default {
         unauthorized: 'Аккаунтка кирүү керек.',
         forbidden: 'Кирүү мүмкүнчүлүгү жок.',
         notFound: 'Бет табылган жок.',
+        rateLimited: 'Өтө көп аракет. Сураныч, бир аз күтүңүз.',
         generic: 'Ката кетти. Кайра аракет кылыңыз.',
     },
 
@@ -364,7 +382,7 @@ export default {
         codePlaceholder: '123456',
         newPasswordLabel: 'Жаңы сырсөз',
         newPasswordPlaceholder: 'Минимум 8 символ',
-        confirmPasswordLabel: 'Жаңы сырсөздү ырастоо',
+        confirmPasswordLabel: 'Жаңы сырсөздү ырастаңыз',
         confirmPasswordPlaceholder: 'Жаңы сырсөздү кайталаңыз',
         emailRequired: 'Email киргизиңиз',
         emailInvalid: 'Туура email киргизиңиз',
@@ -427,12 +445,6 @@ export default {
         sectionMain: 'Негизги',
         sectionManagement: 'Башкаруу',
         sectionActivity: 'Активдүүлүк',
-    },
-
-    roles: {
-        student: 'Окуучу',
-        mentor: 'Ментор',
-        admin: 'Админ',
     },
 
     privateNav: {

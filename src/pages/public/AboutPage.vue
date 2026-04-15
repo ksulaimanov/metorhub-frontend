@@ -22,7 +22,7 @@
 
         <!-- Features -->
         <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-          <div v-for="i in 6" :key="i" class="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-border-brand">
+          <div v-for="i in 6" :key="i" class="rounded-2xl bg-surface p-6 shadow-sm ring-1 ring-border-brand">
             <div class="flex items-center gap-3">
               <div class="flex h-12 w-12 items-center justify-center rounded-2xl bg-brand-soft">
                 <svg class="h-6 w-6 text-brand" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -43,14 +43,14 @@
           <div class="mt-6 flex flex-wrap items-center justify-center gap-4">
             <RouterLink
                 to="/mentors"
-                class="rounded-2xl bg-white px-6 py-3 text-base font-semibold text-brand transition hover:bg-white/90"
+                class="rounded-2xl bg-surface px-6 py-3 text-base font-semibold text-brand transition hover:bg-surface/90"
             >
               {{ t('about.ctaFindMentor') }}
             </RouterLink>
 
             <RouterLink
                 to="/register"
-                class="rounded-2xl border border-white/40 px-6 py-3 text-base font-semibold text-white transition hover:bg-white/10"
+                class="rounded-2xl border border-white/40 px-6 py-3 text-base font-semibold text-white transition hover:bg-surface/10"
             >
               {{ t('about.ctaRegister') }}
             </RouterLink>

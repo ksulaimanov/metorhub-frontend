@@ -1,4 +1,5 @@
 import { defineStore } from 'pinia'
+import { http } from '@/shared/api/http'
 
 type UserRole = 'ROLE_STUDENT' | 'ROLE_MENTOR' | 'ROLE_ADMIN'
 
@@ -39,6 +40,20 @@ export const useAuthStore = defineStore('auth', {
     },
 
     actions: {
+        async fetchProfile() {
+            if (!this.accessToken) return
+            try {
+                const { data } = await http.get('/api/users/me')
+                this.roles = data.roles
+                this.email = data.email
+                localStorage.setItem('roles', JSON.stringify(data.roles))
+            } catch (error: any) {
+                // If 401/403, interceptor will handle or we just logout
+                if (error?.response?.status === 401 || error?.response?.status === 403) {
+                    this.logout()
+                }
+            }
+        },
         setAuth(payload: { accessToken: string; refreshToken: string; email: string; roles: UserRole[] }) {
             this.accessToken = payload.accessToken
             this.refreshToken = payload.refreshToken

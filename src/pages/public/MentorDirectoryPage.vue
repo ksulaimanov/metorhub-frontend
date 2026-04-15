@@ -17,7 +17,7 @@
 
     <section class="mx-auto max-w-7xl px-4 pb-16 sm:px-6">
       <!-- ─── Filters ─── -->
-      <div class="rounded-2xl bg-white p-5 shadow-sm ring-1 ring-border-brand/80 md:p-6">
+      <div class="rounded-2xl bg-surface p-5 shadow-sm ring-1 ring-border-brand/80 md:p-6">
         <div class="grid gap-4 md:grid-cols-4">
           <div class="md:col-span-2">
             <label class="mb-1.5 block text-sm font-medium text-text-primary">{{ t('mentorDirectory.searchLabel') }}</label>
@@ -25,7 +25,7 @@
                 v-model="query"
                 type="text"
                 :placeholder="t('mentorDirectory.searchPlaceholder')"
-                class="w-full rounded-xl border border-border-brand bg-white px-4 py-2.5 text-sm outline-none transition placeholder:text-text-secondary/60 focus:border-brand focus:ring-2 focus:ring-brand/20"
+                class="w-full rounded-xl border border-border-brand bg-surface px-4 py-2.5 text-sm outline-none transition placeholder:text-text-secondary/60 focus:border-brand focus:ring-2 focus:ring-brand/20"
             />
           </div>
 
@@ -35,7 +35,7 @@
                 v-model="city"
                 type="text"
                 :placeholder="t('mentorDirectory.cityPlaceholder')"
-                class="w-full rounded-xl border border-border-brand bg-white px-4 py-2.5 text-sm outline-none transition placeholder:text-text-secondary/60 focus:border-brand focus:ring-2 focus:ring-brand/20"
+                class="w-full rounded-xl border border-border-brand bg-surface px-4 py-2.5 text-sm outline-none transition placeholder:text-text-secondary/60 focus:border-brand focus:ring-2 focus:ring-brand/20"
             />
           </div>
 
@@ -43,7 +43,7 @@
             <label class="mb-1.5 block text-sm font-medium text-text-primary">{{ t('mentorDirectory.sortLabel') }}</label>
             <select
                 v-model="sortBy"
-                class="w-full rounded-xl border border-border-brand bg-white px-4 py-2.5 text-sm outline-none transition focus:border-brand focus:ring-2 focus:ring-brand/20"
+                class="w-full rounded-xl border border-border-brand bg-surface px-4 py-2.5 text-sm outline-none transition focus:border-brand focus:ring-2 focus:ring-brand/20"
             >
               <option value="">{{ t('mentorDirectory.sortDefault') }}</option>
               <option value="ratingDesc">{{ t('mentorDirectory.sortRating') }}</option>
@@ -60,7 +60,7 @@
           <label
               :class="[
                 'flex cursor-pointer items-center gap-2 rounded-full px-4 py-2 text-sm font-medium ring-1 transition',
-                online ? 'bg-brand-soft text-brand ring-brand/30' : 'bg-white text-text-secondary ring-border-brand hover:bg-brand-soft/50',
+                online ? 'bg-brand-soft text-brand ring-brand/30' : 'bg-surface text-text-secondary ring-border-brand hover:bg-brand-soft/50',
               ]"
           >
             <input v-model="online" type="checkbox" class="sr-only" />
@@ -70,7 +70,7 @@
           <label
               :class="[
                 'flex cursor-pointer items-center gap-2 rounded-full px-4 py-2 text-sm font-medium ring-1 transition',
-                offline ? 'bg-brand-soft text-brand ring-brand/30' : 'bg-white text-text-secondary ring-border-brand hover:bg-brand-soft/50',
+                offline ? 'bg-brand-soft text-brand ring-brand/30' : 'bg-surface text-text-secondary ring-border-brand hover:bg-brand-soft/50',
               ]"
           >
             <input v-model="offline" type="checkbox" class="sr-only" />
@@ -80,7 +80,7 @@
           <label
               :class="[
                 'flex cursor-pointer items-center gap-2 rounded-full px-4 py-2 text-sm font-medium ring-1 transition',
-                hybrid ? 'bg-brand-soft text-brand ring-brand/30' : 'bg-white text-text-secondary ring-border-brand hover:bg-brand-soft/50',
+                hybrid ? 'bg-brand-soft text-brand ring-brand/30' : 'bg-surface text-text-secondary ring-border-brand hover:bg-brand-soft/50',
               ]"
           >
             <input v-model="hybrid" type="checkbox" class="sr-only" />
@@ -111,7 +111,7 @@
       <div class="mt-6">
         <!-- Skeleton loading -->
         <div v-if="loading" class="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
-          <div v-for="i in 6" :key="i" class="animate-pulse rounded-2xl bg-white p-5 ring-1 ring-border-brand/80">
+          <div v-for="i in 6" :key="i" class="animate-pulse rounded-2xl bg-surface p-5 ring-1 ring-border-brand/80">
             <div class="flex items-start gap-3.5">
               <div class="h-14 w-14 rounded-full bg-brand-soft" />
               <div class="flex-1 space-y-2">
@@ -154,7 +154,7 @@
         />
 
         <!-- Empty -->
-        <div v-else-if="mentors.length === 0" class="rounded-2xl bg-white p-10 text-center ring-1 ring-border-brand/80">
+        <div v-else-if="mentors.length === 0" class="rounded-2xl bg-surface p-10 text-center ring-1 ring-border-brand/80">
           <div class="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-brand-soft">
             <Search class="h-6 w-6 text-brand" />
           </div>

@@ -1,4 +1,7 @@
 import axios from 'axios'
+import i18n from '../i18n'
+import { useToastStore } from '../lib/getApiErrorMessage'
+import router from '@/app/router'
 
 const baseURL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080'
 
@@ -40,6 +43,23 @@ http.interceptors.response.use(
     async (error) => {
         const original = error.config
 
+        // --- Handle 429 Too Many Requests (rate limiting) ---
+        if (error.response?.status === 429) {
+            const t = i18n.global.t as (key: string) => string
+            const toastStore = useToastStore()
+            toastStore.warning(t('errors.rateLimited'))
+            return Promise.reject(error)
+        }
+
+        // --- Handle 403 Forbidden ---
+        if (error.response?.status === 403) {
+            const t = i18n.global.t as (key: string) => string
+            const toastStore = useToastStore()
+            toastStore.error(t('errors.forbidden') || 'Access denied.')
+            router.push('/')
+            return Promise.reject(error)
+        }
+
         // Skip refresh for login/register/refresh endpoints themselves
         if (
             !error.response ||
@@ -74,7 +94,7 @@ http.interceptors.response.use(
         }
 
         try {
-            const { data } = await axios.post(`${baseURL}/auth/refresh`, { refreshToken })
+            const { data } = await axios.post(`${baseURL}/api/auth/refresh`, { refreshToken })
 
             localStorage.setItem('accessToken', data.accessToken)
             localStorage.setItem('refreshToken', data.refreshToken)

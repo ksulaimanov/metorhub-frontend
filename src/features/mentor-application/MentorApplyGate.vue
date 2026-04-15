@@ -34,7 +34,7 @@
         </RouterLink>
         <RouterLink
             :to="registerLink"
-            class="flex w-full items-center justify-center rounded-2xl border border-border-brand bg-white px-5 py-3 text-sm font-semibold text-text-primary transition hover:bg-brand-soft active:scale-[0.98]"
+            class="flex w-full items-center justify-center rounded-2xl border border-border-brand bg-surface px-5 py-3 text-sm font-semibold text-text-primary transition hover:bg-brand-soft active:scale-[0.98]"
         >
           {{ t('mentorGate.registerAction') }}
         </RouterLink>

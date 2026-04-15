@@ -1,12 +1,15 @@
 <template>
   <PrivateLayout>
-    <div class="space-y-8">
-      <div>
+    <div class="relative space-y-8 rounded-2xl p-6 bg-surface shadow-sm ring-1 ring-border-brand/80 overflow-hidden dark:bg-zinc-950">
+      <KyrgyzOrnamentPattern :opacity="0.08" :scale="1.2" />
+      <KyrgyzCornerOrnament position="top-right" :opacity="0.1" />
+
+      <div class="relative">
         <h1 class="text-3xl font-bold text-text-primary">{{ t('mentorDashboard.title') }}</h1>
         <p class="mt-2 text-text-secondary">{{ t('mentorDashboard.subtitle') }}</p>
       </div>
 
-      <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      <div class="relative grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <AppCard>
           <div class="flex items-start gap-4">
             <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-brand-soft text-brand">
@@ -63,20 +66,22 @@
         </AppCard>
       </div>
 
-      <UpcomingEventsCard
-          :title="t('mentorDashboard.upcomingTitle')"
-          :subtitle="t('mentorDashboard.upcomingSubtitle')"
-          :events="dashboardData?.upcomingEvents || []"
-          :loading="loading"
-          :error="error"
-          :empty-message="t('mentorDashboard.noUpcoming')"
-          :action-button-label="t('mentorDashboard.goTo')"
-          @retry="loadDashboard"
-          @event-click="handleEventClick"
-          @view-all="navigateToBookings"
-      />
+      <div class="relative">
+        <UpcomingEventsCard
+            :title="t('mentorDashboard.upcomingTitle')"
+            :subtitle="t('mentorDashboard.upcomingSubtitle')"
+            :events="dashboardData?.upcomingEvents || []"
+            :loading="loading"
+            :error="error"
+            :empty-message="t('mentorDashboard.noUpcoming')"
+            :action-button-label="t('mentorDashboard.goTo')"
+            @retry="loadDashboard"
+            @event-click="handleEventClick"
+            @view-all="navigateToBookings"
+        />
+      </div>
 
-      <div class="grid gap-4 sm:grid-cols-2">
+      <div class="relative grid gap-4 sm:grid-cols-2">
         <button
             type="button"
             class="flex items-start gap-4 rounded-2xl border border-border-brand p-6 text-left transition hover:border-brand/40 hover:bg-brand-soft/30"
@@ -119,6 +124,8 @@ import type { MentorDashboard } from '../../shared/types/dashboard'
 import PrivateLayout from '../../widgets/layout/PrivateLayout.vue'
 import AppCard from '../../shared/ui/AppCard.vue'
 import UpcomingEventsCard from '../../shared/ui/UpcomingEventsCard.vue'
+import KyrgyzCornerOrnament from '../../components/ui/KyrgyzCornerOrnament.vue'
+import KyrgyzOrnamentPattern from '../../components/ui/KyrgyzOrnamentPattern.vue'
 
 const { t } = useI18n()
 const router = useRouter()

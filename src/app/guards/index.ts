@@ -4,8 +4,16 @@ import { ROLES } from '@/shared/constants/app'
 
 
 export function setupRouteGuards(router: Router) {
-    router.beforeEach((to) => {
+    let initialAuthCheck = false
+
+    router.beforeEach(async (to) => {
         const auth = useAuthStore()
+
+        if (auth.isAuthenticated && !initialAuthCheck) {
+            await auth.fetchProfile()
+            initialAuthCheck = true
+        }
+
         const requiresAuth = Boolean(to.meta.requiresAuth)
         const requiredRole = to.meta.role as string | undefined
 
@@ -31,4 +39,3 @@ export function setupRouteGuards(router: Router) {
         document.title = (to.meta.title as string) || 'JaiMentorship'
     })
 }
-

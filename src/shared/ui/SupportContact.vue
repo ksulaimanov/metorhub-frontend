@@ -13,19 +13,29 @@
               href="https://t.me/ksulaimanov"
               target="_blank"
               rel="noopener noreferrer"
-              class="inline-flex items-center gap-1.5 rounded-xl bg-white px-3 py-2 text-sm font-medium text-text-primary ring-1 ring-border-brand transition hover:bg-brand-soft hover:text-brand"
+              class="inline-flex items-center gap-1.5 rounded-xl bg-surface px-3 py-2 text-sm font-medium text-text-primary ring-1 ring-border-brand transition hover:bg-brand-soft hover:text-brand"
           >
             <Send class="h-4 w-4" />
             Telegram
           </a>
 
           <a
-              href="mailto:ksulaimanov.dev@gmail.com"
-              class="inline-flex items-center gap-1.5 rounded-xl bg-white px-3 py-2 text-sm font-medium text-text-primary ring-1 ring-border-brand transition hover:bg-brand-soft hover:text-brand"
+              :href="`mailto:${SUPPORT_EMAIL}`"
+              class="inline-flex items-center gap-1.5 rounded-xl bg-surface px-3 py-2 text-sm font-medium text-text-primary ring-1 ring-border-brand transition hover:bg-brand-soft hover:text-brand"
+              aria-label="Contact support via email"
           >
-            <Mail class="h-4 w-4" />
-            Email
+            <Mail class="h-4 w-4 whitespace-nowrap" />
+             {{ SUPPORT_EMAIL }}
           </a>
+
+          <button
+              type="button"
+              class="inline-flex items-center gap-1.5 rounded-xl bg-surface px-3 py-2 text-sm font-medium text-text-primary ring-1 ring-border-brand transition hover:bg-brand-soft hover:text-brand"
+              aria-label="Copy support email"
+              @click="copyEmail"
+          >
+            📋 Copy
+          </button>
         </div>
       </div>
     </div>
@@ -35,7 +45,16 @@
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n'
 import { Send, Mail, HelpCircle } from 'lucide-vue-next'
+import { useToastStore } from '@/shared/lib/getApiErrorMessage'
 
 const { t } = useI18n()
+const toastStore = useToastStore()
+
+const SUPPORT_EMAIL = 'ksulaimanov.dev@gmail.com'
+
+const copyEmail = () => {
+  navigator.clipboard.writeText(SUPPORT_EMAIL)
+  toastStore.success('Email copied to clipboard')
+}
 </script>
 

@@ -1,11 +1,11 @@
 <template>
   <div class="flex min-h-screen flex-col bg-bg text-text-primary">
     <!-- ─── Header ─── -->
-    <header class="sticky top-0 z-30 border-b border-border-brand/60 bg-white/80 backdrop-blur-lg">
-      <div class="mx-auto flex max-w-6xl items-center justify-between px-4 py-3 sm:px-6 lg:py-4">
+    <header class="sticky top-0 z-30 border-b border-border-brand/60 bg-surface/80 backdrop-blur-lg">
+      <div class="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 sm:px-6 lg:py-4">
         <!-- Brand -->
         <RouterLink to="/" class="flex items-center gap-2 text-xl font-extrabold tracking-tight text-brand sm:text-2xl">
-          <span class="flex h-8 w-8 items-center justify-center rounded-xl bg-brand text-sm font-bold text-white">J</span>
+          <AppLogo class="h-8 w-8" />
           JaiMentorship
         </RouterLink>
 
@@ -32,9 +32,14 @@
           <template v-if="authStore.isAuthenticated">
             <RouterLink
                 :to="dashboardRoute"
-                class="rounded-xl bg-brand px-5 py-2.5 text-sm font-semibold text-white shadow-sm shadow-brand/20 transition hover:bg-brand-hover"
+                class="flex items-center gap-2.5 rounded-full border border-border-brand bg-surface p-1 pr-4 shadow-sm transition hover:bg-surface-secondary hover:shadow active:scale-[0.98]"
             >
-              {{ t('nav.dashboard') }}
+              <ProfileAvatar
+                :first-name="authStore.initials"
+                size="sm"
+                class="!h-8 !w-8 text-xs ring-0"
+              />
+              <span class="text-sm font-bold text-text-primary">{{ t('nav.dashboard') }}</span>
             </RouterLink>
           </template>
 
@@ -42,13 +47,13 @@
           <template v-else>
             <RouterLink
                 to="/login"
-                class="rounded-xl px-4 py-2 text-sm font-semibold text-text-primary transition hover:bg-brand-soft"
+                class="rounded-2xl px-5 py-2.5 text-sm font-bold text-text-primary transition hover:bg-surface-secondary active:scale-[0.98]"
             >
               {{ t('nav.login') }}
             </RouterLink>
             <RouterLink
                 to="/register"
-                class="rounded-xl bg-brand px-5 py-2.5 text-sm font-semibold text-white shadow-sm shadow-brand/20 transition hover:bg-brand-hover"
+                class="rounded-2xl bg-brand px-5 py-2.5 text-sm font-bold text-white shadow-sm transition hover:bg-brand-hover hover:-translate-y-0.5 active:scale-[0.98]"
             >
               {{ t('nav.register') }}
             </RouterLink>
@@ -62,22 +67,26 @@
           <template v-if="authStore.isAuthenticated">
             <RouterLink
                 :to="dashboardRoute"
-                class="rounded-xl bg-brand px-4 py-2.5 text-sm font-semibold text-white shadow-sm shadow-brand/20 transition hover:bg-brand-hover"
+                class="flex items-center justify-center p-1 rounded-full bg-surface shadow-sm border border-border-brand transition hover:bg-surface-secondary active:scale-95"
             >
-              {{ t('nav.dashboard') }}
+              <ProfileAvatar
+                :first-name="authStore.initials"
+                size="sm"
+                class="!h-9 !w-9 text-xs ring-0"
+              />
             </RouterLink>
           </template>
 
           <template v-else>
             <RouterLink
                 to="/login"
-                class="rounded-xl px-3 py-2 text-sm font-semibold text-text-primary transition hover:bg-brand-soft"
+                class="rounded-2xl px-4 py-2 text-sm font-bold text-text-primary transition hover:bg-surface-secondary"
             >
               {{ t('nav.login') }}
             </RouterLink>
             <RouterLink
                 to="/register"
-                class="rounded-xl bg-brand px-4 py-2.5 text-sm font-semibold text-white shadow-sm shadow-brand/20 transition hover:bg-brand-hover"
+                class="hidden sm:inline-flex rounded-2xl bg-brand px-5 py-2 text-sm font-bold text-white shadow-sm transition hover:bg-brand-hover hover:-translate-y-0.5"
             >
               {{ t('nav.register') }}
             </RouterLink>
@@ -92,7 +101,7 @@
     </main>
 
     <!-- ─── Ornament divider above footer ─── -->
-    <div class="mx-auto max-w-6xl px-4 pb-2 sm:px-6">
+    <div class="mx-auto max-w-7xl px-4 pb-2 sm:px-6">
       <KyrgyzDivider variant="subtle" size="sm" />
     </div>
 
@@ -108,6 +117,8 @@ import { useAuthStore } from '../../stores/authStore'
 import AppFooter from '../../shared/ui/AppFooter.vue'
 import LanguageSwitcher from '../../shared/ui/LanguageSwitcher.vue'
 import KyrgyzDivider from '../../shared/ui/KyrgyzDivider.vue'
+import AppLogo from '../../components/AppLogo.vue'
+import ProfileAvatar from '../../shared/ui/ProfileAvatar.vue'
 
 const { t } = useI18n()
 const authStore = useAuthStore()

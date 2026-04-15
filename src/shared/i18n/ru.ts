@@ -33,6 +33,13 @@ export default {
             OFFLINE: 'Офлайн',
             HYBRID: 'Гибрид',
         },
+        pagination: {
+            showing: 'Показано',
+            of: 'из',
+            perPage: 'На странице',
+            prevPage: 'Предыдущая страница',
+            nextPage: 'Следующая страница',
+        },
     },
 
     auth: {
@@ -150,6 +157,7 @@ export default {
         phoneInvalid: 'Введите корректный номер телефона',
         minLength: 'Минимум {min} символов',
         selectAtLeastOne: 'Выберите хотя бы один вариант',
+        urlInvalid: 'Неверный формат URL',
     },
 
     mentorGate: {
@@ -187,6 +195,8 @@ export default {
         motivationPlaceholder: 'Расскажите, что вас мотивирует делиться знаниями...',
         experience: 'Опыт работы и преподавания',
         experiencePlaceholder: 'Кратко опишите ваш профессиональный опыт...',
+        portfolioUrl: 'Ссылка на портфолио',
+        portfolioUrlPlaceholder: 'https://...',
         specializations: 'Специализации',
         specializationOptions: {
             programming: 'Программирование',
@@ -204,6 +214,7 @@ export default {
         submitSuccessDesc: 'Мы рассмотрим вашу заявку и свяжемся с вами по email. Вы можете проверить статус заявки по ссылке ниже.',
         submitFailed: 'Не удалось отправить заявку',
         submitErrorFallback: 'Попробуйте отправить заявку позже.',
+        alreadySubmitted: 'Заявка уже отправлена',
         checkStatus: 'Проверить статус заявки',
         hasAccount: 'Уже есть аккаунт ментора?',
         hasAccountLink: 'Войти',
@@ -268,6 +279,12 @@ export default {
             approveFailed: 'Не удалось одобрить заявку',
             rejectSuccess: 'Заявка отклонена',
             rejectFailed: 'Не удалось отклонить заявку',
+            confirmApproveTitle: 'Одобрить заявку?',
+            confirmApproveDescription: 'Вы уверены, что хотите одобрить заявку от {name}? Кандидат получит статус ментора.',
+            confirmApproveButton: 'Да, одобрить',
+            confirmRejectTitle: 'Отклонить заявку?',
+            confirmRejectDescription: 'Укажите причину отклонения заявки от {name}.',
+            confirmRejectButton: 'Отклонить заявку',
         },
     },
 
@@ -277,6 +294,7 @@ export default {
         unauthorized: 'Необходимо войти в аккаунт.',
         forbidden: 'Нет доступа.',
         notFound: 'Страница не найдена.',
+        rateLimited: 'Слишком много попыток. Пожалуйста, подождите немного.',
         generic: 'Произошла ошибка. Попробуйте ещё раз.',
     },
 
@@ -427,12 +445,6 @@ export default {
         sectionMain: 'Основное',
         sectionManagement: 'Управление',
         sectionActivity: 'Активность',
-    },
-
-    roles: {
-        student: 'Ученик',
-        mentor: 'Ментор',
-        admin: 'Админ',
     },
 
     privateNav: {

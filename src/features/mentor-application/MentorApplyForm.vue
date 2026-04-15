@@ -1,81 +1,77 @@
 <template>
-  <div class="space-y-6">
-    <InfoPanel v-if="submitted" variant="success">
-      <h2 class="text-lg font-semibold">{{ t('mentorApplication.submitSuccess') }}</h2>
-      <p class="mt-2 text-sm">
+  <div class="space-y-8">
+    <!-- Success state -->
+    <div
+      v-if="isSuccess"
+      class="rounded-2xl border border-green-500/20 bg-green-500/10 p-6 text-center"
+    >
+      <div class="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-green-500/20">
+        <svg class="h-6 w-6 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+        </svg>
+      </div>
+      <h3 class="mt-4 text-lg font-bold text-slate-900 dark:text-slate-300">
+        {{ t('mentorApplication.submitSuccess') }}
+      </h3>
+      <p class="mt-2 text-sm text-slate-600 dark:text-slate-400">
         {{ t('mentorApplication.submitSuccessDesc') }}
       </p>
-      <RouterLink
-          :to="{ path: '/mentor/application/status', query: { email: form.email, token: submittedToken } }"
-          class="mt-4 inline-flex rounded-xl bg-brand px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-brand-hover"
-      >
-        {{ t('mentorApplication.checkStatus') }}
-      </RouterLink>
-    </InfoPanel>
+    </div>
 
-    <form v-else class="space-y-5" @submit.prevent="handleSubmit">
-      <AppField :label="t('mentorApplication.name')" :error="showValidation ? nameError : ''" required>
-        <AppInput
-            v-model.trim="form.name"
-            :error="showValidation && !!nameError"
-            :placeholder="t('mentorApplication.namePlaceholder')"
+    <!-- Live Preview Card -->
+    <div v-if="!isSuccess" class="rounded-2xl border border-violet-100 bg-violet-50/50 p-5 dark:border-violet-800 dark:bg-violet-900/20">
+      <h3 class="mb-4 text-sm font-semibold text-slate-800 dark:text-slate-200">
+        Предпросмотр профиля для учеников
+      </h3>
+      <div class="flex items-start gap-4">
+        <!-- Replaced with requested AppAvatar / ProfileAvatar component with Violet-600 background -->
+        <ProfileAvatar
+            :first-name="authStore.initials"
+            size="lg"
+            class="!h-14 !w-14 !bg-gradient-to-br !from-violet-600 !to-indigo-500 !text-lg !font-bold !text-white !ring-2 !ring-white dark:!ring-slate-800"
         />
-      </AppField>
+        <div class="flex-1">
+          <div class="text-base font-bold text-slate-900 dark:text-white">
+            {{ authStore.displayName || 'Имя Фамилия' }}
+          </div>
+          <div class="mt-1 text-sm text-slate-600 dark:text-slate-400 line-clamp-2">
+            <span v-if="form.motivationText">{{ form.motivationText }}</span>
+            <span v-else class="italic opacity-60">Заполните поля ниже, чтобы увидеть, как будет выглядеть ваш профиль...</span>
+          </div>
+          <div v-if="form.portfolioUrl" class="mt-2 text-xs font-medium text-violet-600 dark:text-violet-400">
+            🔗 Портфолио прикреплено
+          </div>
+        </div>
+      </div>
+    </div>
 
-      <AppField :label="t('mentorApplication.email')" :error="showValidation ? emailError : ''" required>
-        <AppInput
-            v-model.trim="form.email"
-            type="email"
-            autocomplete="email"
-            :error="showValidation && !!emailError"
-            :placeholder="t('mentorApplication.emailPlaceholder')"
-        />
-      </AppField>
-
-      <AppField :label="t('mentorApplication.phone')" :error="showValidation ? phoneError : ''" required>
-        <AppInput
-            v-model.trim="form.phone"
-            type="tel"
-            :error="showValidation && !!phoneError"
-            :placeholder="t('mentorApplication.phonePlaceholder')"
-        />
-      </AppField>
-
-      <AppField :label="t('mentorApplication.motivation')" :error="showValidation ? motivationError : ''" required>
+    <!-- Form -->
+    <form v-if="!isSuccess" class="flex flex-col gap-6" @submit.prevent="handleSubmit">
+      <AppField :label="t('mentorApplication.motivation')" :error="showValidation ? motivationTextError : ''" required>
         <AppTextarea
-            v-model="form.motivation"
-            :error="showValidation && !!motivationError"
+            v-model="form.motivationText"
+            :error="showValidation && !!motivationTextError"
             :placeholder="t('mentorApplication.motivationPlaceholder')"
             rows="4"
         />
       </AppField>
 
-      <AppField :label="t('mentorApplication.experience')" :error="showValidation ? experienceError : ''" required>
+      <AppField :label="t('mentorApplication.experience')" :error="showValidation ? experienceSummaryError : ''" required>
         <AppTextarea
-            v-model="form.experience"
-            :error="showValidation && !!experienceError"
+            v-model="form.experienceSummary"
+            :error="showValidation && !!experienceSummaryError"
             :placeholder="t('mentorApplication.experiencePlaceholder')"
             rows="3"
         />
       </AppField>
 
-      <AppField :label="t('mentorApplication.specializations')" :error="showValidation ? specializationsError : ''" required>
-        <div class="grid gap-2 sm:grid-cols-2">
-          <label
-              v-for="(optLabel, key) in specializationOptions"
-              :key="key"
-              class="flex cursor-pointer items-center gap-3 rounded-2xl border p-3 transition"
-              :class="form.specializations.includes(key) ? 'border-brand bg-brand-soft/50' : 'border-border-brand hover:border-brand/40'"
-          >
-            <input
-                type="checkbox"
-                :checked="form.specializations.includes(key)"
-                class="h-4 w-4 shrink-0 cursor-pointer rounded border-border-brand text-brand focus:ring-brand-soft"
-                @change="toggleSpecialization(key)"
-            />
-            <span class="text-sm font-medium text-text-primary">{{ optLabel }}</span>
-          </label>
-        </div>
+      <AppField :label="t('mentorApplication.portfolioUrl')" :error="showValidation ? portfolioUrlError : ''">
+        <AppInput
+            v-model.trim="form.portfolioUrl"
+            type="url"
+            :error="showValidation && !!portfolioUrlError"
+            :placeholder="t('mentorApplication.portfolioUrlPlaceholder')"
+        />
       </AppField>
 
       <AppErrorState
@@ -84,20 +80,15 @@
           :description="errorMessage"
       />
 
-      <AppButton
-          type="submit"
-          size="lg"
-          :loading="loading"
-          class="w-full"
-      >
-        {{ loading ? t('mentorApplication.submitting') : t('mentorApplication.submit') }}
-      </AppButton>
-
-      <div class="text-center text-sm text-text-secondary">
-        {{ t('mentorApplication.hasAccount') }}
-        <RouterLink to="/login" class="font-semibold text-brand transition hover:text-brand-hover">
-          {{ t('mentorApplication.hasAccountLink') }}
-        </RouterLink>
+      <div class="pt-2">
+        <AppButton
+            type="submit"
+            size="lg"
+            :loading="loading"
+            class="w-full"
+        >
+          {{ loading ? t('mentorApplication.submitting') : t('mentorApplication.submit') }}
+        </AppButton>
       </div>
     </form>
   </div>
@@ -106,94 +97,59 @@
 <script setup lang="ts">
 import { computed, reactive, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { useAuthStore } from '../../stores/authStore'
 import { submitMentorApplication } from '../../shared/api/mentorApplicationApi'
 import { useErrorHandler } from '../../shared/composables/useErrorHandler'
-import { useAuthStore } from '../../stores/authStore'
 import AppField from '../../shared/ui/AppField.vue'
 import AppInput from '../../shared/ui/AppInput.vue'
 import AppTextarea from '../../shared/ui/AppTextarea.vue'
 import AppButton from '../../shared/ui/AppButton.vue'
 import AppErrorState from '../../shared/ui/AppErrorState.vue'
-import InfoPanel from '../../shared/ui/InfoPanel.vue'
+import ProfileAvatar from '../../shared/ui/ProfileAvatar.vue'
 
-const { t, tm } = useI18n()
-const { handleError } = useErrorHandler()
+const { t } = useI18n()
 const authStore = useAuthStore()
+const { handleError } = useErrorHandler()
 
 const form = reactive({
-  name: '',
-  email: authStore.email || '',
-  phone: '',
-  motivation: '',
-  experience: '',
-  specializations: [] as string[],
+  motivationText: '',
+  experienceSummary: '',
+  portfolioUrl: '',
 })
 
 const showValidation = ref(false)
 const loading = ref(false)
+const isSuccess = ref(false)
 const errorMessage = ref('')
-const submitted = ref(false)
-const submittedToken = ref('')
 
-const specializationOptions = computed(() => {
-  const raw = tm('mentorApplication.specializationOptions')
-  if (raw && typeof raw === 'object') {
-    const result: Record<string, string> = {}
-    for (const [key, val] of Object.entries(raw)) {
-      result[key] = typeof val === 'string' ? val : String(val)
-    }
-    return result
-  }
-  return {} as Record<string, string>
-})
-
-const nameError = computed(() => {
-  if (!form.name) return t('validation.required')
+const motivationTextError = computed(() => {
+  if (!form.motivationText) return t('validation.required')
+  if (form.motivationText.length < 50) return t('validation.minLength', { min: 50 })
+  if (form.motivationText.length > 2000) return t('validation.maxLength', { max: 2000 })
   return ''
 })
 
-const emailError = computed(() => {
-  if (!form.email) return t('validation.required')
-  const valid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)
-  return valid ? '' : t('validation.emailInvalid')
-})
-
-const phoneError = computed(() => {
-  if (!form.phone) return t('validation.required')
-  const valid = /^\+?[\d\s()-]{7,}$/.test(form.phone)
-  return valid ? '' : t('validation.phoneInvalid')
-})
-
-const motivationError = computed(() => {
-  if (!form.motivation) return t('validation.required')
-  return form.motivation.length >= 50 ? '' : t('validation.minLength', { min: 50 })
-})
-
-const experienceError = computed(() => {
-  if (!form.experience) return t('validation.required')
+const experienceSummaryError = computed(() => {
+  if (!form.experienceSummary) return t('validation.required')
+  if (form.experienceSummary.length < 10) return t('validation.minLength', { min: 10 })
+  if (form.experienceSummary.length > 2000) return t('validation.maxLength', { max: 2000 })
   return ''
 })
 
-const specializationsError = computed(() => {
-  return form.specializations.length === 0 ? t('validation.selectAtLeastOne') : ''
-})
-
-const toggleSpecialization = (key: string) => {
-  const index = form.specializations.indexOf(key)
-  if (index === -1) {
-    form.specializations.push(key)
-  } else {
-    form.specializations.splice(index, 1)
+const portfolioUrlError = computed(() => {
+  if (!form.portfolioUrl) return ''
+  try {
+    new URL(form.portfolioUrl)
+    return ''
+  } catch {
+    return t('validation.urlInvalid')
   }
-}
+})
 
 const hasErrors = computed(() =>
-    !!nameError.value ||
-    !!emailError.value ||
-    !!phoneError.value ||
-    !!motivationError.value ||
-    !!experienceError.value ||
-    !!specializationsError.value
+    !!motivationTextError.value ||
+    !!experienceSummaryError.value ||
+    !!portfolioUrlError.value
 )
 
 const handleSubmit = async () => {
@@ -205,23 +161,37 @@ const handleSubmit = async () => {
   loading.value = true
 
   try {
-    const response = await submitMentorApplication({
-      name: form.name,
-      email: form.email,
-      phone: form.phone,
-      motivation: form.motivation,
-      experience: form.experience,
-      specializations: form.specializations,
+    await submitMentorApplication({
+      motivationText: form.motivationText,
+      experienceSummary: form.experienceSummary,
+      portfolioUrl: form.portfolioUrl || undefined,
     })
 
-    submittedToken.value = response.token
-    submitted.value = true
+    isSuccess.value = true
   } catch (error: any) {
-    errorMessage.value = handleError(error, t('mentorApplication.submitErrorFallback'), { toast: false })
+    if (error?.response?.status === 409) {
+      errorMessage.value = t('mentorApplication.alreadySubmitted')
+    } else {
+      errorMessage.value = handleError(error, t('mentorApplication.submitErrorFallback'), { toast: false })
+    }
   } finally {
     loading.value = false
   }
 }
 </script>
 
+<style scoped>
+@reference "../../assets/main.css";
 
+/* Visual Contrast Cleanup for this form specifically */
+:deep(label) {
+  @apply text-slate-900 dark:text-slate-300 font-semibold;
+}
+:deep(.text-text-secondary) {
+  @apply text-slate-600 dark:text-slate-400;
+}
+:deep(textarea),
+:deep(input) {
+  @apply text-slate-900 dark:text-slate-200 bg-white dark:bg-slate-800 border-slate-300 dark:border-slate-600 placeholder:text-slate-400 dark:placeholder:text-slate-500;
+}
+</style>

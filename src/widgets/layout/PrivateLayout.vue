@@ -21,7 +21,7 @@
           </button>
 
           <RouterLink to="/" class="flex items-center gap-2 lg:hidden">
-            <span class="flex h-7 w-7 items-center justify-center rounded-lg bg-brand text-xs font-bold text-white">J</span>
+            <AppLogo class="h-7 w-7 shrink-0" />
             <span class="text-base font-extrabold tracking-tight text-text-primary">JaiMentorship</span>
           </RouterLink>
         </div>
@@ -68,6 +68,7 @@ import { Menu, LogOut } from 'lucide-vue-next'
 import { useAuthStore } from '../../stores/authStore'
 import SidebarNav from '../../widgets/sidebar/SidebarNav.vue'
 import LanguageSwitcher from '../../shared/ui/LanguageSwitcher.vue'
+import AppLogo from '../../components/AppLogo.vue'
 
 const { t } = useI18n()
 const router = useRouter()

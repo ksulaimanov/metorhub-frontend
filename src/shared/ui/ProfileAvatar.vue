@@ -1,19 +1,20 @@
 <template>
   <div
       :class="[
-        'relative flex shrink-0 items-center justify-center overflow-hidden rounded-full bg-brand-soft font-bold text-brand',
+        'relative flex shrink-0 items-center justify-center overflow-hidden rounded-2xl bg-gradient-to-br from-brand to-indigo-500 font-bold text-white shadow-sm ring-2 ring-surface transition-transform duration-300',
         sizeClasses[size],
         textClasses[size],
       ]"
   >
+    <div v-if="loading" class="absolute inset-0 animate-pulse bg-slate-200 dark:bg-slate-700" />
     <img
-        v-if="src"
+        v-else-if="src && !imgError"
         :src="src"
         :alt="alt"
-        class="absolute inset-0 h-full w-full object-cover"
+        class="absolute inset-0 h-full w-full object-cover transition-transform duration-500 hover:scale-105"
         @error="imgError = true"
     />
-    <span v-if="!src || imgError">{{ initials }}</span>
+    <span v-else-if="!loading" class="drop-shadow-sm">{{ initials }}</span>
   </div>
 </template>
 
@@ -26,9 +27,11 @@ const props = withDefaults(defineProps<{
   lastName?: string | null
   alt?: string
   size?: 'sm' | 'md' | 'lg' | 'xl'
+  loading?: boolean
 }>(), {
   size: 'md',
   alt: '',
+  loading: false,
 })
 
 const imgError = ref(false)

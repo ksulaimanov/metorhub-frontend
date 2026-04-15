@@ -8,6 +8,7 @@
             :last-name="lastName"
             :alt="t('mentorProfile.avatarAlt')"
             size="lg"
+            class="h-24 w-24 sm:h-28 sm:w-28 ring-2 ring-surface shadow-md shadow-slate-900/10"
         />
 
         <div class="min-w-0">

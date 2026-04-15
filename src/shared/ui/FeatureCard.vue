@@ -1,6 +1,6 @@
 <template>
-  <div class="rounded-2xl bg-white p-5 shadow-sm shadow-brand/5 ring-1 ring-border-brand/80">
-    <div v-if="$slots.icon" class="mb-3 flex h-10 w-10 items-center justify-center rounded-xl bg-brand-soft text-brand">
+  <div class="rounded-2xl bg-surface p-5 shadow-sm shadow-slate-900/10 ring-1 ring-border-brand/80 transition-shadow hover:shadow-md">
+    <div v-if="$slots.icon" class="mb-3 flex h-10 w-10 items-center justify-center rounded-xl bg-brand/10 text-brand dark:bg-brand/20">
       <slot name="icon" />
     </div>
     <h3 class="text-base font-semibold leading-snug text-text-primary">

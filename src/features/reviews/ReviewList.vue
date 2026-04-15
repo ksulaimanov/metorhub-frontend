@@ -16,7 +16,7 @@
 
     <!-- Loading -->
     <div v-if="loading" class="mt-4 space-y-3">
-      <div v-for="i in 2" :key="i" class="animate-pulse rounded-2xl bg-white p-5 ring-1 ring-border-brand/80">
+      <div v-for="i in 2" :key="i" class="animate-pulse rounded-2xl bg-surface p-5 ring-1 ring-border-brand/80">
         <div class="flex items-center gap-3">
           <div class="h-10 w-10 rounded-full bg-brand-soft" />
           <div class="flex-1 space-y-2">
@@ -51,7 +51,7 @@
       <button
           v-if="reviews.length > visibleCount"
           type="button"
-          class="w-full rounded-2xl border border-border-brand bg-white px-4 py-2.5 text-sm font-medium text-text-primary transition hover:bg-brand-soft"
+          class="w-full rounded-2xl border border-border-brand bg-surface px-4 py-2.5 text-sm font-medium text-text-primary transition hover:bg-brand-soft"
           @click="showAll = true"
       >
         {{ t('publicMentorProfile.showAllReviews', { count: reviews.length }) }}
