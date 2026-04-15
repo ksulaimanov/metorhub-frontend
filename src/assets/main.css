@@ -2,11 +2,11 @@
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@700&display=swap');
 
 @theme {
-    --color-brand: #7C3AED; /* Vibrant modern violet */
-    --color-brand-hover: #6D28D9;
-    --color-brand-active: #5B21B6;
-    --color-brand-soft: #F5F3FF;
-    --color-accent: #A78BFA;
+    --color-brand: #6b21a8; /* Deep purple */
+    --color-brand-hover: #581c87;
+    --color-brand-active: #4c1d95;
+    --color-brand-soft: #faf5ff;
+    --color-accent: #8b5cf6;
 
     --color-bg: var(--theme-bg);
     --color-surface: var(--theme-surface);
