@@ -45,7 +45,7 @@
           <AppCard padding="none" radius="lg">
             <table class="w-full text-left text-sm">
               <thead>
-                <tr class="border-b border-border-brand text-xs uppercase tracking-wide text-text-secondary">
+                <tr class="border-b border-border-brand text-xs uppercase tracking-wide text-slate-400">
                   <th class="px-5 py-3 font-medium">{{ t('admin.applications.colName') }}</th>
                   <th class="px-5 py-3 font-medium">{{ t('admin.applications.colEmail') }}</th>
                   <th class="px-5 py-3 font-medium">{{ t('admin.applications.colSpecializations') }}</th>
@@ -61,7 +61,7 @@
                   class="border-b border-border-brand last:border-b-0 hover:bg-brand-soft/30 transition cursor-pointer"
                   @click="goToDetail(item.id)"
                 >
-                  <td class="px-5 py-4 font-medium text-text-primary">{{ item.fullName }}</td>
+                  <td class="px-5 py-4 font-medium text-white">{{ item.fullName }}</td>
                   <td class="px-5 py-4 text-text-secondary">{{ item.email }}</td>
                   <td class="px-5 py-4 text-text-secondary">
                     {{ (item.specializations ?? []).join(', ') || '—' }}

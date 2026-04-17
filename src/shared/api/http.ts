@@ -20,6 +20,12 @@ http.interceptors.request.use((config) => {
         config.headers.Authorization = `Bearer ${token}`
     }
 
+    // Attach language from i18n
+    const currentLocale = i18n.global.locale.value
+    if (currentLocale) {
+        config.headers['Accept-Language'] = currentLocale
+    }
+
     return config
 })
 

@@ -36,18 +36,18 @@ withDefaults(defineProps<Props>(), {
 })
 
 const base =
-    'inline-flex items-center justify-center gap-2 rounded-2xl font-semibold transition-all duration-200 active:scale-[0.98] disabled:pointer-events-none disabled:opacity-50'
+    'inline-flex min-h-[44px] sm:min-h-0 items-center justify-center gap-2 rounded-2xl font-semibold transition-all duration-200 active:scale-[0.98] disabled:pointer-events-none disabled:opacity-50'
 
 const variants = {
-  primary: 'bg-brand text-white shadow-sm shadow-brand/10 hover:bg-brand-hover hover:shadow-md hover:-translate-y-0.5 active:bg-brand-active',
+  primary: 'bg-brand text-text-primary shadow-sm shadow-brand/10 hover:bg-brand-hover hover:shadow-md hover:-translate-y-0.5 active:bg-brand-active',
   secondary: 'border border-border-brand bg-surface text-text-primary hover:border-brand/40 hover:bg-surface-secondary hover:text-brand',
-  danger: 'bg-red-600 text-white hover:bg-red-700',
+  danger: 'bg-red-600 text-text-primary hover:bg-red-700',
   ghost: 'text-text-secondary hover:bg-surface-secondary hover:text-brand',
 } as const
 
 const sizes = {
-  sm: 'px-3 py-1.5 text-xs',
-  md: 'px-4 py-2.5 text-sm',
-  lg: 'px-6 py-3.5 text-base',
+  sm: 'px-4 py-2.5 sm:px-3 sm:py-1.5 text-sm sm:text-xs',
+  md: 'px-5 py-3.5 sm:px-4 sm:py-2.5 text-base sm:text-sm',
+  lg: 'px-6 py-4 sm:py-3.5 text-lg sm:text-base',
 } as const
 </script>

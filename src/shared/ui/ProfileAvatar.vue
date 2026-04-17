@@ -1,25 +1,27 @@
 <template>
   <div
-      :class="[
-        'relative flex shrink-0 items-center justify-center overflow-hidden rounded-2xl bg-gradient-to-br from-brand to-indigo-500 font-bold text-white shadow-sm ring-2 ring-surface transition-transform duration-300',
+      :class=" [
+        'relative flex shrink-0 items-center justify-center overflow-hidden rounded-2xl bg-gradient-to-br from-brand to-accent font-bold text-white shadow-sm ring-2 ring-surface transition-transform duration-300',
         sizeClasses[size],
         textClasses[size],
       ]"
   >
     <div v-if="loading" class="absolute inset-0 animate-pulse bg-slate-200 dark:bg-slate-700" />
     <img
-        v-else-if="src && !imgError"
+        v-if="!loading && src && !imgError"
         :src="src"
         :alt="alt"
         class="absolute inset-0 h-full w-full object-cover transition-transform duration-500 hover:scale-105"
         @error="imgError = true"
     />
-    <span v-else-if="!loading" class="drop-shadow-sm">{{ initials }}</span>
+    <span v-else-if="!loading && initials" class="drop-shadow-sm">{{ initials }}</span>
+    <User v-else-if="!loading" class="w-1/2 h-1/2 opacity-80 mix-blend-overlay" />
   </div>
 </template>
 
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue'
+import { User } from 'lucide-vue-next'
 
 const props = withDefaults(defineProps<{
   src?: string | null
@@ -43,7 +45,7 @@ watch(() => props.src, () => {
 const initials = computed(() => {
   const f = props.firstName?.trim()?.[0] || ''
   const l = props.lastName?.trim()?.[0] || ''
-  return (f + l).toUpperCase() || 'U'
+  return (f + l).toUpperCase() || ''
 })
 
 const sizeClasses: Record<string, string> = {
@@ -60,4 +62,3 @@ const textClasses: Record<string, string> = {
   xl: 'text-3xl',
 }
 </script>
-

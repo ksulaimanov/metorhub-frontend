@@ -51,6 +51,10 @@
             {{ t('nav.mentorBookings') }}
           </RouterLink>
         </template>
+      </nav>
+
+      <div class="flex items-center gap-3">
+        <NotificationBell v-if="authStore.isStudent" />
 
         <button
             class="hidden rounded-xl bg-brand px-4 py-2 text-white md:inline-flex"
@@ -58,7 +62,7 @@
         >
           {{ t('auth.logout') }}
         </button>
-      </nav>
+      </div>
     </div>
   </header>
 </template>
@@ -68,6 +72,7 @@ import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { useAuthStore } from '../../stores/authStore'
 import AppLogo from '../../components/AppLogo.vue'
+import NotificationBell from './NotificationBell.vue'
 
 const { t } = useI18n()
 const router = useRouter()

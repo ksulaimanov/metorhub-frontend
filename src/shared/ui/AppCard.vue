@@ -1,5 +1,5 @@
 <template>
-  <div :class="['bg-surface shadow-sm ring-1 ring-border-brand', radiusClass, paddingClass]">
+  <div :class="['bg-surface backdrop-blur-xl border border-border-brand shadow-[0_8px_30px_rgba(0,0,0,0.12)]', radiusClass, paddingClass]">
     <slot />
   </div>
 </template>

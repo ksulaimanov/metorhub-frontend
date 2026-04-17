@@ -1,7 +1,31 @@
-@import "tailwindcss";
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@700&display=swap');
+@import "tailwindcss";
 
 @theme {
+    --animate-aurora: aurora 60s linear infinite;
+
+    @keyframes aurora {
+      from {
+        background-position: 50% 50%, 50% 50%;
+      }
+      to {
+        background-position: 350% 50%, 350% 50%;
+      }
+    }
+
+    --animate-fade-in-up: fade-in-up 0.8s ease-out;
+
+    @keyframes fade-in-up {
+      0% {
+        opacity: 0;
+        transform: translateY(40px);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
     --color-brand: #6b21a8; /* Deep purple */
     --color-brand-hover: #581c87;
     --color-brand-active: #4c1d95;
@@ -27,38 +51,38 @@
 }
 
 :root {
-    --theme-bg: #FAFAFA;
-    --theme-surface: #FFFFFF;
-    --theme-surface-secondary: #F3F4F6;
-    --theme-text-primary: #1E293B; /* Modern slate */
-    --theme-text-secondary: #475569;
-    --theme-text-muted: #94A3B8;
-    --theme-border-brand: #E2E8F0;
-    --theme-border-subtle: #F1F5F9;
+    --theme-bg: transparent;
+    --theme-surface: rgba(255, 255, 255, 0.05); /* Glass surface */
+    --theme-surface-secondary: rgba(0, 0, 0, 0.2); /* Deeper glass */
+    --theme-text-primary: #FFFFFF; /* Pure white headings */
+    --theme-text-secondary: #94A3B8; /* Slate-400 equivalent */
+    --theme-text-muted: #64748B;
+    --theme-border-brand: rgba(255, 255, 255, 0.1); /* Glass border */
+    --theme-border-subtle: rgba(255, 255, 255, 0.05);
 }
 
 /* Base dark mode variable overrides */
 @media (prefers-color-scheme: dark) {
     :root {
-        --theme-bg: #0F172A; /* Slate 900 - professional dark, less pitch black */
-        --theme-surface: #1E293B; /* Slate 800 */
-        --theme-surface-secondary: #334155; /* Slate 700 */
-        --theme-text-primary: #F8FAFC;
+        --theme-bg: transparent;
+        --theme-surface: rgba(255, 255, 255, 0.05);
+        --theme-surface-secondary: rgba(0, 0, 0, 0.2);
+        --theme-text-primary: #FFFFFF;
         --theme-text-secondary: #94A3B8;
         --theme-text-muted: #64748B;
-        --theme-border-brand: #334155;
-        --theme-border-subtle: #1E293B;
+        --theme-border-brand: rgba(255, 255, 255, 0.1);
+        --theme-border-subtle: rgba(255, 255, 255, 0.05);
     }
 }
 html.dark {
-    --theme-bg: #0F172A;
-    --theme-surface: #1E293B;
-    --theme-surface-secondary: #334155;
-    --theme-text-primary: #F8FAFC;
+    --theme-bg: transparent;
+    --theme-surface: rgba(255, 255, 255, 0.05);
+    --theme-surface-secondary: rgba(0, 0, 0, 0.2);
+    --theme-text-primary: #FFFFFF;
     --theme-text-secondary: #94A3B8;
     --theme-text-muted: #64748B;
-    --theme-border-brand: #334155;
-    --theme-border-subtle: #1E293B;
+    --theme-border-brand: rgba(255, 255, 255, 0.1);
+    --theme-border-subtle: rgba(255, 255, 255, 0.05);
 }
 
 html, body, #app {
@@ -74,7 +98,7 @@ html, body, #app {
 
 /* Kyrgyz ornament pattern */
 .ornament-divider {
-    background-image: url("data:image/svg+xml,%3Csvg width='120' height='12' viewBox='0 0 120 12' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 6h10l5-5 5 5h10l5 5 5-5h10l5 5 5-5h10l5 5 5-5h10l5 5 5-5h10l5 5 5-5h10l5 5 5-5h10l5 5 5-5h10' stroke='%237B3FE4' stroke-width='1' fill='none' opacity='0.18'/%3E%3C/svg%3E");
+    background-image: url("data:image/svg+xml,%3Csvg width='120' height='12' viewBox='0 0 120 12' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 6h10l5-5 5 5h10l5 5 5-5h10l5 5 5-5h10l5 5 5-5h10l5 5 5-5h10l5 5 5-5h10l5 5 5-5h10l5 5 5-5h10l5 5 5-5h10' stroke='%236B21A8' stroke-width='1' fill='none' opacity='0.18'/%3E%3C/svg%3E");
     background-repeat: repeat-x;
     background-position: center;
     height: 12px;
@@ -82,6 +106,13 @@ html, body, #app {
 
 /* Subtle ornament background */
 .ornament-bg {
-    background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 5l5 10h10l-8 6 3 10-10-7-10 7 3-10-8-6h10z' fill='%237B3FE4' opacity='0.04'/%3E%3C/svg%3E");
+    background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 5l5 10h10l-8 6 3 10-10-7-10 7 3-10-8-6h10z' fill='%236B21A8' opacity='0.04'/%3E%3C/svg%3E");
     background-repeat: repeat;
+}
+
+/* Prevent zoom on mobile inputs */
+@media screen and (max-width: 768px) {
+    input, select, textarea {
+        font-size: 16px !important;
+    }
 }

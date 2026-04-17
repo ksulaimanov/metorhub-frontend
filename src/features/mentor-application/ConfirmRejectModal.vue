@@ -11,7 +11,7 @@
 
     <template #default>
       <div class="space-y-2">
-        <label class="block text-sm font-medium text-text-primary">
+        <label class="block text-sm font-medium text-white">
           {{ t('admin.applications.rejectReasonLabel') }}
         </label>
         <AppTextarea

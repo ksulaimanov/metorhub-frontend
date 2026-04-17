@@ -15,7 +15,7 @@
             class="rounded-full px-4 py-2 text-sm font-medium transition"
             :class="activeTab === tab.value
               ? 'bg-brand text-white'
-              : 'bg-surface text-text-secondary ring-1 ring-border-brand hover:bg-brand-soft'"
+              : 'bg-white/5 backdrop-blur-xl text-slate-400 ring-1 ring-border-brand hover:bg-brand-soft'"
             @click="activeTab = tab.value"
         >
           {{ tab.label }}
@@ -42,7 +42,7 @@
         <div class="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-brand-soft">
           <CalendarX class="h-6 w-6 text-brand" />
         </div>
-        <h3 class="mt-4 text-lg font-semibold text-text-primary">
+        <h3 class="mt-4 text-lg font-semibold text-white">
           {{ activeTab === 'all' ? t('studentBookings.emptyTitle') : t('studentBookings.emptyFilterTitle') }}
         </h3>
         <p class="mt-2 text-sm text-text-secondary">

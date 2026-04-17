@@ -6,43 +6,44 @@
   >
     <!-- Left info cards -->
     <template #cards>
-      <FeatureCard :title="t('auth.registerStudentCardTitle')" :description="t('auth.registerStudentCardDesc')" />
-      <FeatureCard>
+      <FeatureCard class="!bg-white/5 !border-white/10 !text-white" :title="t('auth.registerStudentCardTitle')" :description="t('auth.registerStudentCardDesc')" />
+      <FeatureCard class="!bg-white/5 !border-white/10 !text-white">
         <template #title>{{ t('auth.registerMentorPrompt') }}</template>
-        <RouterLink to="/mentor/apply" class="font-semibold text-brand underline transition hover:text-brand-hover">
+        <RouterLink to="/mentor/apply" class="font-semibold text-brand-soft underline transition hover:text-brand-hover">
           {{ t('auth.registerMentorPromptLink') }}
         </RouterLink>
       </FeatureCard>
     </template>
 
     <!-- Form -->
-    <h1 class="text-2xl font-bold text-text-primary sm:text-3xl">{{ t('auth.registerTitle') }}</h1>
-    <p class="mt-2 text-sm text-text-secondary">{{ t('auth.registerSubtitle') }}</p>
+    <h1 class="text-2xl font-bold text-white sm:text-3xl">{{ t('auth.registerTitle') }}</h1>
+    <p class="mt-2 text-sm text-slate-300">{{ t('auth.registerSubtitle') }}</p>
 
-    <form class="mt-8 space-y-5" @submit.prevent="handleRegister">
+    <form class="mt-8 space-y-2" @submit.prevent="handleRegister">
       <AppField :label="t('auth.email')" :error="showValidation ? emailError : ''">
         <AppInput
             v-model.trim="email"
             type="email"
             autocomplete="email"
+            class="text-white"
             :error="showValidation && !!emailError"
             :placeholder="t('auth.emailPlaceholder')"
         />
       </AppField>
 
-      <AppField :label="t('auth.password')" :error="showValidation ? passwordError : ''">
+      <AppField :label="t('auth.password')" :error="showValidation ? passwordError : ''" :hint="t('validation.passwordMin', { min: 8 })">
         <div class="relative">
           <AppInput
               v-model="password"
               :type="showPassword ? 'text' : 'password'"
               autocomplete="new-password"
+              class="pr-24 text-white"
               :error="showValidation && !!passwordError"
               :placeholder="t('auth.passwordPlaceholder')"
-              class="pr-24"
           />
           <button
               type="button"
-              class="absolute right-3 top-1/2 -translate-y-1/2 rounded-xl px-3 py-1.5 text-sm font-medium text-text-muted transition-colors hover:bg-surface hover:text-text-primary"
+              class="absolute right-3 top-1/2 -translate-y-1/2 rounded-xl px-3 py-1.5 text-sm font-medium text-slate-400 transition-colors hover:bg-white/10 hover:text-white"
               @click="showPassword = !showPassword"
           >
             {{ showPassword ? t('auth.hidePassword') : t('auth.showPassword') }}
@@ -50,47 +51,42 @@
         </div>
       </AppField>
 
-      <AppField :label="t('auth.confirmPassword')" :error="showValidation ? confirmPasswordError : ''">
+      <AppField :label="t('auth.passwordConfirm')" :error="showValidation ? passwordConfirmError : ''">
         <AppInput
-            v-model="confirmPassword"
+            v-model="passwordConfirm"
             :type="showPassword ? 'text' : 'password'"
             autocomplete="new-password"
-            :error="showValidation && !!confirmPasswordError"
-            :placeholder="t('auth.confirmPasswordPlaceholder')"
+            class="text-white"
+            :error="showValidation && !!passwordConfirmError"
+            :placeholder="t('auth.passwordConfirmPlaceholder')"
         />
       </AppField>
 
       <AppErrorState
           v-if="errorMessage"
+          class="!bg-red-500/10 !border-red-500/20"
           :title="t('auth.registerFailed')"
           :description="errorMessage"
       />
 
-      <InfoPanel v-if="successMessage" variant="success">
-        {{ successMessage }}
-      </InfoPanel>
+      <div class="pt-4">
+        <AppButton
+            type="submit"
+            size="lg"
+            :loading="loading"
+            class="w-full shadow-[0_0_20px_rgba(108,92,231,0.4)] transition-all hover:shadow-[0_4px_25px_rgba(108,92,231,0.6)]"
+        >
+          {{ loading ? t('auth.registerLoading') : t('auth.registerSubmit') }}
+        </AppButton>
+      </div>
 
-      <AppButton
-          type="submit"
-          size="lg"
-          :loading="loading"
-          class="w-full"
-      >
-        {{ loading ? t('auth.registerLoading') : t('auth.registerSubmit') }}
-      </AppButton>
-
-      <p class="text-center text-sm text-text-secondary">
+      <div class="mt-6">
+        <div class="h-[1px] w-full bg-gradient-to-r from-transparent via-white/20 to-transparent border-0" />
+      </div>
+      <p class="pt-6 text-center text-sm text-slate-300">
         {{ t('auth.hasAccount') }}
-        <RouterLink :to="loginLink" class="font-semibold text-brand transition hover:text-brand-hover">
+        <RouterLink :to="loginLink" class="font-semibold text-brand-soft transition hover:text-brand-hover hover:underline">
           {{ t('auth.loginSubmit') }}
-        </RouterLink>
-      </p>
-
-      <!-- Mentor prompt for mobile (visible only when left panel is hidden) -->
-      <p class="text-center text-sm text-text-secondary lg:hidden">
-        {{ t('auth.registerMentorPrompt') }}
-        <RouterLink to="/mentor/apply" class="font-semibold text-brand transition hover:text-brand-hover">
-          {{ t('auth.registerMentorPromptLink') }}
         </RouterLink>
       </p>
     </form>
@@ -106,7 +102,6 @@ import { useToastStore } from '../../shared/lib/getApiErrorMessage'
 import { useErrorHandler } from '../../shared/composables/useErrorHandler'
 import AuthSplitShell from '../../shared/ui/AuthSplitShell.vue'
 import FeatureCard from '../../shared/ui/FeatureCard.vue'
-import InfoPanel from '../../shared/ui/InfoPanel.vue'
 import AppErrorState from '../../shared/ui/AppErrorState.vue'
 import AppField from '../../shared/ui/AppField.vue'
 import AppInput from '../../shared/ui/AppInput.vue'
@@ -125,7 +120,7 @@ const loginLink = computed(() => {
 
 const email = ref('')
 const password = ref('')
-const confirmPassword = ref('')
+const passwordConfirm = ref('')
 const errorMessage = ref('')
 const successMessage = ref('')
 const loading = ref(false)
@@ -143,9 +138,9 @@ const passwordError = computed(() => {
   return password.value.length >= 8 ? '' : t('validation.passwordMin', { min: 8 })
 })
 
-const confirmPasswordError = computed(() => {
-  if (!confirmPassword.value) return t('validation.required')
-  return confirmPassword.value === password.value ? '' : t('validation.passwordMismatch')
+const passwordConfirmError = computed(() => {
+  if (!passwordConfirm.value) return t('validation.required')
+  return passwordConfirm.value === password.value ? '' : t('validation.passwordMismatch')
 })
 
 const handleRegister = async () => {
@@ -153,7 +148,7 @@ const handleRegister = async () => {
   errorMessage.value = ''
   successMessage.value = ''
 
-  if (emailError.value || passwordError.value || confirmPasswordError.value) {
+  if (emailError.value || passwordError.value || passwordConfirmError.value) {
     return
   }
 

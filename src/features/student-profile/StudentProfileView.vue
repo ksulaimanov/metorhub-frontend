@@ -8,7 +8,7 @@
       <div class="-mt-10 px-6 pb-6">
         <div class="flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
           <div class="flex items-end gap-5">
-            <div class="-my-4 rounded-3xl ring-4 ring-surface shadow-lg z-10 bg-surface">
+            <div class="-my-4 rounded-3xl ring-4 ring-surface shadow-lg z-10 bg-white/5 backdrop-blur-xl border border-white/10 shadow-[0_8px_30px_rgba(0,0,0,0.12)]">
               <ProfileAvatar
                   :src="profile.avatarUrl"
                   :first-name="profile.firstName"
@@ -20,8 +20,13 @@
             </div>
 
             <div class="min-w-0 pb-1">
-              <h2 class="text-2xl font-bold text-text-primary">{{ displayName }}</h2>
-              <p v-if="profile.city" class="mt-1 text-sm text-text-secondary">
+              <div class="flex items-center gap-3">
+                <h2 class="text-2xl font-bold text-white">{{ displayName }}</h2>
+                <span v-if="profile.username" class="rounded-lg bg-surface-secondary px-2.5 py-1 text-sm font-semibold tracking-wide text-brand/80">
+                  @{{ profile.username }}
+                </span>
+              </div>
+              <p v-if="profile.city" class="mt-1 text-sm text-slate-400">
                 {{ profile.city }}
               </p>
               <p v-else class="mt-1 text-sm text-text-muted">
@@ -49,11 +54,11 @@
     <div class="grid gap-4 sm:grid-cols-3">
       <AppCard>
         <div class="flex items-start gap-3">
-          <div class="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-brand-soft text-brand">
+          <div class="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-white/10 text-brand-soft shadow-[0_0_15px_rgba(108,92,231,0.2)] border border-white/5">
             <MapPin class="h-4 w-4" />
           </div>
           <div class="min-w-0">
-            <p class="text-sm text-text-secondary">{{ t('studentProfile.statCity') }}</p>
+            <p class="text-sm text-slate-400">{{ t('studentProfile.statCity') }}</p>
             <p class="mt-1 text-base font-semibold text-text-primary">
               {{ profile.city || t('studentProfile.viewCityNotSet') }}
             </p>
@@ -67,7 +72,7 @@
             <Globe class="h-4 w-4" />
           </div>
           <div class="min-w-0">
-            <p class="text-sm text-text-secondary">{{ t('studentProfile.viewTimezone') }}</p>
+            <p class="text-sm text-slate-400">{{ t('studentProfile.viewTimezone') }}</p>
             <p class="mt-1 text-base font-semibold text-text-primary">
               {{ profile.timezone || t('studentProfile.viewTimezoneNotSet') }}
             </p>
@@ -92,9 +97,9 @@
 
     <!-- About / Bio -->
     <AppCard>
-      <h3 class="text-lg font-semibold text-text-primary">{{ t('studentProfile.viewBio') }}</h3>
+      <h3 class="text-lg font-semibold text-text-primary">About / Learning Goals</h3>
       <p v-if="profile.bio" class="mt-3 whitespace-pre-line leading-relaxed text-text-secondary">{{ profile.bio }}</p>
-      <p v-else class="mt-3 text-sm italic text-text-muted">{{ t('studentProfile.viewNoBio') }}</p>
+      <p v-else class="mt-3 text-sm italic text-text-muted">Student hasn't added their learning goals yet.</p>
     </AppCard>
 
     <!-- Contacts -->
@@ -137,6 +142,7 @@ const { t } = useI18n()
 export interface StudentProfileData {
   firstName: string
   lastName: string
+  username?: string
   avatarUrl: string
   bio: string
   timezone: string

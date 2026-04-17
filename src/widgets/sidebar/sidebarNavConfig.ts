@@ -1,6 +1,7 @@
 import {
   LayoutDashboard,
   User,
+  Users,
   Calendar,
   CalendarDays,
   BookOpen,
@@ -63,6 +64,7 @@ export const adminNavGroups: SidebarNavGroup[] = [
   {
     labelKey: 'sidebar.sectionManagement',
     items: [
+      { label: 'Users', to: '/admin/users', icon: Users, i18nKey: 'sidebar.users' },
       { label: 'Applications', to: '/admin/mentor-applications', icon: FileText, i18nKey: 'sidebar.applications' },
     ],
   },

@@ -6,20 +6,21 @@
   >
     <!-- Left info cards -->
     <template #cards>
-      <FeatureCard :title="t('auth.loginHeroStudentTitle')" :description="t('auth.loginHeroStudentDesc')" />
-      <FeatureCard :title="t('auth.loginHeroMentorTitle')" :description="t('auth.loginHeroMentorDesc')" />
+      <FeatureCard class="!bg-surface !border-border-brand !text-text-primary" :title="t('auth.loginHeroStudentTitle')" :description="t('auth.loginHeroStudentDesc')" />
+      <FeatureCard class="!bg-surface !border-border-brand !text-text-primary" :title="t('auth.loginHeroMentorTitle')" :description="t('auth.loginHeroMentorDesc')" />
     </template>
 
     <!-- Form -->
     <h1 class="text-2xl font-bold text-text-primary sm:text-3xl">{{ t('auth.loginTitle') }}</h1>
     <p class="mt-2 text-sm text-text-secondary">{{ t('auth.loginSubtitle') }}</p>
 
-    <form class="mt-8 space-y-5" @submit.prevent="handleLogin">
+    <form class="mt-8 space-y-2" @submit.prevent="handleLogin">
       <AppField :label="t('auth.email')" :error="showValidation ? emailError : ''">
         <AppInput
             v-model.trim="email"
             type="email"
             autocomplete="email"
+            class="text-text-primary"
             :error="showValidation && !!emailError"
             :placeholder="t('auth.emailPlaceholder')"
         />
@@ -31,13 +32,13 @@
               v-model="password"
               :type="showPassword ? 'text' : 'password'"
               autocomplete="current-password"
+              class="pr-24 text-text-primary"
               :error="showValidation && !!passwordError"
               :placeholder="t('auth.passwordEnterPlaceholder')"
-              class="pr-24"
           />
           <button
               type="button"
-              class="absolute right-3 top-1/2 -translate-y-1/2 rounded-xl px-3 py-1.5 text-sm font-medium text-text-muted transition-colors hover:bg-surface hover:text-text-primary"
+              class="absolute right-3 top-1/2 -translate-y-1/2 rounded-xl px-3 py-1.5 text-sm font-medium text-text-muted transition-colors hover:bg-surface-secondary hover:text-text-primary"
               @click="showPassword = !showPassword"
           >
             {{ showPassword ? t('auth.hidePassword') : t('auth.showPassword') }}
@@ -47,14 +48,15 @@
 
       <AppErrorState
           v-if="errorMessage"
+          class="!bg-red-500/10 !border-red-500/20"
           :title="t('auth.loginFailed')"
           :description="errorMessage"
       />
 
-      <div class="text-right">
+      <div class="text-right pb-4">
         <RouterLink
             to="/forgot-password"
-            class="text-sm font-medium text-brand transition hover:text-brand-hover"
+            class="text-sm font-medium text-brand-soft transition hover:text-brand-hover hover:underline"
         >
           {{ t('auth.forgotPassword') }}
         </RouterLink>
@@ -64,11 +66,12 @@
       <InfoPanel
           v-if="errorMessage && isEmailNotVerifiedError"
           variant="muted"
+          class="!bg-surface border border-border-brand"
       >
         <p class="font-medium text-text-primary">{{ t('auth.loginNeedVerify') }}</p>
         <p class="mt-1 text-text-secondary">{{ t('auth.loginNeedVerifyDesc') }}</p>
         <RouterLink
-            class="mt-3 inline-flex rounded-xl bg-brand px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-brand-hover"
+            class="mt-3 inline-flex rounded-xl bg-brand px-4 py-2.5 text-sm font-semibold text-text-primary shadow-[0_0_15px_rgba(108,92,231,0.4)] transition hover:bg-brand-hover hover:-translate-y-0.5"
             :to="{ path: '/verify-email', query: { email } }"
         >
           {{ t('auth.loginGoVerify') }}
@@ -79,14 +82,17 @@
           type="submit"
           size="lg"
           :loading="loading"
-          class="w-full"
+          class="w-full shadow-[0_0_20px_rgba(108,92,231,0.4)] transition-all hover:shadow-[0_4px_25px_rgba(108,92,231,0.6)]"
       >
         {{ loading ? t('auth.loginLoading') : t('auth.loginSubmit') }}
       </AppButton>
 
-      <p class="text-center text-sm text-text-secondary">
+      <div class="mt-6">
+        <div class="h-[1px] w-full bg-gradient-to-r from-transparent via-white/20 to-transparent border-0" />
+      </div>
+      <p class="pt-6 text-center text-sm text-text-secondary">
         {{ t('auth.noAccount') }}
-        <RouterLink :to="registerLink" class="font-semibold text-brand transition hover:text-brand-hover">
+        <RouterLink :to="registerLink" class="font-semibold text-brand-soft transition hover:text-brand-hover hover:underline">
           {{ t('auth.registerSubmit') }}
         </RouterLink>
       </p>

@@ -14,6 +14,8 @@ const MentorSlotsPage = () => import('../../pages/mentor/MentorSlotsPage.vue')
 const MentorBookingsPage = () => import('../../pages/mentor/MentorBookingsPage.vue')
 const MentorDashboardPage = () => import('../../pages/mentor/MentorDashboardPage.vue')
 const AdminDashboardPage = () => import('../../pages/admin/AdminDashboardPage.vue')
+const AdminUsersPage = () => import('../../pages/admin/AdminUsersPage.vue')
+const AdminUserDetailPage = () => import('../../pages/admin/AdminUserDetailPage.vue')
 const AdminMentorApplicationsPage = () => import('../../pages/admin/AdminMentorApplicationsPage.vue')
 const AdminMentorApplicationDetailPage = () => import('../../pages/admin/AdminMentorApplicationDetailPage.vue')
 const VerifyEmailPage = () => import('../../pages/auth/VerifyEmailPage.vue')
@@ -26,7 +28,7 @@ const router = createRouter({
     history: createWebHistory(),
     routes: [
         // --- public ---
-        { path: '/', name: 'home', component: HomePage, meta: { title: 'JaiMentorship — Платформа для менторов и студентов' } },
+        { path: '/', name: 'home', component: HomePage, meta: { title: 'JaiMentorship — платформа для менторов и студентов' } },
         { path: '/about', name: 'about', component: AboutPage, meta: { title: 'О платформе — JaiMentorship' } },
         { path: '/mentors', name: 'mentor-directory', component: MentorDirectoryPage, meta: { title: 'Каталог менторов — JaiMentorship' } },
         { path: '/mentors/:id', name: 'public-mentor-profile', component: PublicMentorProfilePage, props: true, meta: { title: 'Профиль ментора — JaiMentorship' } },
@@ -53,6 +55,8 @@ const router = createRouter({
 
         // --- admin ---
         { path: '/admin/dashboard', name: 'admin-dashboard', component: AdminDashboardPage, meta: { requiresAuth: true, role: 'ROLE_ADMIN', title: 'Админ панель — JaiMentorship' } },
+        { path: '/admin/users', name: 'admin-users', component: AdminUsersPage, meta: { requiresAuth: true, role: 'ROLE_ADMIN', title: 'Пользователи — JaiMentorship' } },
+        { path: '/admin/users/:id', name: 'admin-user-detail', component: AdminUserDetailPage, props: true, meta: { requiresAuth: true, role: 'ROLE_ADMIN', title: 'Детали пользователя — JaiMentorship' } },
         { path: '/admin/mentor-applications', name: 'admin-mentor-applications', component: AdminMentorApplicationsPage, meta: { requiresAuth: true, role: 'ROLE_ADMIN', title: 'Заявки менторов — JaiMentorship' } },
         { path: '/admin/mentor-applications/:id', name: 'admin-mentor-application-detail', component: AdminMentorApplicationDetailPage, props: true, meta: { requiresAuth: true, role: 'ROLE_ADMIN', title: 'Заявка ментора — JaiMentorship' } },
 

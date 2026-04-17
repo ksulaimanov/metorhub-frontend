@@ -8,8 +8,8 @@
         size="sm"
     />
     <div class="min-w-0">
-      <p class="truncate text-base font-semibold text-text-primary">{{ displayName }}</p>
-      <p v-if="subtitle" class="text-sm text-text-secondary">{{ subtitle }}</p>
+      <p class="truncate text-base font-semibold text-white">{{ displayName }}</p>
+      <p v-if="subtitle" class="text-sm text-slate-400">{{ subtitle }}</p>
     </div>
   </div>
 </template>

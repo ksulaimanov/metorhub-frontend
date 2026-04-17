@@ -187,7 +187,7 @@ const handleSubmit = async () => {
 :deep(label) {
   @apply text-slate-900 dark:text-slate-300 font-semibold;
 }
-:deep(.text-text-secondary) {
+:deep(.text-slate-400) {
   @apply text-slate-600 dark:text-slate-400;
 }
 :deep(textarea),

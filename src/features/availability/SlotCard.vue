@@ -2,10 +2,10 @@
   <AppCard>
     <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
       <div class="min-w-0">
-        <p class="text-base font-semibold text-text-primary">
+        <p class="text-base font-semibold text-white">
           {{ formatDateTime(slot.startAt) }} — {{ formatDateTime(slot.endAt) }}
         </p>
-        <div class="mt-2 flex flex-wrap items-center gap-2 text-sm text-text-secondary">
+        <div class="mt-2 flex flex-wrap items-center gap-2 text-sm text-slate-400">
           <AppBadge>{{ t(`common.lessonFormat.${slot.lessonFormat}`, slot.lessonFormat) }}</AppBadge>
           <SlotStatusBadge :active="slot.active" :booked-count="slot.bookedCount" :capacity="slot.capacity" />
           <span v-if="slot.meetingLink" class="truncate">🔗 {{ t('availability.hasLink') }}</span>

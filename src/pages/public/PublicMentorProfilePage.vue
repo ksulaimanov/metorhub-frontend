@@ -125,8 +125,28 @@
               </div>
             </div>
 
+            <!-- Tabs -->
+            <div class="flex gap-4 border-b border-border-brand overflow-x-auto pb-px">
+              <button
+                class="px-4 py-2 font-medium text-sm transition-colors relative whitespace-nowrap"
+                :class="activeTab === 'about' ? 'text-brand' : 'text-text-secondary hover:text-text-primary'"
+                @click="activeTab = 'about'"
+              >
+                {{ t('publicMentorProfile.aboutMentor') }}
+                <div v-if="activeTab === 'about'" class="absolute bottom-0 left-0 right-0 h-0.5 bg-brand rounded-t-full"></div>
+              </button>
+              <button
+                class="px-4 py-2 font-medium text-sm transition-colors relative whitespace-nowrap"
+                :class="activeTab === 'reviews' ? 'text-brand' : 'text-text-secondary hover:text-text-primary'"
+                @click="activeTab = 'reviews'"
+              >
+                {{ t('publicMentorProfile.reviewsTitle') }} ({{ reviews.length }})
+                <div v-if="activeTab === 'reviews'" class="absolute bottom-0 left-0 right-0 h-0.5 bg-brand rounded-t-full"></div>
+              </button>
+            </div>
+
             <!-- ── About ── -->
-            <AppCard>
+            <AppCard v-if="activeTab === 'about'">
               <h2 class="text-xl font-semibold text-text-primary">{{ t('publicMentorProfile.aboutMentor') }}</h2>
               <p class="mt-4 whitespace-pre-line leading-8 text-text-secondary">{{ mentor.bio || t('publicMentorProfile.noBio') }}</p>
             </AppCard>
@@ -145,7 +165,7 @@
             </AppCard>
 
             <!-- ── Reviews ── -->
-            <AppCard>
+            <AppCard v-if="activeTab === 'reviews'">
               <ReviewList
                   :reviews="reviews"
                   :loading="reviewsLoading"
@@ -339,6 +359,8 @@ const toastStore = useToastStore()
 const route = useRoute()
 const router = useRouter()
 
+const activeTab = ref<'about' | 'reviews'>('about')
+
 const mentor = ref<PublicMentorProfile | null>(null)
 const loading = ref(false)
 const error = ref('')
@@ -459,6 +481,8 @@ const scrollToSlots = () => {
 
 onMounted(async () => {
   await loadMentor()
-  await Promise.all([loadSlots(), loadReviews()])
+  // Load slots and reviews without blocking the mentor profile display
+  loadSlots()
+  loadReviews()
 })
 </script>

@@ -43,7 +43,7 @@
               :placeholder="t('mentorSlots.capacityPlaceholder')"
           />
 
-          <div class="rounded-2xl bg-surface-secondary px-4 py-3 text-sm text-text-secondary ring-1 ring-border-brand">
+          <div class="rounded-2xl bg-white/5 backdrop-blur-xl-secondary px-4 py-3 text-sm text-slate-400 ring-1 ring-border-brand">
             {{ t('mentorSlots.capacityHint') }}
           </div>
 
@@ -95,7 +95,7 @@
           <div class="space-y-4">
             <div class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
               <div>
-                <p class="text-lg font-semibold text-text-primary">
+                <p class="text-lg font-semibold text-white">
                   {{ formatDateTime(slot.startAt) }} — {{ formatDateTime(slot.endAt) }}
                 </p>
 

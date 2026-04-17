@@ -24,8 +24,8 @@
         <!-- Header row -->
         <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <h1 class="text-2xl font-bold text-text-primary">{{ application.fullName }}</h1>
-            <p class="mt-1 text-sm text-text-secondary">{{ application.email }}</p>
+            <h1 class="text-2xl font-bold text-white">{{ application.fullName }}</h1>
+            <p class="mt-1 text-sm text-slate-400">{{ application.email }}</p>
           </div>
           <StatusBadge :status="application.status" />
         </div>

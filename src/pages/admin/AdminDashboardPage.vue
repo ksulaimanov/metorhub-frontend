@@ -3,8 +3,8 @@
     <div class="space-y-8">
       <!-- Header -->
       <div>
-        <h1 class="text-3xl font-bold text-text-primary">{{ t('adminDashboard.title') }}</h1>
-        <p class="mt-2 text-text-secondary">{{ t('adminDashboard.subtitle') }}</p>
+        <h1 class="text-3xl font-bold text-white">{{ t('adminDashboard.title') }}</h1>
+        <p class="mt-2 text-slate-400">{{ t('adminDashboard.subtitle') }}</p>
       </div>
 
       <!-- Stats Grid -->
@@ -12,7 +12,7 @@
       <div v-else class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         <AppCard>
           <div class="flex items-start gap-4">
-            <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-brand-soft text-brand">
+            <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white/10 text-brand-soft shadow-[0_0_15px_rgba(108,92,231,0.2)] border border-white/5">
               <CalendarIcon class="h-5 w-5" />
             </div>
             <div class="min-w-0">

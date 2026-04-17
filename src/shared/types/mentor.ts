@@ -27,6 +27,7 @@ export interface PublicMentorProfile {
     city: string | null
     pricePerHour: number | null
     averageRating: number | null
+    reviewsCount?: number | null
     lessonsCompleted: number | null
     verified: boolean
     hasAvailableSlots: boolean
@@ -45,6 +46,7 @@ export interface MentorDirectoryItem {
     city: string | null
     pricePerHour: number | null
     averageRating: number | null
+    reviewsCount?: number | null
     lessonsCompleted: number | null
     verified: boolean
     lessonFormatOnline: boolean

@@ -1,33 +1,37 @@
 <template>
   <!-- Desktop sidebar -->
   <aside
-      :class="[
-        'sidebar-transition hidden flex-col border-r border-white/5 bg-sidebar-bg lg:flex',
+      :class=" [
+        'sidebar-transition hidden flex-col border-r border-white/10 bg-white/5 backdrop-blur-3xl lg:flex',
         collapsed ? 'w-[68px]' : 'w-[240px]',
       ]"
   >
     <!-- Brand -->
-    <div class="flex h-16 items-center gap-2.5 border-b border-white/5 px-4" :class="collapsed ? 'justify-center' : ''">
-      <AppLogo class="h-8 w-8 shrink-0 text-white" />
-      <span v-if="!collapsed" class="text-base font-extrabold tracking-tight text-white">JaiMentorship</span>
+    <div class="flex h-16 items-center gap-2.5 px-4" :class="collapsed ? 'justify-center' : ''">
+      <AppLogo class="h-8 w-8 shrink-0 text-white drop-shadow-[0_0_10px_rgba(255,255,255,0.4)]" />
+      <span v-if="!collapsed" class="text-base font-extrabold tracking-tight text-white drop-shadow-[0_0_10px_rgba(255,255,255,0.3)]">JaiMentorship</span>
     </div>
+    <div class="mx-3 h-[1px] bg-gradient-to-r from-transparent via-white/20 to-transparent border-0" />
 
     <!-- User identity block -->
-    <div :class="['border-b border-white/5', collapsed ? 'px-3 py-3' : 'px-4 py-4']">
+    <div :class="[collapsed ? 'px-3 py-3' : 'px-4 py-4']">
       <div :class="['flex items-center', collapsed ? 'justify-center' : 'gap-3']">
         <ProfileAvatar
-          :first-name="authStore.initials"
+          :src="authStore.avatarUrl"
+          :first-name="authStore.firstName || authStore.initials"
+          :last-name="authStore.lastName"
           size="sm"
-          class="shrink-0 ring-offset-sidebar-bg"
+          class="shrink-0 ring-offset-transparent border border-white/20 shadow-[0_0_15px_rgba(108,92,231,0.3)]"
         />
         <div v-if="!collapsed" class="min-w-0 flex-1">
           <p class="truncate text-sm font-medium text-white">{{ authStore.displayName }}</p>
-          <span class="mt-0.5 inline-block rounded bg-sidebar-active px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-sidebar-text">
+          <span class="mt-0.5 inline-block rounded bg-brand/20 border border-brand/30 px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-brand-soft">
             {{ t(`roles.${role}`) }}
           </span>
         </div>
       </div>
     </div>
+    <div class="mx-3 h-[1px] bg-gradient-to-r from-transparent via-white/20 to-transparent border-0" />
 
     <!-- Grouped nav items -->
     <nav class="flex-1 overflow-y-auto px-3 py-3">
@@ -50,7 +54,8 @@
     </nav>
 
     <!-- Bottom section -->
-    <div class="space-y-1 border-t border-white/5 px-3 py-4">
+    <div class="space-y-1 px-3 py-4">
+      <div class="h-[1px] bg-gradient-to-r from-transparent via-white/20 to-transparent border-0" />
       <SidebarNavItem
           to="/mentors"
           :label="t('sidebar.browseMentors')"
@@ -78,7 +83,7 @@
         <div class="fixed inset-0 bg-black/40" @click="$emit('close-mobile')" />
         <aside class="relative flex w-[260px] flex-col bg-sidebar-bg shadow-xl">
           <!-- Brand -->
-          <div class="flex h-16 items-center justify-between border-b border-white/5 px-4">
+          <div class="flex h-16 items-center justify-between px-4">
             <div class="flex items-center gap-2.5">
               <AppLogo class="h-8 w-8 shrink-0 text-white" />
               <span class="text-base font-extrabold tracking-tight text-white">JaiMentorship</span>
@@ -87,12 +92,15 @@
               <X class="h-5 w-5" />
             </button>
           </div>
+          <div class="mx-3 h-[1px] bg-gradient-to-r from-transparent via-white/20 to-transparent border-0" />
 
           <!-- Mobile user identity -->
-          <div class="border-b border-white/5 px-4 py-4">
+          <div class="px-4 py-4">
             <div class="flex items-center gap-3">
               <ProfileAvatar
-                :first-name="authStore.initials"
+                :src="authStore.avatarUrl"
+                :first-name="authStore.firstName || authStore.initials"
+                :last-name="authStore.lastName"
                 size="sm"
                 class="shrink-0 ring-offset-sidebar-bg"
               />
@@ -104,6 +112,7 @@
               </div>
             </div>
           </div>
+          <div class="mx-3 h-[1px] bg-gradient-to-r from-transparent via-white/20 to-transparent border-0" />
 
           <!-- Mobile grouped nav -->
           <nav class="flex-1 overflow-y-auto px-3 py-3" @click="$emit('close-mobile')">
@@ -123,7 +132,8 @@
             </div>
           </nav>
 
-          <div class="space-y-1 border-t border-white/5 px-3 py-4" @click="$emit('close-mobile')">
+          <div class="space-y-1 px-3 py-4" @click="$emit('close-mobile')">
+            <div class="h-[1px] bg-gradient-to-r from-transparent via-white/20 to-transparent border-0" />
             <SidebarNavItem
                 to="/mentors"
                 :label="t('sidebar.browseMentors')"

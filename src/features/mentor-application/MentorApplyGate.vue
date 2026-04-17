@@ -10,17 +10,17 @@
 
     <!-- Benefits list -->
     <div class="space-y-3">
-      <div class="flex items-start gap-3 rounded-xl bg-surface-secondary p-3.5">
+      <div class="flex items-start gap-3 rounded-xl bg-white/5 backdrop-blur-xl border border-white/10 shadow-[0_8px_30px_rgba(0,0,0,0.12)]-secondary p-3.5">
         <CheckCircle2 class="mt-0.5 h-4 w-4 shrink-0 text-brand" />
-        <p class="text-sm text-text-secondary">{{ t('mentorGate.benefit1') }}</p>
+        <p class="text-sm text-slate-400">{{ t('mentorGate.benefit1') }}</p>
       </div>
       <div class="flex items-start gap-3 rounded-xl bg-surface-secondary p-3.5">
         <CheckCircle2 class="mt-0.5 h-4 w-4 shrink-0 text-brand" />
-        <p class="text-sm text-text-secondary">{{ t('mentorGate.benefit2') }}</p>
+        <p class="text-sm text-slate-400">{{ t('mentorGate.benefit2') }}</p>
       </div>
       <div class="flex items-start gap-3 rounded-xl bg-surface-secondary p-3.5">
         <CheckCircle2 class="mt-0.5 h-4 w-4 shrink-0 text-brand" />
-        <p class="text-sm text-text-secondary">{{ t('mentorGate.benefit3') }}</p>
+        <p class="text-sm text-slate-400">{{ t('mentorGate.benefit3') }}</p>
       </div>
     </div>
 
@@ -34,7 +34,7 @@
         </RouterLink>
         <RouterLink
             :to="registerLink"
-            class="flex w-full items-center justify-center rounded-2xl border border-border-brand bg-surface px-5 py-3 text-sm font-semibold text-text-primary transition hover:bg-brand-soft active:scale-[0.98]"
+            class="flex w-full items-center justify-center rounded-2xl border border-border-brand bg-surface px-5 py-3 text-sm font-semibold text-white transition hover:bg-brand-soft active:scale-[0.98]"
         >
           {{ t('mentorGate.registerAction') }}
         </RouterLink>

@@ -1,19 +1,19 @@
 <template>
   <div class="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
     <AppCard>
-      <p class="text-sm text-text-secondary">{{ t('mentorProfile.statRating') }}</p>
+      <p class="text-sm text-slate-400">{{ t('mentorProfile.statRating') }}</p>
       <div class="mt-2">
         <StarRating :rating="averageRating" class="text-xl" />
       </div>
     </AppCard>
 
     <AppCard>
-      <p class="text-sm text-text-secondary">{{ t('mentorProfile.statLessons') }}</p>
-      <p class="mt-2 text-2xl font-bold text-text-primary">{{ lessonsCompleted }}</p>
+      <p class="text-sm text-slate-400">{{ t('mentorProfile.statLessons') }}</p>
+      <p class="mt-2 text-2xl font-bold text-white">{{ lessonsCompleted }}</p>
     </AppCard>
 
     <AppCard>
-      <p class="text-sm text-text-secondary">{{ t('mentorProfile.statVisibility') }}</p>
+      <p class="text-sm text-slate-400">{{ t('mentorProfile.statVisibility') }}</p>
       <div class="mt-3">
         <AppBadge :variant="isPublic ? 'success' : 'default'">
           {{ isPublic ? t('mentorProfile.publicProfile') : t('mentorProfile.hiddenProfile') }}

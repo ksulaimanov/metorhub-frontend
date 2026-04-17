@@ -4,8 +4,8 @@
     <AppCard>
       <div class="space-y-6">
         <div>
-          <h2 class="text-xl font-semibold text-text-primary">{{ t('mentorProfile.sectionMain') }}</h2>
-          <p class="mt-1 text-sm text-text-secondary">{{ t('mentorProfile.sectionMainHint') }}</p>
+          <h2 class="text-xl font-semibold text-white">{{ t('mentorProfile.sectionMain') }}</h2>
+          <p class="mt-1 text-sm text-slate-400">{{ t('mentorProfile.sectionMainHint') }}</p>
         </div>
 
         <div class="grid gap-4 md:grid-cols-2">
@@ -34,7 +34,7 @@
                 v-model.number="form.yearsExperience"
                 type="number"
                 min="0"
-                class="w-full rounded-2xl border border-border-brand bg-surface px-4 py-3 text-sm outline-none transition placeholder:text-text-secondary/60 focus:border-brand focus:ring-2 focus:ring-brand-soft"
+                class="w-full rounded-2xl border border-border-brand bg-white/5 backdrop-blur-xl border border-white/10 shadow-[0_8px_30px_rgba(0,0,0,0.12)] px-4 py-3 text-sm outline-none transition placeholder:text-slate-400/60 focus:border-brand focus:ring-2 focus:ring-brand-soft"
                 :placeholder="t('mentorProfile.yearsExperiencePlaceholder')"
             />
           </AppField>
@@ -44,7 +44,7 @@
                 v-model.number="form.pricePerHour"
                 type="number"
                 min="0"
-                class="w-full rounded-2xl border border-border-brand bg-surface px-4 py-3 text-sm outline-none transition placeholder:text-text-secondary/60 focus:border-brand focus:ring-2 focus:ring-brand-soft"
+                class="w-full rounded-2xl border border-border-brand bg-surface px-4 py-3 text-sm outline-none transition placeholder:text-slate-400/60 focus:border-brand focus:ring-2 focus:ring-brand-soft"
                 :placeholder="t('mentorProfile.pricePerHourPlaceholder')"
             />
           </AppField>

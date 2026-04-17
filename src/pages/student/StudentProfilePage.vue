@@ -41,14 +41,14 @@
                 />
 
                 <div class="min-w-0">
-                  <h2 class="text-xl font-semibold text-text-primary">{{ fullName }}</h2>
-                  <p class="mt-1 text-sm text-text-secondary">{{ t('studentProfile.avatarHint') }}</p>
+                  <h2 class="text-xl font-semibold text-white">{{ fullName }}</h2>
+                  <p class="mt-1 text-sm text-slate-400">{{ t('studentProfile.avatarHint') }}</p>
                 </div>
               </div>
 
               <div class="flex shrink-0 flex-col gap-3 sm:flex-row">
                 <label
-                    class="inline-flex cursor-pointer items-center justify-center rounded-2xl border border-border-brand bg-surface px-4 py-3 text-sm font-semibold text-text-primary transition hover:bg-brand-soft disabled:cursor-not-allowed disabled:opacity-50"
+                    class="inline-flex cursor-pointer items-center justify-center rounded-2xl border border-border-brand bg-white/5 backdrop-blur-xl px-4 py-3 text-sm font-semibold text-text-primary transition hover:bg-brand-soft disabled:cursor-not-allowed disabled:opacity-50"
                 >
                   <input type="file" class="hidden" accept="image/png,image/jpeg,image/webp" :disabled="avatarUploading" @change="handleAvatarUpload" />
                   {{ avatarUploading ? t('studentProfile.uploadingPhoto') : t('studentProfile.uploadPhoto') }}
@@ -107,12 +107,12 @@
             <AppCard>
               <div class="space-y-6">
                 <div>
-                  <h2 class="text-xl font-semibold text-text-primary">{{ t('studentProfile.sectionBio') }}</h2>
-                  <p class="mt-1 text-sm text-text-secondary">{{ t('studentProfile.sectionBioHint') }}</p>
+                  <h2 class="text-xl font-semibold text-text-primary">About / Learning Goals</h2>
+                  <p class="mt-1 text-sm text-text-secondary">This information will be displayed to your mentors to help them prepare for lessons with you.</p>
                 </div>
 
-                <AppField :label="t('studentProfile.bioLabel')" :hint="t('studentProfile.bioHint')">
-                  <AppTextarea v-model="form.bio" :placeholder="t('studentProfile.bioPlaceholder')" rows="5" />
+                <AppField label="Tell us about yourself and your tech goals" hint="Minimum 50 characters is recommended.">
+                  <AppTextarea v-model="form.bio" placeholder="E.g., I want to learn frontend development to build my own startup..." rows="5" />
                 </AppField>
               </div>
             </AppCard>

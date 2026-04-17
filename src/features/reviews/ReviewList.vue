@@ -3,7 +3,7 @@
     <!-- Summary header -->
     <div class="flex flex-wrap items-center justify-between gap-4">
       <div class="flex items-center gap-3">
-        <h2 class="text-xl font-semibold text-text-primary">{{ t('publicMentorProfile.reviewsTitle') }}</h2>
+        <h2 class="text-xl font-semibold text-white">{{ t('publicMentorProfile.reviewsTitle') }}</h2>
         <span v-if="reviews.length" class="rounded-full bg-brand-soft px-2.5 py-0.5 text-xs font-medium text-brand">
           {{ reviews.length }}
         </span>
@@ -16,7 +16,7 @@
 
     <!-- Loading -->
     <div v-if="loading" class="mt-4 space-y-3">
-      <div v-for="i in 2" :key="i" class="animate-pulse rounded-2xl bg-surface p-5 ring-1 ring-border-brand/80">
+      <div v-for="i in 3" :key="i" class="animate-pulse rounded-2xl bg-white/5 backdrop-blur-xl border border-white/10 shadow-[0_8px_30px_rgba(0,0,0,0.12)] p-5 ring-1 ring-border-brand/80">
         <div class="flex items-center gap-3">
           <div class="h-10 w-10 rounded-full bg-brand-soft" />
           <div class="flex-1 space-y-2">
@@ -38,7 +38,7 @@
         <MessageSquare class="h-5 w-5 text-brand" />
       </div>
       <p class="mt-3 text-sm font-medium text-text-primary">{{ t('publicMentorProfile.noReviewsTitle') }}</p>
-      <p class="mt-1 text-xs text-text-secondary">{{ t('publicMentorProfile.noReviewsHint') }}</p>
+      <p class="mt-1 text-xs text-slate-400">{{ t('publicMentorProfile.noReviewsHint') }}</p>
     </div>
 
     <!-- Reviews -->
@@ -91,4 +91,3 @@ const averageRating = computed(() => {
   return sum / props.reviews.length
 })
 </script>
-

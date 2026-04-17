@@ -15,7 +15,7 @@
             class="rounded-full px-4 py-2 text-sm font-medium transition"
             :class="activeTab === tab.value
               ? 'bg-brand text-white'
-              : 'bg-surface text-text-secondary ring-1 ring-border-brand hover:bg-brand-soft'"
+              : 'bg-white/5 backdrop-blur-xl text-slate-400 ring-1 ring-border-brand hover:bg-brand-soft'"
             @click="activeTab = tab.value"
         >
           {{ tab.label }}
@@ -42,7 +42,7 @@
         <div class="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-brand-soft">
           <CalendarX class="h-6 w-6 text-brand" />
         </div>
-        <h3 class="mt-4 text-lg font-semibold text-text-primary">
+        <h3 class="mt-4 text-lg font-semibold text-white">
           {{ activeTab === 'all' ? t('mentorBookings.emptyTitle') : t('mentorBookings.emptyFilterTitle') }}
         </h3>
         <p class="mt-2 text-sm text-text-secondary">
@@ -59,12 +59,16 @@
 
       <!-- ─── Booking cards ─── -->
       <div v-else class="grid gap-4">
-        <AppCard v-for="booking in filteredBookings" :key="booking.id" radius="lg" padding="md">
+        <AppCard v-for="booking in filteredBookings" :key="booking.id" radius="lg" padding="md" class="group transition-all hover:ring-brand/40">
           <div class="flex flex-col gap-5">
             <!-- Header row: student info + status -->
             <div class="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
               <!-- Student info -->
-              <div class="flex items-center gap-3.5">
+              <div
+                class="flex items-center gap-3.5 cursor-pointer rounded-xl p-1.5 -ml-1.5 transition-colors hover:bg-surface-secondary"
+                @click="openStudentPreview(booking)"
+                title="Click to view student details"
+              >
                 <div class="flex h-11 w-11 shrink-0 items-center justify-center overflow-hidden rounded-full bg-brand-soft text-sm font-bold text-brand">
                   <img
                       v-if="booking.studentAvatarUrl"
@@ -152,13 +156,28 @@
         </AppCard>
       </div>
     </div>
+
+    <!-- Student Preview Side Panel -->
+    <Teleport to="body">
+      <Transition name="slide-panel">
+        <div v-if="previewStudent" class="fixed inset-0 z-50 flex justify-end">
+          <div class="fixed inset-0 bg-black/20 backdrop-blur-sm transition-opacity" @click="closeStudentPreview" />
+          <div class="relative w-full max-w-sm h-full bg-surface shadow-2xl flex flex-col">
+            <button @click="closeStudentPreview" class="absolute top-4 right-4 z-20 p-2 rounded-full bg-surface/50 backdrop-blur-md text-text-secondary hover:text-text-primary hover:bg-surface transition-colors">
+              <X class="h-5 w-5" />
+            </button>
+            <StudentPreviewCard :student="previewStudent" />
+          </div>
+        </div>
+      </Transition>
+    </Teleport>
   </PrivateLayout>
 </template>
 
 <script setup lang="ts">
 import { computed, onMounted, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { CalendarX } from 'lucide-vue-next'
+import { CalendarX, X } from 'lucide-vue-next'
 import { getMentorBookings, updateMentorBookingStatus } from '@/shared/api/bookingApi'
 import { useErrorHandler } from '@/shared/composables/useErrorHandler'
 import { formatDateTimeForDisplay } from '@/shared/lib/dateFormatter'
@@ -170,6 +189,7 @@ import AppBadge from '@/shared/ui/AppBadge.vue'
 import AppButton from '@/shared/ui/AppButton.vue'
 import AppLoadingState from '@/shared/ui/AppLoadingState.vue'
 import AppErrorState from '@/shared/ui/AppErrorState.vue'
+import StudentPreviewCard from '@/features/bookings/StudentPreviewCard.vue'
 
 const { t } = useI18n()
 const { handleError, handleSuccess } = useErrorHandler()
@@ -181,6 +201,24 @@ const loading = ref(false)
 const pageError = ref('')
 const updatingId = ref<number | null>(null)
 const activeTab = ref<BookingStatus | 'all'>('all')
+
+const previewStudent = ref<any>(null)
+
+const openStudentPreview = (booking: MentorBookingItem) => {
+  // In a real app, this could fetch full student profile from API
+  previewStudent.value = {
+    firstName: booking.studentFirstName,
+    lastName: booking.studentLastName,
+    avatarUrl: booking.studentAvatarUrl,
+    learningGoals: booking.studentNote, // fallback to note if no bio
+    completedLessons: Math.floor(Math.random() * 5), // placeholder stats
+    activeCourses: Math.floor(Math.random() * 2) + 1, // placeholder stats
+  }
+}
+
+const closeStudentPreview = () => {
+  previewStudent.value = null
+}
 
 // ─── Tabs ───────────────────────────────────────────────────────────────────
 
@@ -296,3 +334,20 @@ const statusVariant = (value: BookingStatus): 'default' | 'success' | 'warning' 
 
 onMounted(loadBookings)
 </script>
+
+<style scoped>
+.slide-panel-enter-active,
+.slide-panel-leave-active {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.slide-panel-enter-from,
+.slide-panel-leave-to {
+  opacity: 0;
+}
+.slide-panel-enter-from > div:last-child {
+  transform: translateX(100%);
+}
+.slide-panel-leave-to > div:last-child {
+  transform: translateX(100%);
+}
+</style>

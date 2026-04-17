@@ -9,12 +9,12 @@
 
 export const colors = {
     primary: {
-        DEFAULT: '#5B3FD3',   // brand purple
-        hover: '#4C31BF',     // brand hover
-        soft: '#EEE9FF',      // brand soft bg
+        DEFAULT: '#6b21a8',   // deep brand purple
+        hover: '#581c87',     // brand hover
+        soft: '#faf5ff',      // brand soft bg
     },
     accent: {
-        DEFAULT: '#8B7BFF',   // accent purple
+        DEFAULT: '#8b5cf6',   // accent purple
     },
     success: {
         DEFAULT: '#16a34a',
