@@ -7,7 +7,7 @@
     <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
       <defs>
         <pattern
-          id="kyrgyz-pattern"
+          :id="patternId"
           :width="patternSize"
           :height="patternSize"
           patternUnits="userSpaceOnUse"
@@ -32,7 +32,7 @@
         </pattern>
       </defs>
       <!-- Base pattern fill -->
-      <rect width="100%" height="100%" fill="url(#kyrgyz-pattern)" class="text-brand dark:text-zinc-500" />
+      <rect width="100%" height="100%" :fill="`url(#${patternId})`" class="text-brand dark:text-zinc-500" />
     </svg>
     <!-- Dark/Light gradient to fade pattern naturally -->
     <div v-if="fade" class="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-bg"></div>
@@ -40,7 +40,9 @@
 </template>
 
 <script setup lang="ts">
-const props = withDefaults(defineProps<{
+import { getCurrentInstance } from 'vue'
+
+withDefaults(defineProps<{
   opacity?: number
   scale?: number
   patternSize?: number
@@ -51,5 +53,6 @@ const props = withDefaults(defineProps<{
   patternSize: 40,
   fade: true
 })
-</script>
 
+const patternId = `kyrgyz-pattern-${getCurrentInstance()?.uid ?? 'default'}`
+</script>
