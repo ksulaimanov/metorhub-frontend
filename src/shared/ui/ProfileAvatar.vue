@@ -8,8 +8,8 @@
   >
     <div v-if="loading" class="absolute inset-0 animate-pulse bg-slate-200 dark:bg-slate-700" />
     <img
-        v-if="!loading && src && !imgError"
-        :src="src"
+        v-if="!loading && resolvedSrc && !imgError"
+        :src="resolvedSrc"
         :alt="alt"
         class="absolute inset-0 h-full w-full object-cover transition-transform duration-500 hover:scale-105"
         @error="imgError = true"
@@ -22,6 +22,7 @@
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue'
 import { User } from 'lucide-vue-next'
+import { resolveMediaUrl } from '@/shared/lib/resolveMediaUrl'
 
 const props = withDefaults(defineProps<{
   src?: string | null
@@ -41,6 +42,8 @@ const imgError = ref(false)
 watch(() => props.src, () => {
   imgError.value = false
 })
+
+const resolvedSrc = computed(() => resolveMediaUrl(props.src))
 
 const initials = computed(() => {
   const f = props.firstName?.trim()?.[0] || ''

@@ -50,9 +50,9 @@
 import { ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { XCircle } from 'lucide-vue-next'
-import AppModal from '../../shared/ui/AppModal.vue'
-import AppButton from '../../shared/ui/AppButton.vue'
-import AppTextarea from '../../shared/ui/AppTextarea.vue'
+import AppModal from '@/shared/ui/AppModal.vue'
+import AppButton from '@/shared/ui/AppButton.vue'
+import AppTextarea from '@/shared/ui/AppTextarea.vue'
 
 const { t } = useI18n()
 

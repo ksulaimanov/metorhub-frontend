@@ -1,4 +1,4 @@
-import type { MentorApplicationStatus } from './mentorApplication'
+import type { MentorApplicationStatus } from '@/shared/types/mentorApplication'
 
 /** Single item in the admin applications list */
 export interface AdminMentorApplicationListItem {

@@ -151,16 +151,16 @@ import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useLocalStorage } from '@vueuse/core'
 import { Search, ChevronsLeft, ChevronsRight, X } from 'lucide-vue-next'
-import { useAuthStore } from '../../stores/authStore'
-import SidebarNavItem from './SidebarNavItem.vue'
-import AppLogo from '../../components/AppLogo.vue'
-import ProfileAvatar from '../../shared/ui/ProfileAvatar.vue'
+import { useAuthStore } from '@/entities/auth/model/authStore'
+import SidebarNavItem from '@/widgets/sidebar/SidebarNavItem.vue'
+import AppLogo from '@/shared/ui/AppLogo.vue'
+import ProfileAvatar from '@/shared/ui/ProfileAvatar.vue'
 import {
   studentNavGroups,
   mentorNavGroups,
   adminNavGroups,
   type SidebarNavGroup,
-} from './sidebarNavConfig'
+} from '@/widgets/sidebar/sidebarNavConfig'
 
 const props = defineProps<{
   role: 'student' | 'mentor' | 'admin'

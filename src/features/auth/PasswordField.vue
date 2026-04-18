@@ -22,7 +22,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useI18n } from 'vue-i18n'
-import AppInput from '../../shared/ui/AppInput.vue'
+import AppInput from '@/shared/ui/AppInput.vue'
 
 const { t } = useI18n()
 

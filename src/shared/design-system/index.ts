@@ -1,4 +1,4 @@
-export { colors } from './colors'
-export { typography, fontFamily } from './typography'
-export { radius, spacing } from './spacing'
+export { colors } from '@/shared/design-system/colors'
+export { typography, fontFamily } from '@/shared/design-system/typography'
+export { radius, spacing } from '@/shared/design-system/spacing'
 

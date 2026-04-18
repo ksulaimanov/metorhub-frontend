@@ -70,14 +70,14 @@
 import { computed, ref } from 'vue'
 import { useRoute } from 'vue-router'
 import { useI18n } from 'vue-i18n'
-import type { MentorApplicationStatusResponse } from '../../shared/types/mentorApplication'
-import { getMentorApplicationStatus } from '../../shared/api/mentorApplicationApi'
-import { useErrorHandler } from '../../shared/composables/useErrorHandler'
-import AppField from '../../shared/ui/AppField.vue'
-import AppInput from '../../shared/ui/AppInput.vue'
-import AppButton from '../../shared/ui/AppButton.vue'
-import AppBadge from '../../shared/ui/AppBadge.vue'
-import AppErrorState from '../../shared/ui/AppErrorState.vue'
+import type { MentorApplicationStatusResponse } from '@/shared/types/mentorApplication'
+import { getMentorApplicationStatus } from '@/shared/api/mentorApplicationApi'
+import { useErrorHandler } from '@/shared/composables/useErrorHandler'
+import AppField from '@/shared/ui/AppField.vue'
+import AppInput from '@/shared/ui/AppInput.vue'
+import AppButton from '@/shared/ui/AppButton.vue'
+import AppBadge from '@/shared/ui/AppBadge.vue'
+import AppErrorState from '@/shared/ui/AppErrorState.vue'
 
 const { t } = useI18n()
 const route = useRoute()

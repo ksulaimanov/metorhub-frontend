@@ -184,9 +184,9 @@
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n'
 import { Send, Mail, Copy } from 'lucide-vue-next'
-import AppLogo from '../../components/AppLogo.vue'
-import OrnamentDivider from '../../components/ui/OrnamentDivider.vue'
-import KyrgyzOrnamentPattern from '../../components/ui/KyrgyzOrnamentPattern.vue'
+import AppLogo from '@/shared/ui/AppLogo.vue'
+import OrnamentDivider from '@/shared/ui/OrnamentDivider.vue'
+import KyrgyzOrnamentPattern from '@/shared/ui/KyrgyzOrnamentPattern.vue'
 import { useToastStore } from '@/shared/lib/getApiErrorMessage'
 
 const { t } = useI18n()

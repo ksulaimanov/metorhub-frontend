@@ -87,12 +87,12 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import { ArrowLeft, Mail } from 'lucide-vue-next'
-import PrivateLayout from '../../widgets/layout/PrivateLayout.vue'
-import AppCard from '../../shared/ui/AppCard.vue'
-import AppButton from '../../shared/ui/AppButton.vue'
-import AppBadge from '../../shared/ui/AppBadge.vue'
-import ProfileAvatar from '../../shared/ui/ProfileAvatar.vue'
-import { useToastStore } from '../../shared/lib/getApiErrorMessage'
+import PrivateLayout from '@/widgets/layout/PrivateLayout.vue'
+import AppCard from '@/shared/ui/AppCard.vue'
+import AppButton from '@/shared/ui/AppButton.vue'
+import AppBadge from '@/shared/ui/AppBadge.vue'
+import ProfileAvatar from '@/shared/ui/ProfileAvatar.vue'
+import { useToastStore } from '@/shared/lib/getApiErrorMessage'
 
 const props = defineProps<{
   id: string

@@ -31,10 +31,10 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { http } from '../../shared/api/http'
-import { useErrorHandler } from '../../shared/composables/useErrorHandler'
-import { useToastStore } from '../../shared/lib/getApiErrorMessage'
-import AppButton from '../../shared/ui/AppButton.vue'
+import { http } from '@/shared/api/http'
+import { useErrorHandler } from '@/shared/composables/useErrorHandler'
+import { useToastStore } from '@/shared/lib/getApiErrorMessage'
+import AppButton from '@/shared/ui/AppButton.vue'
 
 const { t } = useI18n()
 const { handleError } = useErrorHandler()

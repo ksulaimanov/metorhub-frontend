@@ -64,9 +64,9 @@
 import { computed, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { MessageSquare } from 'lucide-vue-next'
-import type { MentorReview } from '../../shared/types/mentor'
-import StarRating from '../../shared/ui/StarRating.vue'
-import ReviewCard from './ReviewCard.vue'
+import type { MentorReview } from '@/shared/types/mentor'
+import StarRating from '@/shared/ui/StarRating.vue'
+import ReviewCard from '@/features/reviews/ReviewCard.vue'
 
 const { t } = useI18n()
 

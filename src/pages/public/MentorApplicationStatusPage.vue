@@ -25,8 +25,8 @@
 
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n'
-import PublicLayout from '../../widgets/layout/PublicLayout.vue'
-import MentorApplicationStatus from '../../features/mentor-application/MentorApplicationStatus.vue'
+import PublicLayout from '@/widgets/layout/PublicLayout.vue'
+import MentorApplicationStatus from '@/features/mentor-application/MentorApplicationStatus.vue'
 
 const { t } = useI18n()
 </script>

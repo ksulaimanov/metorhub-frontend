@@ -4,67 +4,10 @@
       <!-- Full background subtle pattern across the whole landing page -->
       <KyrgyzOrnamentPattern :opacity="0.10" :scale="1" class="fixed inset-0 z-0 pointer-events-none mix-blend-overlay" />
 
-      <!-- ”€”€”€ 1. Hero ”€”€”€ -->
-      <AuroraBackground :showRadialGradient="true" class="relative !bg-transparent h-[600px] sm:h-auto overflow-visible">
-        <!-- Elegant corner borders inspired by embroidery -->
-        <KyrgyzCornerOrnament position="top-left" :opacity="0.10" class="z-0 text-text-primary" />
-        <KyrgyzCornerOrnament position="top-right" :opacity="0.10" class="z-0 text-text-primary" />
-        <div class="relative z-10 mx-auto max-w-7xl px-4 pb-20 pt-16 sm:px-6 lg:pb-28 lg:pt-24 animate-fade-in-up">
-          <div class="grid gap-10 lg:grid-cols-[1fr_0.72fr] lg:items-center lg:gap-12">
-
-            <!-- Left: copy + CTAs -->
-            <div class="bg-surface backdrop-blur-xl p-6 sm:p-10 rounded-[2rem] border border-border-brand shadow-[0_0_40px_rgba(108,92,231,0.15)]">
-              <p class="inline-flex rounded-full bg-surface-secondary backdrop-blur-md px-4 py-1.5 text-sm font-semibold text-brand-soft shadow-sm border border-border-subtle">
-                {{ t('home.heroBadge') }}
-              </p>
-
-              <h1 class="mt-5 max-w-lg text-3xl font-extrabold leading-tight text-text-primary sm:text-4xl lg:text-5xl">
-                {{ t('home.heroTitle') }}
-              </h1>
-
-              <p class="mt-5 max-w-md text-base leading-7 text-text-secondary lg:text-lg lg:leading-8">
-                {{ t('home.heroSubtitle') }}
-              </p>
-
-              <div class="mt-8 flex flex-col sm:flex-row flex-wrap gap-4">
-                <RouterLink
-                    to="/mentors"
-                    class="inline-flex justify-center items-center rounded-2xl bg-brand/95 backdrop-blur-sm px-8 py-4 text-base font-semibold text-text-primary shadow-lg shadow-brand/20 transition hover:bg-brand active:scale-[0.98]"
-                >
-                  {{ t('home.ctaFindMentor') }}
-                </RouterLink>
-
-                <RouterLink
-                    to="/register"
-                    class="inline-flex justify-center items-center rounded-2xl border border-border-brand bg-surface backdrop-blur-md px-8 py-4 text-base font-semibold text-text-primary transition hover:border-border-brand hover:bg-surface-secondary active:scale-[0.98]"
-                >
-                  {{ t('home.ctaRegister') }}
-                </RouterLink>
-              </div>
-
-              <!-- Social proof micro-stats -->
-              <p class="mt-6 flex flex-wrap gap-x-6 gap-y-2 text-sm font-medium text-text-secondary bg-surface backdrop-blur-sm inline-flex p-3 rounded-2xl border border-border-subtle">
-                <span class="inline-flex items-center gap-1"><ShieldCheck class="h-3.5 w-3.5 text-brand" /> {{ t('home.proofMentors') }}</span>
-                <span class="inline-flex items-center gap-1"><CalendarDays class="h-3.5 w-3.5 text-brand" /> {{ t('home.proofFormats') }}</span>
-                <span class="inline-flex items-center gap-1"><Star class="h-3.5 w-3.5 text-brand" /> {{ t('home.proofFree') }}</span>
-              </p>
-            </div>
-
-            <!-- Right: illustration/image -->
-            <div class="relative order-first lg:order-last">
-              <!-- Decorative blur behind the image -->
-              <div class="absolute -inset-4 rounded-full bg-brand-soft/50 dark:bg-brand/10 blur-3xl" />
-              <img
-                  src="@/assets/images/hero/home-hero-desktop.webp"
-                  alt="Mentorship Platform"
-                  class="relative w-full rounded-[2.5rem] object-cover ring-1 ring-border-brand/40 shadow-2xl transition-transform hover:scale-[1.01] hover:shadow-brand/20"
-                  style="aspect-ratio: 4/3; object-position: center 20%;"
-              />
-            </div>
-          </div>
-        </div>
-        <div class="pointer-events-none absolute inset-x-0 bottom-0 mx-auto h-[1px] w-full max-w-6xl bg-gradient-to-r from-transparent via-white/20 to-transparent border-0" />
-      </AuroraBackground>
+      <!-- Fullscreen hero -->
+      <div class="relative z-10">
+        <HeroSection />
+      </div>
 
       <!-- ”€”€”€ 2. Features ”€”€”€ -->
       <section class="relative z-10 mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:py-24 mt-8">
@@ -310,10 +253,10 @@
 import { useI18n } from 'vue-i18n'
 import { computed, ref, onMounted } from 'vue'
 import PublicLayout from '@/widgets/layout/PublicLayout.vue'
-import AuroraBackground from '@/components/ui/AuroraBackground.vue'
-import KyrgyzOrnamentPattern from '@/components/ui/KyrgyzOrnamentPattern.vue'
-import KyrgyzCornerOrnament from '@/components/ui/KyrgyzCornerOrnament.vue'
-import OrnamentDivider from '@/components/ui/OrnamentDivider.vue'
+import HeroSection from '@/widgets/hero/ui/HeroSection.vue'
+import KyrgyzOrnamentPattern from '@/shared/ui/KyrgyzOrnamentPattern.vue'
+import KyrgyzCornerOrnament from '@/shared/ui/KyrgyzCornerOrnament.vue'
+import OrnamentDivider from '@/shared/ui/OrnamentDivider.vue'
 import ProfileAvatar from '@/shared/ui/ProfileAvatar.vue'
 import { getFeaturedMentors } from '@/shared/api/mentorPublicApi'
 import type { MentorDirectoryItem } from '@/shared/types/mentor'

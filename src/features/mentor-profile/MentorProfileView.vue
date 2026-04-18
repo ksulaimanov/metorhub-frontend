@@ -192,13 +192,13 @@
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { Pencil, Instagram, Send, Mail, Star as StarIcon, BookOpen as BookOpenIcon, Briefcase as BriefcaseIcon, Clock as ClockIcon } from 'lucide-vue-next'
-import AppCard from '../../shared/ui/AppCard.vue'
-import AppButton from '../../shared/ui/AppButton.vue'
-import AppBadge from '../../shared/ui/AppBadge.vue'
-import ProfileAvatar from '../../shared/ui/ProfileAvatar.vue'
-import StarRating from '../../shared/ui/StarRating.vue'
-import SocialLinks from '../../shared/ui/SocialLinks.vue'
-import SupportContact from '../../shared/ui/SupportContact.vue'
+import AppCard from '@/shared/ui/AppCard.vue'
+import AppButton from '@/shared/ui/AppButton.vue'
+import AppBadge from '@/shared/ui/AppBadge.vue'
+import ProfileAvatar from '@/shared/ui/ProfileAvatar.vue'
+import StarRating from '@/shared/ui/StarRating.vue'
+import SocialLinks from '@/shared/ui/SocialLinks.vue'
+import SupportContact from '@/shared/ui/SupportContact.vue'
 
 const { t } = useI18n()
 

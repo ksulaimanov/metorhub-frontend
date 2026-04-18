@@ -34,9 +34,9 @@
 
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n'
-import AppCard from '../../shared/ui/AppCard.vue'
-import AppBadge from '../../shared/ui/AppBadge.vue'
-import StarRating from '../../shared/ui/StarRating.vue'
+import AppCard from '@/shared/ui/AppCard.vue'
+import AppBadge from '@/shared/ui/AppBadge.vue'
+import StarRating from '@/shared/ui/StarRating.vue'
 
 const { t } = useI18n()
 

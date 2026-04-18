@@ -22,10 +22,10 @@
 
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n'
-import AppCard from '../../shared/ui/AppCard.vue'
-import AppBadge from '../../shared/ui/AppBadge.vue'
-import SlotStatusBadge from './SlotStatusBadge.vue'
-import { formatDateTimeForDisplay } from '../../shared/lib/dateFormatter'
+import AppCard from '@/shared/ui/AppCard.vue'
+import AppBadge from '@/shared/ui/AppBadge.vue'
+import SlotStatusBadge from '@/features/availability/SlotStatusBadge.vue'
+import { formatDateTimeForDisplay } from '@/shared/lib/dateFormatter'
 
 const { t } = useI18n()
 

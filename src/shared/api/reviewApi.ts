@@ -1,4 +1,4 @@
-import { http } from './http'
+import { http } from '@/shared/api/http'
 
 export const createStudentReview = async (payload: {
   bookingId: number

@@ -98,7 +98,7 @@ html, body, #app {
 
 /* Kyrgyz ornament pattern */
 .ornament-divider {
-    background-image: url("data:image/svg+xml,%3Csvg width='120' height='12' viewBox='0 0 120 12' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 6h10l5-5 5 5h10l5 5 5-5h10l5 5 5-5h10l5 5 5-5h10l5 5 5-5h10l5 5 5-5h10l5 5 5-5h10l5 5 5-5h10l5 5 5-5h10' stroke='%236B21A8' stroke-width='1' fill='none' opacity='0.18'/%3E%3C/svg%3E");
+    background-image: url("data:image/svg+xml,%3Csvg width='120' height='12' viewBox='0 0 120 12' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 6h10l5-5 5 5h10l5 5 5-5h10l5 5 5-5h10l5 5 5-5h10l5 5 5-5h10l5 5 5-5h10l5 5 5-5h10l5 5 5-5h10l5 5 5-5h10l5 5 5-5h10' stroke='%236B21A8' stroke-width='1' fill='none' opacity='0.18'/%3E%3C/svg%3E");
     background-repeat: repeat-x;
     background-position: center;
     height: 12px;
@@ -115,4 +115,16 @@ html, body, #app {
     input, select, textarea {
         font-size: 16px !important;
     }
+}
+
+/* Auth-card transition for auth page navigation */
+.auth-card-enter-active,
+.auth-card-leave-active {
+    transition: opacity 240ms ease, transform 280ms ease;
+}
+
+.auth-card-enter-from,
+.auth-card-leave-to {
+    opacity: 0;
+    transform: translateY(12px) scale(0.985);
 }

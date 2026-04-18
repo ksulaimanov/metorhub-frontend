@@ -196,13 +196,13 @@
 import { computed, onMounted, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { Search } from 'lucide-vue-next'
-import { getPublicMentors } from '../../shared/api/mentorPublicApi'
-import type { MentorDirectoryItem } from '../../shared/types/mentor'
-import PublicLayout from '../../widgets/layout/PublicLayout.vue'
-import AuroraBackground from '../../components/ui/AuroraBackground.vue'
-import KyrgyzOrnamentPattern from '../../components/ui/KyrgyzOrnamentPattern.vue'
-import AppErrorState from '../../shared/ui/AppErrorState.vue'
-import MentorCard from '../../features/mentor-directory/MentorCard.vue'
+import { getPublicMentors } from '@/shared/api/mentorPublicApi'
+import type { MentorDirectoryItem } from '@/shared/types/mentor'
+import PublicLayout from '@/widgets/layout/PublicLayout.vue'
+import AuroraBackground from '@/shared/ui/AuroraBackground.vue'
+import KyrgyzOrnamentPattern from '@/shared/ui/KyrgyzOrnamentPattern.vue'
+import AppErrorState from '@/shared/ui/AppErrorState.vue'
+import MentorCard from '@/features/mentor-directory/MentorCard.vue'
 
 const { t } = useI18n()
 

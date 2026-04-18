@@ -13,7 +13,7 @@
 
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n'
-import { formatDateTimeForDisplay } from '../../shared/lib/dateFormatter'
+import { formatDateTimeForDisplay } from '@/shared/lib/dateFormatter'
 
 const { t } = useI18n()
 

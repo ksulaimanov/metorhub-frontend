@@ -54,7 +54,7 @@
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { GraduationCap, CheckCircle2 } from 'lucide-vue-next'
-import AppModal from '../../shared/ui/AppModal.vue'
+import AppModal from '@/shared/ui/AppModal.vue'
 
 const { t } = useI18n()
 

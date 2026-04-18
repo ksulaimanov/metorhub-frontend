@@ -21,9 +21,9 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
-import type { MentorReview } from '../../shared/types/mentor'
-import { formatDateTimeForDisplay } from '../../shared/lib/dateFormatter'
-import StarRating from '../../shared/ui/StarRating.vue'
+import type { MentorReview } from '@/shared/types/mentor'
+import { formatDateTimeForDisplay } from '@/shared/lib/dateFormatter'
+import StarRating from '@/shared/ui/StarRating.vue'
 
 const { t } = useI18n()
 

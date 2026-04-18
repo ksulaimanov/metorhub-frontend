@@ -186,11 +186,11 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
-import AppCard from '../../shared/ui/AppCard.vue'
-import AppField from '../../shared/ui/AppField.vue'
-import AppInput from '../../shared/ui/AppInput.vue'
-import AppTextarea from '../../shared/ui/AppTextarea.vue'
-import AppButton from '../../shared/ui/AppButton.vue'
+import AppCard from '@/shared/ui/AppCard.vue'
+import AppField from '@/shared/ui/AppField.vue'
+import AppInput from '@/shared/ui/AppInput.vue'
+import AppTextarea from '@/shared/ui/AppTextarea.vue'
+import AppButton from '@/shared/ui/AppButton.vue'
 
 const { t } = useI18n()
 

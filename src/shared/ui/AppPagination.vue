@@ -63,7 +63,7 @@
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { ChevronLeft, ChevronRight } from 'lucide-vue-next'
-import AppSelect from './AppSelect.vue'
+import AppSelect from '@/shared/ui/AppSelect.vue'
 
 const { t } = useI18n()
 

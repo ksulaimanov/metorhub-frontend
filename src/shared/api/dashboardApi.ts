@@ -1,5 +1,5 @@
-import { http } from './http'
-import type { StudentDashboard, MentorDashboard, AdminDashboard } from '../types/dashboard'
+import { http } from '@/shared/api/http'
+import type { StudentDashboard, MentorDashboard, AdminDashboard } from '@/shared/types/dashboard'
 
 /**
  * Get student dashboard data

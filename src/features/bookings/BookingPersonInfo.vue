@@ -17,7 +17,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
-import ProfileAvatar from '../../shared/ui/ProfileAvatar.vue'
+import ProfileAvatar from '@/shared/ui/ProfileAvatar.vue'
 
 const { t } = useI18n()
 

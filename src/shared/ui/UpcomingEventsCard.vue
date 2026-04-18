@@ -105,10 +105,10 @@
 
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n'
-import type { UpcomingEvent } from '../../shared/types/dashboard'
-import AppCard from './AppCard.vue'
-import AppBadge from './AppBadge.vue'
-import AppEventSkeleton from './AppEventSkeleton.vue'
+import type { UpcomingEvent } from '@/shared/types/dashboard'
+import AppCard from '@/shared/ui/AppCard.vue'
+import AppBadge from '@/shared/ui/AppBadge.vue'
+import AppEventSkeleton from '@/shared/ui/AppEventSkeleton.vue'
 
 const { t, locale } = useI18n()
 

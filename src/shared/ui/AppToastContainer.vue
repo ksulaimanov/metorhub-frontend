@@ -31,8 +31,8 @@
 </template>
 
 <script setup lang="ts">
-import type { ToastType } from '../lib/getApiErrorMessage'
-import { useToastStore } from '../lib/getApiErrorMessage'
+import type { ToastType } from '@/shared/lib/getApiErrorMessage'
+import { useToastStore } from '@/shared/lib/getApiErrorMessage'
 import { useI18n } from 'vue-i18n'
 
 const { t } = useI18n()

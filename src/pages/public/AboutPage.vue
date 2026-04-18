@@ -67,9 +67,9 @@
 
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n'
-import PublicLayout from '../../widgets/layout/PublicLayout.vue'
-import KyrgyzDivider from '../../shared/ui/KyrgyzDivider.vue'
-import KyrgyzOrnamentPattern from '../../components/ui/KyrgyzOrnamentPattern.vue'
+import PublicLayout from '@/widgets/layout/PublicLayout.vue'
+import KyrgyzDivider from '@/shared/ui/KyrgyzDivider.vue'
+import KyrgyzOrnamentPattern from '@/shared/ui/KyrgyzOrnamentPattern.vue'
 
 const { t } = useI18n()
 

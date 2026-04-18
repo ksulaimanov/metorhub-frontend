@@ -31,7 +31,7 @@
 
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n'
-import AppCard from './AppCard.vue'
+import AppCard from '@/shared/ui/AppCard.vue'
 
 const { t } = useI18n()
 

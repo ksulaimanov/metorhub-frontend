@@ -1,9 +1,9 @@
-import { http } from './http'
+import { http } from '@/shared/api/http'
 import type {
     SubmitMentorApplicationRequest,
     MentorApplicationStatusResponse,
     MentorApplicationSubmitResponse,
-} from '../types/mentorApplication'
+} from '@/shared/types/mentorApplication'
 
 export const submitMentorApplication = async (
     payload: SubmitMentorApplicationRequest,

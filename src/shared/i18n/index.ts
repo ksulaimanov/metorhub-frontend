@@ -1,6 +1,6 @@
 import { createI18n } from 'vue-i18n'
-import ru from './ru'
-import ky from './ky'
+import ru from '@/shared/i18n/ru'
+import ky from '@/shared/i18n/ky'
 
 export type SupportedLocale = 'ru' | 'ky'
 

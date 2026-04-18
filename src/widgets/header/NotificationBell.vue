@@ -51,7 +51,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { Bell, Star } from 'lucide-vue-next'
-import { useNotificationStore } from '../../stores/notificationStore'
+import { useNotificationStore } from '@/entities/notification/model/notificationStore'
 
 const isOpen = ref(false)
 const notificationStore = useNotificationStore()

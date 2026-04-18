@@ -1,11 +1,11 @@
-import { http } from './http'
+import { http } from '@/shared/api/http'
 import type {
   AdminMentorApplicationPage,
   AdminMentorApplicationDetail,
   AdminMentorApplicationListItem,
   AdminMentorApplicationFilter,
   RejectMentorApplicationPayload,
-} from '../types/adminMentorApplication'
+} from '@/shared/types/adminMentorApplication'
 
 const BASE = '/api/admin/mentor-applications'
 

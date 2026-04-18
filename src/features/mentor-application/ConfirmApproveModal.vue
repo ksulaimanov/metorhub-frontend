@@ -33,8 +33,8 @@
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n'
 import { CheckCircle } from 'lucide-vue-next'
-import AppModal from '../../shared/ui/AppModal.vue'
-import AppButton from '../../shared/ui/AppButton.vue'
+import AppModal from '@/shared/ui/AppModal.vue'
+import AppButton from '@/shared/ui/AppButton.vue'
 
 const { t } = useI18n()
 

@@ -1,11 +1,11 @@
-import { http } from './http'
+import { http } from '@/shared/api/http'
 import type {
     AvailabilitySlot,
     MentorDirectoryItem,
     MentorReview,
     PageResponse,
     PublicMentorProfile,
-} from '../types/mentor'
+} from '@/shared/types/mentor'
 
 export interface MentorDirectoryParams {
     query?: string

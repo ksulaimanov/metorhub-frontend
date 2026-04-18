@@ -97,15 +97,15 @@
 <script setup lang="ts">
 import { computed, reactive, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { useAuthStore } from '../../stores/authStore'
-import { submitMentorApplication } from '../../shared/api/mentorApplicationApi'
-import { useErrorHandler } from '../../shared/composables/useErrorHandler'
-import AppField from '../../shared/ui/AppField.vue'
-import AppInput from '../../shared/ui/AppInput.vue'
-import AppTextarea from '../../shared/ui/AppTextarea.vue'
-import AppButton from '../../shared/ui/AppButton.vue'
-import AppErrorState from '../../shared/ui/AppErrorState.vue'
-import ProfileAvatar from '../../shared/ui/ProfileAvatar.vue'
+import { useAuthStore } from '@/entities/auth/model/authStore'
+import { submitMentorApplication } from '@/shared/api/mentorApplicationApi'
+import { useErrorHandler } from '@/shared/composables/useErrorHandler'
+import AppField from '@/shared/ui/AppField.vue'
+import AppInput from '@/shared/ui/AppInput.vue'
+import AppTextarea from '@/shared/ui/AppTextarea.vue'
+import AppButton from '@/shared/ui/AppButton.vue'
+import AppErrorState from '@/shared/ui/AppErrorState.vue'
+import ProfileAvatar from '@/shared/ui/ProfileAvatar.vue'
 
 const { t } = useI18n()
 const authStore = useAuthStore()

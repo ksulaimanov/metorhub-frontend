@@ -7,7 +7,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
-import AppBadge from '../../shared/ui/AppBadge.vue'
+import AppBadge from '@/shared/ui/AppBadge.vue'
 
 const { t } = useI18n()
 

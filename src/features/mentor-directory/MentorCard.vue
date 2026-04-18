@@ -113,10 +113,10 @@
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { Banknote, Sparkles, Laptop, MapPin } from 'lucide-vue-next'
-import type { MentorDirectoryItem } from '../../shared/types/mentor'
-import AppBadge from '../../shared/ui/AppBadge.vue'
-import MentorRating from '../../shared/ui/MentorRating.vue'
-import ProfileAvatar from '../../shared/ui/ProfileAvatar.vue'
+import type { MentorDirectoryItem } from '@/shared/types/mentor'
+import AppBadge from '@/shared/ui/AppBadge.vue'
+import MentorRating from '@/shared/ui/MentorRating.vue'
+import ProfileAvatar from '@/shared/ui/ProfileAvatar.vue'
 
 const { t } = useI18n()
 

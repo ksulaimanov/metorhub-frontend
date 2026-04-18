@@ -1,27 +1,48 @@
 import axios from 'axios'
-import i18n from '../i18n'
-import { useToastStore } from '../lib/getApiErrorMessage'
+import i18n from '@/shared/i18n'
+import { useToastStore } from '@/shared/lib/getApiErrorMessage'
 import router from '@/app/router'
 
-const baseURL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080'
+const baseURL = import.meta.env.VITE_API_BASE_URL?.trim()
+const REFRESH_ENDPOINTS = ['/api/auth/refresh', '/api/v1/auth/refresh']
+
+if (!baseURL) {
+    throw new Error('VITE_API_BASE_URL is not configured. Set it in your environment file before running the app.')
+}
 
 export const http = axios.create({
     baseURL,
+    withCredentials: true,
     headers: {
         'Content-Type': 'application/json',
     },
+    xsrfCookieName: 'XSRF-TOKEN',
+    xsrfHeaderName: 'X-XSRF-TOKEN',
 })
 
-// --- request: attach access token ---
+// --- Queue for 401 refresh ---
+let isRefreshing = false
+let isForceLoggingOut = false
+let failedQueue: Array<{
+    resolve: (value?: unknown) => void
+    reject: (reason?: any) => void
+}> = []
+
+const processQueue = (error: any, token: string | null = null) => {
+    failedQueue.forEach((prom) => {
+        if (error) {
+            prom.reject(error)
+        } else {
+            prom.resolve(token)
+        }
+    })
+    failedQueue = []
+}
+
+// --- request: attach language ---
 http.interceptors.request.use((config) => {
-    const token = localStorage.getItem('accessToken')
-
-    if (token) {
-        config.headers.Authorization = `Bearer ${token}`
-    }
-
     // Attach language from i18n
-    const currentLocale = i18n.global.locale.value
+    const currentLocale = i18n.global.locale?.value
     if (currentLocale) {
         config.headers['Accept-Language'] = currentLocale
     }
@@ -29,26 +50,9 @@ http.interceptors.request.use((config) => {
     return config
 })
 
-// --- response: handle 401 with token refresh ---
-let isRefreshing = false
-let pendingQueue: Array<{
-    resolve: (token: string) => void
-    reject: (err: unknown) => void
-}> = []
-
-function processQueue(error: unknown, token: string | null) {
-    pendingQueue.forEach(({ resolve, reject }) => {
-        if (token) resolve(token)
-        else reject(error)
-    })
-    pendingQueue = []
-}
-
 http.interceptors.response.use(
     (response) => response,
     async (error) => {
-        const original = error.config
-
         // --- Handle 429 Too Many Requests (rate limiting) ---
         if (error.response?.status === 429) {
             const t = i18n.global.t as (key: string) => string
@@ -66,63 +70,100 @@ http.interceptors.response.use(
             return Promise.reject(error)
         }
 
-        // Skip refresh for login/register/refresh endpoints themselves
-        if (
-            !error.response ||
-            error.response.status !== 401 ||
-            original._retry ||
-            original.url?.includes('/auth/')
-        ) {
-            return Promise.reject(error)
-        }
+        const originalRequest = error.config
 
-        // If already refreshing — queue this request
-        if (isRefreshing) {
-            return new Promise((resolve, reject) => {
-                pendingQueue.push({
-                    resolve: (token: string) => {
-                        original.headers.Authorization = `Bearer ${token}`
-                        resolve(http(original))
-                    },
-                    reject,
+        // --- Handle 401 Unauthorized ---
+        if (error.response?.status === 401 && originalRequest) {
+            if (shouldSkipRefresh(originalRequest)) {
+                return Promise.reject(error)
+            }
+
+            if (originalRequest._retry) {
+                return Promise.reject(error)
+            }
+
+            if (isRefreshing) {
+                return new Promise((resolve, reject) => {
+                    failedQueue.push({ resolve, reject })
+                }).then(() => {
+                    return http(originalRequest)
+                }).catch((err) => {
+                    return Promise.reject(err)
                 })
-            })
+            }
+
+            originalRequest._retry = true
+            isRefreshing = true
+
+            try {
+                // Try both refresh route variants to match backend API prefixing.
+                await refreshSession()
+                isRefreshing = false
+                processQueue(null)
+                return http(originalRequest)
+            } catch (refreshError) {
+                isRefreshing = false
+                processQueue(refreshError)
+                await forceLogout()
+                return Promise.reject(refreshError)
+            }
         }
 
-        original._retry = true
-        isRefreshing = true
-
-        const refreshToken = localStorage.getItem('refreshToken')
-        if (!refreshToken) {
-            isRefreshing = false
-            clearAuth()
-            return Promise.reject(error)
-        }
-
-        try {
-            const { data } = await axios.post(`${baseURL}/api/auth/refresh`, { refreshToken })
-
-            localStorage.setItem('accessToken', data.accessToken)
-            localStorage.setItem('refreshToken', data.refreshToken)
-
-            original.headers.Authorization = `Bearer ${data.accessToken}`
-            processQueue(null, data.accessToken)
-
-            return http(original)
-        } catch (refreshError) {
-            processQueue(refreshError, null)
-            clearAuth()
-            return Promise.reject(refreshError)
-        } finally {
-            isRefreshing = false
-        }
+        return Promise.reject(error)
     },
 )
 
-function clearAuth() {
-    localStorage.removeItem('accessToken')
-    localStorage.removeItem('refreshToken')
-    localStorage.removeItem('email')
-    localStorage.removeItem('roles')
-    window.location.href = '/login'
+const AUTH_ENDPOINTS_SKIP_REFRESH = [
+    ...REFRESH_ENDPOINTS,
+    '/api/auth/login',
+    '/api/auth/logout',
+    '/api/auth/register',
+    '/api/auth/register/student',
+    '/api/auth/forgot-password',
+    '/api/auth/reset-password',
+    '/api/auth/verify-email',
+    '/api/auth/resend-verification',
+]
+
+function shouldSkipRefresh(config: any): boolean {
+    const url = String(config?.url ?? '')
+    return AUTH_ENDPOINTS_SKIP_REFRESH.some((path) => url.includes(path)) || config?.skipAuthRefresh === true
+}
+
+async function refreshSession(): Promise<void> {
+    let lastError: unknown
+
+    for (const refreshPath of REFRESH_ENDPOINTS) {
+        try {
+            await axios.post(`${baseURL}${refreshPath}`, {}, { withCredentials: true })
+            return
+        } catch (error) {
+            lastError = error
+        }
+    }
+
+    throw lastError
+}
+
+async function forceLogout(): Promise<void> {
+    if (isForceLoggingOut) {
+        return
+    }
+
+    isForceLoggingOut = true
+
+    try {
+        const { useAuthStore } = await import('@/entities/auth/model/authStore')
+        const authStore = useAuthStore()
+        await authStore.logout()
+    } catch {
+        localStorage.removeItem('auth-store')
+        localStorage.removeItem('user')
+        sessionStorage.clear()
+    } finally {
+        if (router.currentRoute.value.path !== '/login') {
+            await router.replace('/login')
+        }
+        isForceLoggingOut = false
+    }
 }

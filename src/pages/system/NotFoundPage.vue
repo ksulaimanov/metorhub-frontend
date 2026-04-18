@@ -36,7 +36,7 @@
 
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n'
-import PublicLayout from '../../widgets/layout/PublicLayout.vue'
+import PublicLayout from '@/widgets/layout/PublicLayout.vue'
 
 const { t } = useI18n()
 </script>

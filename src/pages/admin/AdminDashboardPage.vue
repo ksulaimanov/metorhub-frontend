@@ -168,13 +168,13 @@
 import { computed, onMounted, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { Calendar as CalendarIcon, Clock, UserCheck, GraduationCap, Star, TrendingUp, Users, BarChart3 } from 'lucide-vue-next'
-import { getAdminDashboard } from '../../shared/api/dashboardApi'
-import { getApiErrorMessage, useToastStore } from '../../shared/lib/getApiErrorMessage'
-import type { AdminDashboard } from '../../shared/types/dashboard'
-import PrivateLayout from '../../widgets/layout/PrivateLayout.vue'
-import AppCard from '../../shared/ui/AppCard.vue'
-import AppStatCardSkeleton from '../../shared/ui/AppStatCardSkeleton.vue'
-import UpcomingEventsCard from '../../shared/ui/UpcomingEventsCard.vue'
+import { getAdminDashboard } from '@/shared/api/dashboardApi'
+import { getApiErrorMessage, useToastStore } from '@/shared/lib/getApiErrorMessage'
+import type { AdminDashboard } from '@/shared/types/dashboard'
+import PrivateLayout from '@/widgets/layout/PrivateLayout.vue'
+import AppCard from '@/shared/ui/AppCard.vue'
+import AppStatCardSkeleton from '@/shared/ui/AppStatCardSkeleton.vue'
+import UpcomingEventsCard from '@/shared/ui/UpcomingEventsCard.vue'
 
 const { t } = useI18n()
 const toastStore = useToastStore()

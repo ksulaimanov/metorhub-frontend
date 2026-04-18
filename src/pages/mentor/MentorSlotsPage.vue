@@ -185,17 +185,17 @@
 <script setup lang="ts">
 import { onMounted, reactive, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { http } from '../../shared/api/http'
-import { useToastStore } from '../../shared/lib/getApiErrorMessage'
-import { useErrorHandler } from '../../shared/composables/useErrorHandler'
-import { formatDateTimeForDisplay } from '../../shared/lib/dateFormatter'
-import PrivateLayout from '../../widgets/layout/PrivateLayout.vue'
-import AppSectionTitle from '../../shared/ui/AppSectionTitle.vue'
-import AppCard from '../../shared/ui/AppCard.vue'
-import AppEmptyState from '../../shared/ui/AppEmptyState.vue'
-import AppBadge from '../../shared/ui/AppBadge.vue'
-import AppLoadingState from '../../shared/ui/AppLoadingState.vue'
-import AppErrorState from '../../shared/ui/AppErrorState.vue'
+import { http } from '@/shared/api/http'
+import { useToastStore } from '@/shared/lib/getApiErrorMessage'
+import { useErrorHandler } from '@/shared/composables/useErrorHandler'
+import { formatDateTimeForDisplay } from '@/shared/lib/dateFormatter'
+import PrivateLayout from '@/widgets/layout/PrivateLayout.vue'
+import AppSectionTitle from '@/shared/ui/AppSectionTitle.vue'
+import AppCard from '@/shared/ui/AppCard.vue'
+import AppEmptyState from '@/shared/ui/AppEmptyState.vue'
+import AppBadge from '@/shared/ui/AppBadge.vue'
+import AppLoadingState from '@/shared/ui/AppLoadingState.vue'
+import AppErrorState from '@/shared/ui/AppErrorState.vue'
 
 const { t } = useI18n()
 const toastStore = useToastStore()

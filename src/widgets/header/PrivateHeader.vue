@@ -70,9 +70,9 @@
 <script setup lang="ts">
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
-import { useAuthStore } from '../../stores/authStore'
-import AppLogo from '../../components/AppLogo.vue'
-import NotificationBell from './NotificationBell.vue'
+import { useAuthStore } from '@/entities/auth/model/authStore'
+import AppLogo from '@/shared/ui/AppLogo.vue'
+import NotificationBell from '@/widgets/header/NotificationBell.vue'
 
 const { t } = useI18n()
 const router = useRouter()

@@ -1,5 +1,5 @@
-import { http } from './http'
-import type { StudentBookingItem, MentorBookingItem, BookingStatus } from '../types/booking'
+import { http } from '@/shared/api/http'
+import type { StudentBookingItem, MentorBookingItem, BookingStatus } from '@/shared/types/booking'
 
 // ─── Student ────────────────────────────────────────────────────────────────
 

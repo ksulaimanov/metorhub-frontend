@@ -49,11 +49,11 @@
 import { ref, onMounted, computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { GraduationCap } from 'lucide-vue-next'
-import { useAuthStore } from '../../stores/authStore'
-import AuthSplitShell from '../../shared/ui/AuthSplitShell.vue'
-import FeatureCard from '../../shared/ui/FeatureCard.vue'
-import MentorApplyForm from '../../features/mentor-application/MentorApplyForm.vue'
-import MentorApplyGate from '../../features/mentor-application/MentorApplyGate.vue'
+import { useAuthStore } from '@/entities/auth/model/authStore'
+import AuthSplitShell from '@/shared/ui/AuthSplitShell.vue'
+import FeatureCard from '@/shared/ui/FeatureCard.vue'
+import MentorApplyForm from '@/features/mentor-application/MentorApplyForm.vue'
+import MentorApplyGate from '@/features/mentor-application/MentorApplyGate.vue'
 
 const { t } = useI18n()
 const authStore = useAuthStore()

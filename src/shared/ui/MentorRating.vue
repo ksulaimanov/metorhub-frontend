@@ -14,7 +14,7 @@
 
 <script setup lang="ts">
 import { Star } from 'lucide-vue-next'
-import StarRating from './StarRating.vue'
+import StarRating from '@/shared/ui/StarRating.vue'
 
 const props = defineProps<{
   rating?: number | null

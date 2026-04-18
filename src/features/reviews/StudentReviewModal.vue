@@ -57,10 +57,10 @@
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue'
 import { X, Star } from 'lucide-vue-next'
-import { useNotificationStore } from '../../stores/notificationStore'
-import { createStudentReview } from '../../shared/api/reviewApi'
-import { useToastStore } from '../../shared/lib/getApiErrorMessage'
-import AppButton from '../../shared/ui/AppButton.vue'
+import { useNotificationStore } from '@/entities/notification/model/notificationStore'
+import { createStudentReview } from '@/shared/api/reviewApi'
+import { useToastStore } from '@/shared/lib/getApiErrorMessage'
+import AppButton from '@/shared/ui/AppButton.vue'
 
 const notificationStore = useNotificationStore()
 const toastStore = useToastStore()
