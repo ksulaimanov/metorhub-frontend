@@ -1,6 +1,6 @@
 import type { Router } from 'vue-router'
-import { useAuthStore } from '@/stores/authStore'
-import { ROLES } from '@/shared/constants/app'
+import { useAuthStore } from '@/entities/auth/model/authStore'
+import { resolveDashboardPath } from '@/shared/lib/auth/resolveDashboardPath'
 
 
 export function setupRouteGuards(router: Router) {
@@ -10,12 +10,19 @@ export function setupRouteGuards(router: Router) {
         const auth = useAuthStore()
 
         if (auth.isAuthenticated && !initialAuthCheck) {
-            await auth.fetchProfile()
+            if (!auth.user) {
+                await auth.fetchProfile()
+            }
             initialAuthCheck = true
         }
 
         const requiresAuth = Boolean(to.meta.requiresAuth)
+        const guestOnly = Boolean(to.meta.guestOnly)
         const requiredRole = to.meta.role as string | undefined
+
+        if (guestOnly && auth.isAuthenticated) {
+            return resolveDashboardPath(auth.roles)
+        }
 
         if (requiresAuth && !auth.isAuthenticated) {
             const intended = to.fullPath
@@ -23,13 +30,7 @@ export function setupRouteGuards(router: Router) {
         }
 
         if (requiredRole && !auth.roles.includes(requiredRole as any)) {
-            if (auth.roles.includes(ROLES.MENTOR as any)) {
-                return '/mentor/dashboard'
-            }
-            if (auth.roles.includes(ROLES.STUDENT as any)) {
-                return '/student/dashboard'
-            }
-            return '/'
+            return resolveDashboardPath(auth.roles)
         }
 
         // allow navigation

@@ -1,8 +1,9 @@
 import { computed } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
-import { useAuthStore } from '@/stores/authStore'
-import { useToast } from './useToast'
+import { useAuthStore } from '@/entities/auth/model/authStore'
 import { ROLES } from '@/shared/constants/app'
+import { useToast } from '@/shared/composables/useToast'
+import { resolveDashboardPath } from '@/shared/lib/auth/resolveDashboardPath'
 
 /**
  * Composable для auth-операций в компонентах.
@@ -27,13 +28,7 @@ export function useAuth() {
             return
         }
 
-        if (auth.isMentor) {
-            router.push('/mentor/dashboard')
-        } else if (auth.isStudent) {
-            router.push('/student/dashboard')
-        } else {
-            router.push('/')
-        }
+        router.push(resolveDashboardPath(auth.roles))
     }
 
     async function logout() {
@@ -51,4 +46,3 @@ export function useAuth() {
         logout,
     }
 }
-

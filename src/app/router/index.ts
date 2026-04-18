@@ -1,28 +1,28 @@
 import { createRouter, createWebHistory } from 'vue-router'
-const HomePage = () => import('../../pages/public/HomePage.vue')
-const AboutPage = () => import('../../pages/public/AboutPage.vue')
-const NotFoundPage = () => import('../../pages/system/NotFoundPage.vue')
-const LoginPage = () => import('../../pages/auth/LoginPage.vue')
-const RegisterPage = () => import('../../pages/auth/RegisterPage.vue')
-const MentorDirectoryPage = () => import('../../pages/public/MentorDirectoryPage.vue')
-const PublicMentorProfilePage = () => import('../../pages/public/PublicMentorProfilePage.vue')
-const StudentProfilePage = () => import('../../pages/student/StudentProfilePage.vue')
-const StudentBookingsPage = () => import('../../pages/student/StudentBookingsPage.vue')
-const StudentDashboardPage = () => import('../../pages/student/StudentDashboardPage.vue')
-const MentorProfilePage = () => import('../../pages/mentor/MentorProfilePage.vue')
-const MentorSlotsPage = () => import('../../pages/mentor/MentorSlotsPage.vue')
-const MentorBookingsPage = () => import('../../pages/mentor/MentorBookingsPage.vue')
-const MentorDashboardPage = () => import('../../pages/mentor/MentorDashboardPage.vue')
-const AdminDashboardPage = () => import('../../pages/admin/AdminDashboardPage.vue')
-const AdminUsersPage = () => import('../../pages/admin/AdminUsersPage.vue')
-const AdminUserDetailPage = () => import('../../pages/admin/AdminUserDetailPage.vue')
-const AdminMentorApplicationsPage = () => import('../../pages/admin/AdminMentorApplicationsPage.vue')
-const AdminMentorApplicationDetailPage = () => import('../../pages/admin/AdminMentorApplicationDetailPage.vue')
-const VerifyEmailPage = () => import('../../pages/auth/VerifyEmailPage.vue')
-const ForgotPasswordPage = () => import('../../pages/auth/ForgotPasswordPage.vue')
-const ResetPasswordPage = () => import('../../pages/auth/ResetPasswordPage.vue')
-const MentorApplyPage = () => import('../../pages/public/MentorApplyPage.vue')
-const MentorApplicationStatusPage = () => import('../../pages/public/MentorApplicationStatusPage.vue')
+const HomePage = () => import('@/pages/public/HomePage.vue')
+const AboutPage = () => import('@/pages/public/AboutPage.vue')
+const NotFoundPage = () => import('@/pages/system/NotFoundPage.vue')
+const LoginPage = () => import('@/pages/auth/LoginPage.vue')
+const RegisterPage = () => import('@/pages/auth/RegisterPage.vue')
+const MentorDirectoryPage = () => import('@/pages/public/MentorDirectoryPage.vue')
+const PublicMentorProfilePage = () => import('@/pages/public/PublicMentorProfilePage.vue')
+const StudentProfilePage = () => import('@/pages/student/StudentProfilePage.vue')
+const StudentBookingsPage = () => import('@/pages/student/StudentBookingsPage.vue')
+const StudentDashboardPage = () => import('@/pages/student/StudentDashboardPage.vue')
+const MentorProfilePage = () => import('@/pages/mentor/MentorProfilePage.vue')
+const MentorSlotsPage = () => import('@/pages/mentor/MentorSlotsPage.vue')
+const MentorBookingsPage = () => import('@/pages/mentor/MentorBookingsPage.vue')
+const MentorDashboardPage = () => import('@/pages/mentor/MentorDashboardPage.vue')
+const AdminDashboardPage = () => import('@/pages/admin/AdminDashboardPage.vue')
+const AdminUsersPage = () => import('@/pages/admin/AdminUsersPage.vue')
+const AdminUserDetailPage = () => import('@/pages/admin/AdminUserDetailPage.vue')
+const AdminMentorApplicationsPage = () => import('@/pages/admin/AdminMentorApplicationsPage.vue')
+const AdminMentorApplicationDetailPage = () => import('@/pages/admin/AdminMentorApplicationDetailPage.vue')
+const VerifyEmailPage = () => import('@/pages/auth/VerifyEmailPage.vue')
+const ForgotPasswordPage = () => import('@/pages/auth/ForgotPasswordPage.vue')
+const ResetPasswordPage = () => import('@/pages/auth/ResetPasswordPage.vue')
+const MentorApplyPage = () => import('@/pages/public/MentorApplyPage.vue')
+const MentorApplicationStatusPage = () => import('@/pages/public/MentorApplicationStatusPage.vue')
 
 const router = createRouter({
     history: createWebHistory(),
@@ -36,11 +36,11 @@ const router = createRouter({
         { path: '/mentor/application/status', name: 'mentor-application-status', component: MentorApplicationStatusPage, meta: { title: 'Статус заявки — JaiMentorship' } },
 
         // --- auth ---
-        { path: '/login', name: 'login', component: LoginPage, meta: { title: 'Вход — JaiMentorship' } },
-        { path: '/register', name: 'register', component: RegisterPage, meta: { title: 'Регистрация — JaiMentorship' } },
-        { path: '/forgot-password', name: 'forgot-password', component: ForgotPasswordPage, meta: { title: 'Восстановление пароля — JaiMentorship' } },
-        { path: '/reset-password', name: 'reset-password', component: ResetPasswordPage, meta: { title: 'Сброс пароля — JaiMentorship' } },
-        { path: '/verify-email', name: 'verify-email', component: VerifyEmailPage, meta: { title: 'Подтверждение email — JaiMentorship' } },
+        { path: '/login', name: 'login', component: LoginPage, meta: { guestOnly: true, title: 'Вход — JaiMentorship' } },
+        { path: '/register', name: 'register', component: RegisterPage, meta: { guestOnly: true, title: 'Регистрация — JaiMentorship' } },
+        { path: '/forgot-password', name: 'forgot-password', component: ForgotPasswordPage, meta: { guestOnly: true, title: 'Восстановление пароля — JaiMentorship' } },
+        { path: '/reset-password', name: 'reset-password', component: ResetPasswordPage, meta: { guestOnly: true, title: 'Сброс пароля — JaiMentorship' } },
+        { path: '/verify-email', name: 'verify-email', component: VerifyEmailPage, meta: { guestOnly: true, title: 'Подтверждение email — JaiMentorship' } },
 
         // --- student ---
         { path: '/student/dashboard', name: 'student-dashboard', component: StudentDashboardPage, meta: { requiresAuth: true, role: 'ROLE_STUDENT', title: 'Мой кабинет — JaiMentorship' } },
