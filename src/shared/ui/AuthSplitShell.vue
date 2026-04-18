@@ -24,23 +24,36 @@
 
             <!-- Info cards -->
             <div v-if="$slots.cards" class="mt-8 grid max-w-lg gap-3">
-              <slot name="cards" />
+              <slot name="cards" :is-loading="isLoading" />
             </div>
           </div>
 
           <!-- Right: form surface -->
           <div class="w-full max-w-xl justify-self-center lg:justify-self-end">
-            <div class="rounded-[2rem] bg-surface backdrop-blur-2xl p-6 shadow-[0_8px_32px_rgba(0,0,0,0.4)] border border-border-brand sm:p-10 relative overflow-hidden">
-              <div class="absolute inset-0 bg-gradient-to-br from-brand/5 to-transparent pointer-events-none" />
-              <div class="relative z-10">
-                <slot />
-              </div>
-            </div>
+            <Transition name="auth-card" mode="out-in">
+              <div :key="authTransitionKey" class="relative">
+                <AuthCard :show-accent-glow="true" :class="isLoading ? 'pointer-events-none' : ''">
+                  <slot />
+                </AuthCard>
 
-            <!-- Below-card links -->
-            <div v-if="$slots.footer" class="mt-5 backdrop-blur-xl rounded-2xl p-4 bg-surface border border-border-brand flex justify-center shadow-sm">
-              <slot name="footer" />
-            </div>
+                <div
+                  v-if="isLoading"
+                  class="absolute inset-0 z-10 flex items-center justify-center rounded-3xl bg-[#2f234f]/45 backdrop-blur-[2px]"
+                  aria-live="polite"
+                  aria-busy="true"
+                >
+                  <div class="flex items-center gap-3 rounded-2xl border border-border-brand bg-surface px-4 py-2.5 text-sm font-medium text-brand-soft shadow-[0_0_20px_rgba(108,92,231,0.25)]">
+                    <span class="h-4 w-4 rounded-full border-2 border-brand/30 border-t-brand animate-spin" aria-hidden="true" />
+                    Загрузка...
+                  </div>
+                </div>
+
+                <!-- Below-card links -->
+                <AuthCard v-if="$slots.footer" compact class="mt-5 flex justify-center backdrop-blur-xl">
+                  <slot name="footer" />
+                </AuthCard>
+              </div>
+            </Transition>
           </div>
         </div>
       </section>
@@ -49,13 +62,20 @@
 </template>
 
 <script setup lang="ts">
-import PublicLayout from '../../widgets/layout/PublicLayout.vue'
-import AuroraBackground from '../../components/ui/AuroraBackground.vue'
-import KyrgyzOrnamentPattern from '../../components/ui/KyrgyzOrnamentPattern.vue'
+import { computed } from 'vue'
+import { useRoute } from 'vue-router'
+import PublicLayout from '@/widgets/layout/PublicLayout.vue'
+import AuroraBackground from '@/shared/ui/AuroraBackground.vue'
+import KyrgyzOrnamentPattern from '@/shared/ui/KyrgyzOrnamentPattern.vue'
+import AuthCard from '@/shared/ui/AuthCard.vue'
 
 defineProps<{
   badge?: string
   title: string
   subtitle?: string
+  isLoading?: boolean
 }>()
+
+const route = useRoute()
+const authTransitionKey = computed(() => route.path)
 </script>

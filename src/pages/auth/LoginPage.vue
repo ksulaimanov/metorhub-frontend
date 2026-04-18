@@ -3,11 +3,11 @@
       :badge="t('auth.loginHeroBadge')"
       :title="t('auth.loginHeroTitle')"
       :subtitle="t('auth.loginHeroSubtitle')"
+      :is-loading="loading"
   >
     <!-- Left info cards -->
-    <template #cards>
-      <FeatureCard class="!bg-surface !border-border-brand !text-text-primary" :title="t('auth.loginHeroStudentTitle')" :description="t('auth.loginHeroStudentDesc')" />
-      <FeatureCard class="!bg-surface !border-border-brand !text-text-primary" :title="t('auth.loginHeroMentorTitle')" :description="t('auth.loginHeroMentorDesc')" />
+    <template #cards="{ isLoading }">
+      <AuthHeroCards :is-loading="isLoading" />
     </template>
 
     <!-- Form -->
@@ -104,17 +104,17 @@
 import { computed, ref } from 'vue'
 import { useRoute } from 'vue-router'
 import { useI18n } from 'vue-i18n'
-import { http } from '../../shared/api/http'
-import { useAuthStore } from '../../stores/authStore'
-import { useErrorHandler } from '../../shared/composables/useErrorHandler'
-import { useAuth } from '../../shared/composables/useAuth'
-import AuthSplitShell from '../../shared/ui/AuthSplitShell.vue'
-import FeatureCard from '../../shared/ui/FeatureCard.vue'
-import InfoPanel from '../../shared/ui/InfoPanel.vue'
-import AppErrorState from '../../shared/ui/AppErrorState.vue'
-import AppField from '../../shared/ui/AppField.vue'
-import AppInput from '../../shared/ui/AppInput.vue'
-import AppButton from '../../shared/ui/AppButton.vue'
+import { http } from '@/shared/api/http'
+import { useAuthStore } from '@/entities/auth/model/authStore'
+import { useErrorHandler } from '@/shared/composables/useErrorHandler'
+import { useAuth } from '@/shared/composables/useAuth'
+import AuthSplitShell from '@/shared/ui/AuthSplitShell.vue'
+import AuthHeroCards from '@/shared/ui/AuthHeroCards.vue'
+import InfoPanel from '@/shared/ui/InfoPanel.vue'
+import AppErrorState from '@/shared/ui/AppErrorState.vue'
+import AppField from '@/shared/ui/AppField.vue'
+import AppInput from '@/shared/ui/AppInput.vue'
+import AppButton from '@/shared/ui/AppButton.vue'
 
 const { t } = useI18n()
 const route = useRoute()
@@ -151,6 +151,8 @@ const isEmailNotVerifiedError = computed(() => {
 })
 
 const handleLogin = async () => {
+  if (loading.value) return
+
   showValidation.value = true
 
   if (emailError.value || passwordError.value) {
@@ -166,10 +168,12 @@ const handleLogin = async () => {
     })
 
     authStore.setAuth({
-      accessToken: data.accessToken,
-      refreshToken: data.refreshToken,
       email: data.email,
       roles: data.roles,
+      firstName: data.firstName,
+      lastName: data.lastName,
+      avatarUrl: data.avatarUrl,
+      username: data.username,
     })
 
     errorMessage.value = ''

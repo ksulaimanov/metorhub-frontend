@@ -1,142 +1,123 @@
 <template>
-  <PublicLayout>
-    <section class="mx-auto flex min-h-[calc(100vh-73px)] max-w-7xl items-center px-4 py-10 sm:px-6">
-      <div class="grid w-full gap-8 lg:grid-cols-2 lg:items-center">
-        <div class="hidden lg:block">
-          <p class="inline-flex rounded-full bg-brand-soft px-4 py-2 text-sm font-medium text-brand">
-            {{ t('resetPassword.heroBadge') }}
-          </p>
+  <AuthSplitShell
+      :badge="t('resetPassword.heroBadge')"
+      :title="t('resetPassword.heroTitle')"
+      :subtitle="t('resetPassword.heroSubtitle')"
+      :is-loading="loading"
+  >
+    <template #cards="{ isLoading }">
+      <AuthHeroCards :is-loading="isLoading" />
+    </template>
 
-          <h1 class="mt-5 max-w-xl text-5xl font-bold leading-tight text-text-primary">
-            {{ t('resetPassword.heroTitle') }}
-          </h1>
+    <h1 class="text-2xl font-bold text-text-primary sm:text-3xl">{{ t('resetPassword.title') }}</h1>
+    <p class="mt-2 text-sm text-text-secondary">
+      {{ t('resetPassword.subtitle') }}
+    </p>
 
-          <p class="mt-6 max-w-lg text-lg leading-8 text-text-secondary">
-            {{ t('resetPassword.heroSubtitle') }}
-          </p>
+    <form class="mt-8 space-y-2" @submit.prevent="handleSubmit">
+      <AppField :label="t('resetPassword.emailLabel')" :error="showValidation ? emailError : ''">
+        <AppInput
+            v-model.trim="email"
+            type="email"
+            autocomplete="email"
+            class="text-text-primary"
+            :error="showValidation && !!emailError"
+            :placeholder="t('resetPassword.emailPlaceholder')"
+        />
+      </AppField>
+
+      <AppField :label="t('resetPassword.codeLabel')" :error="showValidation ? codeError : ''">
+        <AppInput
+            v-model.trim="code"
+            inputmode="numeric"
+            maxlength="6"
+            class="tracking-[0.35em] text-text-primary"
+            :error="showValidation && !!codeError"
+            :placeholder="t('resetPassword.codePlaceholder')"
+        />
+      </AppField>
+
+      <AppField :label="t('resetPassword.newPasswordLabel')" :error="showValidation ? newPasswordError : ''">
+        <div class="relative">
+          <AppInput
+              v-model="newPassword"
+              :type="showPassword ? 'text' : 'password'"
+              autocomplete="new-password"
+              class="pr-24 text-text-primary"
+              :error="showValidation && !!newPasswordError"
+              :placeholder="t('resetPassword.newPasswordPlaceholder')"
+          />
+          <button
+              type="button"
+              class="absolute right-3 top-1/2 -translate-y-1/2 rounded-xl px-3 py-1.5 text-sm font-medium text-text-muted transition-colors hover:bg-surface-secondary hover:text-text-primary"
+              @click="showPassword = !showPassword"
+          >
+            {{ showPassword ? t('resetPassword.hidePassword') : t('resetPassword.showPassword') }}
+          </button>
         </div>
+      </AppField>
 
-        <div class="w-full max-w-md justify-self-center rounded-3xl bg-surface p-6 shadow-sm ring-1 ring-border-brand sm:p-8">
-          <h1 class="text-3xl font-bold text-text-primary">{{ t('resetPassword.title') }}</h1>
-          <p class="mt-2 text-sm text-text-secondary">
-            {{ t('resetPassword.subtitle') }}
-          </p>
+      <AppField :label="t('resetPassword.confirmPasswordLabel')" :error="showValidation ? confirmPasswordError : ''">
+        <AppInput
+            v-model="confirmPassword"
+            :type="showPassword ? 'text' : 'password'"
+            autocomplete="new-password"
+            class="text-text-primary"
+            :error="showValidation && !!confirmPasswordError"
+            :placeholder="t('resetPassword.confirmPasswordPlaceholder')"
+        />
+      </AppField>
 
-          <form class="mt-8 space-y-5" @submit.prevent="handleSubmit">
-            <div>
-              <label class="mb-2 block text-sm font-medium text-text-primary">{{ t('resetPassword.emailLabel') }}</label>
-              <input
-                  v-model.trim="email"
-                  type="email"
-                  autocomplete="email"
-                  class="w-full rounded-2xl border px-4 py-3 outline-none transition"
-                  :class="fieldClass(showValidation && !!emailError)"
-                  :placeholder="t('resetPassword.emailPlaceholder')"
-              />
-              <p v-if="showValidation && emailError" class="mt-2 text-sm text-red-600">
-                {{ emailError }}
-              </p>
-            </div>
+      <AppErrorState
+          v-if="errorMessage"
+          class="!bg-red-500/10 !border-red-500/20"
+          :title="t('resetPassword.errorTitle')"
+          :description="errorMessage"
+      />
 
-            <div>
-              <label class="mb-2 block text-sm font-medium text-text-primary">{{ t('resetPassword.codeLabel') }}</label>
-              <input
-                  v-model.trim="code"
-                  inputmode="numeric"
-                  maxlength="6"
-                  class="w-full rounded-2xl border px-4 py-3 tracking-[0.35em] outline-none transition"
-                  :class="fieldClass(showValidation && !!codeError)"
-                  :placeholder="t('resetPassword.codePlaceholder')"
-              />
-              <p v-if="showValidation && codeError" class="mt-2 text-sm text-red-600">
-                {{ codeError }}
-              </p>
-            </div>
+      <InfoPanel v-if="successMessage" variant="success">
+        {{ successMessage }}
+      </InfoPanel>
 
-            <div>
-              <label class="mb-2 block text-sm font-medium text-text-primary">{{ t('resetPassword.newPasswordLabel') }}</label>
-              <input
-                  v-model="newPassword"
-                  :type="showPassword ? 'text' : 'password'"
-                  autocomplete="new-password"
-                  class="w-full rounded-2xl border px-4 py-3 outline-none transition"
-                  :class="fieldClass(showValidation && !!newPasswordError)"
-                  :placeholder="t('resetPassword.newPasswordPlaceholder')"
-              />
-              <p v-if="showValidation && newPasswordError" class="mt-2 text-sm text-red-600">
-                {{ newPasswordError }}
-              </p>
-            </div>
+      <AppButton
+          type="submit"
+          size="lg"
+          :loading="loading"
+          class="w-full shadow-[0_0_20px_rgba(108,92,231,0.4)] transition-all hover:shadow-[0_4px_25px_rgba(108,92,231,0.6)]"
+      >
+        {{ loading ? t('resetPassword.submitLoading') : t('resetPassword.submit') }}
+      </AppButton>
 
-            <div>
-              <label class="mb-2 block text-sm font-medium text-text-primary">{{ t('resetPassword.confirmPasswordLabel') }}</label>
-              <input
-                  v-model="confirmPassword"
-                  :type="showPassword ? 'text' : 'password'"
-                  autocomplete="new-password"
-                  class="w-full rounded-2xl border px-4 py-3 outline-none transition"
-                  :class="fieldClass(showValidation && !!confirmPasswordError)"
-                  :placeholder="t('resetPassword.confirmPasswordPlaceholder')"
-              />
-              <p v-if="showValidation && confirmPasswordError" class="mt-2 text-sm text-red-600">
-                {{ confirmPasswordError }}
-              </p>
-            </div>
-
-            <button
-                type="button"
-                class="w-full rounded-2xl border border-border-brand px-4 py-3 text-sm font-semibold text-text-primary transition hover:bg-brand-soft"
-                @click="showPassword = !showPassword"
-            >
-              {{ showPassword ? t('resetPassword.hidePassword') : t('resetPassword.showPassword') }}
-            </button>
-
-            <AppErrorState
-                v-if="errorMessage"
-                :title="t('resetPassword.errorTitle')"
-                :description="errorMessage"
-            />
-
-            <div
-                v-if="successMessage"
-                class="rounded-2xl border border-emerald-200 bg-emerald-50 p-4 text-sm text-emerald-700"
-            >
-              {{ successMessage }}
-            </div>
-
-            <button
-                type="submit"
-class="w-full rounded-2xl bg-brand px-4 py-3 font-semibold text-white transition hover:bg-brand-hover disabled:cursor-not-allowed disabled:opacity-50"
-                :disabled="loading"
-            >
-              {{ loading ? t('resetPassword.submitLoading') : t('resetPassword.submit') }}
-            </button>
-
-            <div class="text-center text-sm text-text-secondary">
-              {{ t('resetPassword.needNewCode') }}
-              <RouterLink
-                  :to="{ path: '/forgot-password', query: { email } }"
-                  class="font-semibold text-brand transition hover:text-brand-hover"
-              >
-                {{ t('resetPassword.needNewCodeLink') }}
-              </RouterLink>
-            </div>
-          </form>
-        </div>
+      <div class="mt-6">
+        <div class="h-[1px] w-full bg-gradient-to-r from-transparent via-white/20 to-transparent border-0" />
       </div>
-    </section>
-  </PublicLayout>
+      <p class="pt-6 text-center text-sm text-text-secondary">
+        {{ t('resetPassword.needNewCode') }}
+        <RouterLink
+            :to="{ path: '/forgot-password', query: { email } }"
+            class="font-semibold text-brand-soft transition hover:text-brand-hover hover:underline"
+        >
+          {{ t('resetPassword.needNewCodeLink') }}
+        </RouterLink>
+      </p>
+    </form>
+  </AuthSplitShell>
 </template>
 
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
-import { http } from '../../shared/api/http'
-import { useToastStore } from '../../shared/lib/getApiErrorMessage'
-import { useErrorHandler } from '../../shared/composables/useErrorHandler'
-import PublicLayout from '../../widgets/layout/PublicLayout.vue'
-import AppErrorState from '../../shared/ui/AppErrorState.vue'
+import { http } from '@/shared/api/http'
+import { useToastStore } from '@/shared/lib/getApiErrorMessage'
+import { useErrorHandler } from '@/shared/composables/useErrorHandler'
+import AuthSplitShell from '@/shared/ui/AuthSplitShell.vue'
+import AuthHeroCards from '@/shared/ui/AuthHeroCards.vue'
+import InfoPanel from '@/shared/ui/InfoPanel.vue'
+import AppErrorState from '@/shared/ui/AppErrorState.vue'
+import AppField from '@/shared/ui/AppField.vue'
+import AppInput from '@/shared/ui/AppInput.vue'
+import AppButton from '@/shared/ui/AppButton.vue'
 
 const { t } = useI18n()
 const route = useRoute()
@@ -175,12 +156,9 @@ const confirmPasswordError = computed(() => {
   return confirmPassword.value === newPassword.value ? '' : t('resetPassword.confirmMismatch')
 })
 
-const fieldClass = (hasError: boolean) =>
-    hasError
-        ? 'border-red-300 focus:border-red-500'
-        : 'border-border-brand focus:border-brand'
-
 const handleSubmit = async () => {
+  if (loading.value) return
+
   showValidation.value = true
 
   if (
@@ -201,6 +179,7 @@ const handleSubmit = async () => {
       newPassword: newPassword.value,
     })
 
+    successMessage.value = t('resetPassword.successToast')
     toastStore.success(t('resetPassword.successToast'))
 
     setTimeout(async () => {

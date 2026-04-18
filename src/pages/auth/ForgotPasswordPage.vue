@@ -1,86 +1,78 @@
 <template>
-  <PublicLayout>
-    <section class="mx-auto flex min-h-[calc(100vh-73px)] max-w-7xl items-center px-4 py-10 sm:px-6">
-      <div class="grid w-full gap-8 lg:grid-cols-2 lg:items-center">
-        <div class="hidden lg:block">
-          <p class="inline-flex rounded-full bg-brand-soft px-4 py-2 text-sm font-medium text-brand">
-            {{ t('forgotPassword.heroBadge') }}
-          </p>
+  <AuthSplitShell
+      :badge="t('forgotPassword.heroBadge')"
+      :title="t('forgotPassword.heroTitle')"
+      :subtitle="t('forgotPassword.heroSubtitle')"
+      :is-loading="loading"
+  >
+    <template #cards="{ isLoading }">
+      <AuthHeroCards :is-loading="isLoading" />
+    </template>
 
-          <h1 class="mt-5 max-w-xl text-5xl font-bold leading-tight text-text-primary">
-            {{ t('forgotPassword.heroTitle') }}
-          </h1>
+    <h1 class="text-2xl font-bold text-text-primary sm:text-3xl">{{ t('forgotPassword.title') }}</h1>
+    <p class="mt-2 text-sm text-text-secondary">
+      {{ t('forgotPassword.subtitle') }}
+    </p>
 
-          <p class="mt-6 max-w-lg text-lg leading-8 text-text-secondary">
-            {{ t('forgotPassword.heroSubtitle') }}
-          </p>
-        </div>
+    <form class="mt-8 space-y-2" @submit.prevent="handleSubmit">
+      <AppField :label="t('forgotPassword.emailLabel')" :error="showValidation ? emailError : ''">
+        <AppInput
+            v-model.trim="email"
+            type="email"
+            autocomplete="email"
+            class="text-text-primary"
+            :error="showValidation && !!emailError"
+            :placeholder="t('forgotPassword.emailPlaceholder')"
+        />
+      </AppField>
 
-        <div class="w-full max-w-md justify-self-center rounded-3xl bg-surface p-6 shadow-sm ring-1 ring-border-brand sm:p-8">
-          <h1 class="text-3xl font-bold text-text-primary">{{ t('forgotPassword.title') }}</h1>
-          <p class="mt-2 text-sm text-text-secondary">
-            {{ t('forgotPassword.subtitle') }}
-          </p>
+      <AppErrorState
+          v-if="errorMessage"
+          class="!bg-red-500/10 !border-red-500/20"
+          :title="t('forgotPassword.errorTitle')"
+          :description="errorMessage"
+      />
 
-          <form class="mt-8 space-y-5" @submit.prevent="handleSubmit">
-            <div>
-              <label class="mb-2 block text-sm font-medium text-text-primary">{{ t('forgotPassword.emailLabel') }}</label>
-              <input
-                  v-model.trim="email"
-                  type="email"
-                  autocomplete="email"
-                  class="w-full rounded-2xl border px-4 py-3 outline-none transition"
-                  :class="fieldClass(showValidation && !!emailError)"
-                  :placeholder="t('forgotPassword.emailPlaceholder')"
-              />
-              <p v-if="showValidation && emailError" class="mt-2 text-sm text-red-600">
-                {{ emailError }}
-              </p>
-            </div>
+      <InfoPanel v-if="successMessage" variant="success">
+        {{ successMessage }}
+      </InfoPanel>
 
-            <AppErrorState
-                v-if="errorMessage"
-                :title="t('forgotPassword.errorTitle')"
-                :description="errorMessage"
-            />
+      <AppButton
+          type="submit"
+          size="lg"
+          :loading="loading"
+          class="w-full shadow-[0_0_20px_rgba(108,92,231,0.4)] transition-all hover:shadow-[0_4px_25px_rgba(108,92,231,0.6)]"
+      >
+        {{ loading ? t('forgotPassword.submitLoading') : t('forgotPassword.submit') }}
+      </AppButton>
 
-            <div
-                v-if="successMessage"
-                class="rounded-2xl border border-emerald-200 bg-emerald-50 p-4 text-sm text-emerald-700"
-            >
-              {{ successMessage }}
-            </div>
-
-            <button
-                type="submit"
-                class="w-full rounded-2xl bg-brand px-4 py-3 font-semibold text-white transition hover:bg-brand-hover disabled:cursor-not-allowed disabled:opacity-50"
-                :disabled="loading"
-            >
-              {{ loading ? t('forgotPassword.submitLoading') : t('forgotPassword.submit') }}
-            </button>
-
-            <div class="text-center text-sm text-text-secondary">
-              {{ t('forgotPassword.backToLogin') }}
-              <RouterLink to="/login" class="font-semibold text-brand transition hover:text-brand-hover">
-                {{ t('forgotPassword.backToLoginLink') }}
-              </RouterLink>
-            </div>
-          </form>
-        </div>
+      <div class="mt-6">
+        <div class="h-[1px] w-full bg-gradient-to-r from-transparent via-white/20 to-transparent border-0" />
       </div>
-    </section>
-  </PublicLayout>
+      <p class="pt-6 text-center text-sm text-text-secondary">
+        {{ t('forgotPassword.backToLogin') }}
+        <RouterLink to="/login" class="font-semibold text-brand-soft transition hover:text-brand-hover hover:underline">
+          {{ t('forgotPassword.backToLoginLink') }}
+        </RouterLink>
+      </p>
+    </form>
+  </AuthSplitShell>
 </template>
 
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
-import { http } from '../../shared/api/http'
-import { useToastStore } from '../../shared/lib/getApiErrorMessage'
-import { useErrorHandler } from '../../shared/composables/useErrorHandler'
-import PublicLayout from '../../widgets/layout/PublicLayout.vue'
-import AppErrorState from '../../shared/ui/AppErrorState.vue'
+import { http } from '@/shared/api/http'
+import { useToastStore } from '@/shared/lib/getApiErrorMessage'
+import { useErrorHandler } from '@/shared/composables/useErrorHandler'
+import AuthSplitShell from '@/shared/ui/AuthSplitShell.vue'
+import AuthHeroCards from '@/shared/ui/AuthHeroCards.vue'
+import InfoPanel from '@/shared/ui/InfoPanel.vue'
+import AppErrorState from '@/shared/ui/AppErrorState.vue'
+import AppField from '@/shared/ui/AppField.vue'
+import AppInput from '@/shared/ui/AppInput.vue'
+import AppButton from '@/shared/ui/AppButton.vue'
 
 const { t } = useI18n()
 const router = useRouter()
@@ -100,12 +92,9 @@ const emailError = computed(() => {
   return valid ? '' : t('forgotPassword.emailInvalid')
 })
 
-const fieldClass = (hasError: boolean) =>
-    hasError
-        ? 'border-red-300 focus:border-red-500'
-        : 'border-border-brand focus:border-brand'
-
 const handleSubmit = async () => {
+  if (loading.value) return
+
   showValidation.value = true
 
   if (emailError.value) return
@@ -117,6 +106,7 @@ const handleSubmit = async () => {
       email: email.value,
     })
 
+    successMessage.value = t('forgotPassword.successToast')
     toastStore.success(t('forgotPassword.successToast'))
 
     setTimeout(async () => {

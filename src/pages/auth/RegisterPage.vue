@@ -3,21 +3,16 @@
       :badge="t('auth.registerHeroBadge')"
       :title="t('auth.registerHeroTitle')"
       :subtitle="t('auth.registerHeroSubtitle')"
+      :is-loading="loading"
   >
     <!-- Left info cards -->
-    <template #cards>
-      <FeatureCard class="!bg-white/5 !border-white/10 !text-white" :title="t('auth.registerStudentCardTitle')" :description="t('auth.registerStudentCardDesc')" />
-      <FeatureCard class="!bg-white/5 !border-white/10 !text-white">
-        <template #title>{{ t('auth.registerMentorPrompt') }}</template>
-        <RouterLink to="/mentor/apply" class="font-semibold text-brand-soft underline transition hover:text-brand-hover">
-          {{ t('auth.registerMentorPromptLink') }}
-        </RouterLink>
-      </FeatureCard>
+    <template #cards="{ isLoading }">
+      <AuthHeroCards :is-loading="isLoading" />
     </template>
 
     <!-- Form -->
-    <h1 class="text-2xl font-bold text-white sm:text-3xl">{{ t('auth.registerTitle') }}</h1>
-    <p class="mt-2 text-sm text-slate-300">{{ t('auth.registerSubtitle') }}</p>
+    <h1 class="text-2xl font-bold text-text-primary sm:text-3xl">{{ t('auth.registerTitle') }}</h1>
+    <p class="mt-2 text-sm text-text-secondary">{{ t('auth.registerSubtitle') }}</p>
 
     <form class="mt-8 space-y-2" @submit.prevent="handleRegister">
       <AppField :label="t('auth.email')" :error="showValidation ? emailError : ''">
@@ -25,7 +20,7 @@
             v-model.trim="email"
             type="email"
             autocomplete="email"
-            class="text-white"
+            class="text-text-primary"
             :error="showValidation && !!emailError"
             :placeholder="t('auth.emailPlaceholder')"
         />
@@ -37,13 +32,13 @@
               v-model="password"
               :type="showPassword ? 'text' : 'password'"
               autocomplete="new-password"
-              class="pr-24 text-white"
+              class="pr-24 text-text-primary"
               :error="showValidation && !!passwordError"
               :placeholder="t('auth.passwordPlaceholder')"
           />
           <button
               type="button"
-              class="absolute right-3 top-1/2 -translate-y-1/2 rounded-xl px-3 py-1.5 text-sm font-medium text-slate-400 transition-colors hover:bg-white/10 hover:text-white"
+              class="absolute right-3 top-1/2 -translate-y-1/2 rounded-xl px-3 py-1.5 text-sm font-medium text-text-muted transition-colors hover:bg-surface-secondary hover:text-text-primary"
               @click="showPassword = !showPassword"
           >
             {{ showPassword ? t('auth.hidePassword') : t('auth.showPassword') }}
@@ -56,7 +51,7 @@
             v-model="passwordConfirm"
             :type="showPassword ? 'text' : 'password'"
             autocomplete="new-password"
-            class="text-white"
+            class="text-text-primary"
             :error="showValidation && !!passwordConfirmError"
             :placeholder="t('auth.passwordConfirmPlaceholder')"
         />
@@ -83,7 +78,7 @@
       <div class="mt-6">
         <div class="h-[1px] w-full bg-gradient-to-r from-transparent via-white/20 to-transparent border-0" />
       </div>
-      <p class="pt-6 text-center text-sm text-slate-300">
+      <p class="pt-6 text-center text-sm text-text-secondary">
         {{ t('auth.hasAccount') }}
         <RouterLink :to="loginLink" class="font-semibold text-brand-soft transition hover:text-brand-hover hover:underline">
           {{ t('auth.loginSubmit') }}
@@ -97,15 +92,15 @@
 import { computed, ref } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { useI18n } from 'vue-i18n'
-import { http } from '../../shared/api/http'
-import { useToastStore } from '../../shared/lib/getApiErrorMessage'
-import { useErrorHandler } from '../../shared/composables/useErrorHandler'
-import AuthSplitShell from '../../shared/ui/AuthSplitShell.vue'
-import FeatureCard from '../../shared/ui/FeatureCard.vue'
-import AppErrorState from '../../shared/ui/AppErrorState.vue'
-import AppField from '../../shared/ui/AppField.vue'
-import AppInput from '../../shared/ui/AppInput.vue'
-import AppButton from '../../shared/ui/AppButton.vue'
+import { http } from '@/shared/api/http'
+import { useToastStore } from '@/shared/lib/getApiErrorMessage'
+import { useErrorHandler } from '@/shared/composables/useErrorHandler'
+import AuthSplitShell from '@/shared/ui/AuthSplitShell.vue'
+import AuthHeroCards from '@/shared/ui/AuthHeroCards.vue'
+import AppErrorState from '@/shared/ui/AppErrorState.vue'
+import AppField from '@/shared/ui/AppField.vue'
+import AppInput from '@/shared/ui/AppInput.vue'
+import AppButton from '@/shared/ui/AppButton.vue'
 
 const { t, locale } = useI18n()
 const router = useRouter()
@@ -144,6 +139,8 @@ const passwordConfirmError = computed(() => {
 })
 
 const handleRegister = async () => {
+  if (loading.value) return
+
   showValidation.value = true
   errorMessage.value = ''
   successMessage.value = ''

@@ -3,11 +3,11 @@
       :badge="t('auth.verifyHeroBadge')"
       :title="t('auth.verifyHeroTitle')"
       :subtitle="t('auth.verifyHeroSubtitle')"
+      :is-loading="isLoading"
   >
     <!-- Left info cards -->
-    <template #cards>
-      <FeatureCard :title="t('auth.verifyHeroSecureTitle')" :description="t('auth.verifyHeroSecureDesc')" />
-      <FeatureCard :title="t('auth.verifyHeroFastTitle')" :description="t('auth.verifyHeroFastDesc')" />
+    <template #cards="{ isLoading: shellLoading }">
+      <AuthHeroCards :is-loading="shellLoading" />
     </template>
 
     <!-- Form -->
@@ -50,7 +50,8 @@
           type="submit"
           size="lg"
           :loading="verifying"
-          class="w-full"
+          :disabled="resending"
+          class="w-full shadow-[0_0_20px_rgba(108,92,231,0.4)] transition-all hover:shadow-[0_4px_25px_rgba(108,92,231,0.6)]"
       >
         {{ verifying ? t('auth.verifyLoading') : t('auth.verifySubmit') }}
       </AppButton>
@@ -65,7 +66,7 @@
           variant="secondary"
           size="lg"
           :loading="resending"
-          :disabled="resendCooldown > 0"
+          :disabled="resendCooldown > 0 || verifying"
           class="mt-4 w-full"
           @click="handleResend"
       >
@@ -85,7 +86,7 @@
     <template #footer>
       <p class="text-center text-sm text-text-secondary">
         {{ t('auth.verifyAlreadyDone') }}
-        <RouterLink :to="loginLink" class="font-semibold text-brand transition hover:text-brand-hover">
+        <RouterLink :to="loginLink" class="font-semibold text-brand-soft transition hover:text-brand-hover hover:underline">
           {{ t('auth.loginSubmit') }}
         </RouterLink>
       </p>
@@ -97,16 +98,16 @@
 import { computed, onBeforeUnmount, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
-import { http } from '../../shared/api/http'
-import { useToastStore } from '../../shared/lib/getApiErrorMessage'
-import { useErrorHandler } from '../../shared/composables/useErrorHandler'
-import AuthSplitShell from '../../shared/ui/AuthSplitShell.vue'
-import FeatureCard from '../../shared/ui/FeatureCard.vue'
-import InfoPanel from '../../shared/ui/InfoPanel.vue'
-import AppErrorState from '../../shared/ui/AppErrorState.vue'
-import AppField from '../../shared/ui/AppField.vue'
-import AppInput from '../../shared/ui/AppInput.vue'
-import AppButton from '../../shared/ui/AppButton.vue'
+import { http } from '@/shared/api/http'
+import { useToastStore } from '@/shared/lib/getApiErrorMessage'
+import { useErrorHandler } from '@/shared/composables/useErrorHandler'
+import AuthSplitShell from '@/shared/ui/AuthSplitShell.vue'
+import AuthHeroCards from '@/shared/ui/AuthHeroCards.vue'
+import InfoPanel from '@/shared/ui/InfoPanel.vue'
+import AppErrorState from '@/shared/ui/AppErrorState.vue'
+import AppField from '@/shared/ui/AppField.vue'
+import AppInput from '@/shared/ui/AppInput.vue'
+import AppButton from '@/shared/ui/AppButton.vue'
 
 const { t, locale } = useI18n()
 const route = useRoute()
@@ -125,6 +126,7 @@ const showValidation = ref(false)
 
 const verifying = ref(false)
 const resending = ref(false)
+const isLoading = computed(() => verifying.value || resending.value)
 
 const errorMessage = ref('')
 const successMessage = ref('')
@@ -165,6 +167,8 @@ const startCooldown = (seconds: number) => {
 }
 
 const handleVerify = async () => {
+  if (verifying.value || resending.value) return
+
   showValidation.value = true
   errorMessage.value = ''
 
@@ -196,6 +200,8 @@ const handleVerify = async () => {
 }
 
 const handleResend = async () => {
+  if (resending.value || verifying.value || resendCooldown.value > 0) return
+
   showValidation.value = true
   errorMessage.value = ''
 
