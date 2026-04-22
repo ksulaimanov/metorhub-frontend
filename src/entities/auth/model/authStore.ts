@@ -1,14 +1,21 @@
 import { defineStore } from 'pinia'
-import type { AuthState, AuthUser } from '@/entities/auth/model/types'
+import { isAxiosError } from 'axios'
+import type { AuthState, AuthUser, AuthProfileResponse, LoginRequest, LoginResponse } from '@/entities/auth/model/types'
 import { getAuthDisplayName, getAuthInitials } from '@/shared/lib/auth/authPresentation'
 import { getEmptyAuthUser, mapProfileToAuthUser } from '@/shared/lib/auth/authMappers'
+import { ErrorCodes } from '@/constants/errorCodes'
 
 const buildInitialState = (): AuthState => ({
   isAuthenticated: false,
   profileLoaded: false,
   isEmailVerified: true,
+  pendingVerificationEmail: null,
   ...getEmptyAuthUser(),
 })
+
+function isProfileResponse(payload: LoginResponse | AuthProfileResponse): payload is AuthProfileResponse {
+  return Boolean(payload && typeof payload === 'object' && ('email' in payload || 'roles' in payload))
+}
 
 export const useAuthStore = defineStore('auth', {
   state: (): AuthState => buildInitialState(),
@@ -45,6 +52,8 @@ export const useAuthStore = defineStore('auth', {
       this.username = user.username
       this.isAuthenticated = true
       this.profileLoaded = true
+      this.isEmailVerified = true
+      this.pendingVerificationEmail = null
     },
 
     resetAuthState() {
@@ -52,6 +61,7 @@ export const useAuthStore = defineStore('auth', {
       this.isAuthenticated = false
       this.profileLoaded = false
       this.isEmailVerified = true
+      this.pendingVerificationEmail = null
       this.email = empty.email
       this.roles = empty.roles
       this.firstName = empty.firstName
@@ -67,6 +77,40 @@ export const useAuthStore = defineStore('auth', {
       sessionStorage.clear()
     },
 
+    setPendingVerificationEmail(email: string | null) {
+      this.pendingVerificationEmail = email
+    },
+
+    async login(credentials: LoginRequest) {
+      const { login: loginRequest, fetchCurrentUserProfile, requestLogout } = await import('@/shared/api/authApi')
+
+      try {
+        const response = await loginRequest(credentials)
+
+        if (isProfileResponse(response)) {
+          this.applyUser(mapProfileToAuthUser(response))
+          return
+        }
+
+        try {
+          const profile = await fetchCurrentUserProfile()
+          this.applyUser(mapProfileToAuthUser(profile))
+        } catch {
+          await requestLogout().catch(() => {})
+          this.clearClientAuthData()
+          throw new Error('Login succeeded but session could not be established')
+        }
+      } catch (error: unknown) {
+        if (isAxiosError(error)) {
+          const errorCode = error.response?.data?.errorCode as string | undefined
+          if (error.response?.status === 401 && errorCode === ErrorCodes.EMAIL_NOT_VERIFIED) {
+            this.setPendingVerificationEmail(credentials.email)
+          }
+        }
+        throw error
+      }
+    },
+
     async fetchProfile(force = false) {
       if (!force && this.user) {
         return
@@ -77,24 +121,21 @@ export const useAuthStore = defineStore('auth', {
         const profile = await fetchCurrentUserProfile()
         this.isEmailVerified = true
         this.applyUser(mapProfileToAuthUser(profile))
-      } catch (error: any) {
-        const errorData = error?.response?.data
-        const status = error?.response?.status
-        const errStr = JSON.stringify(errorData || '').toLowerCase()
+      } catch (error: unknown) {
+        if (isAxiosError(error)) {
+          const errorCode = error.response?.data?.errorCode as string | undefined
+          if (error.response?.status === 401 && errorCode === ErrorCodes.EMAIL_NOT_VERIFIED) {
+            this.isAuthenticated = true
+            this.profileLoaded = true
+            this.isEmailVerified = false
+            return
+          }
 
-        // Если ошибка говорит о неподтвержденном email (или мы получаем 403 с соотв. текстом)
-        if (status === 403 && (errStr.includes('verif') || errStr.includes('email') || errStr.includes('unverified'))) {
-          // Оставляем isAuthenticated как есть, чтобы не выбрасывало на /login
-          this.isAuthenticated = true
-          this.profileLoaded = true
-          this.isEmailVerified = false
-          throw new Error('EMAIL_NOT_VERIFIED')
+          if (error.response?.status === 401 || error.response?.status === 403) {
+            this.clearClientAuthData()
+          }
         }
 
-        if (status === 401 || status === 403) {
-          // Session is invalid/expired: only clear client auth state, no extra auth calls.
-          this.clearClientAuthData()
-        }
         throw error
       }
     },

@@ -64,7 +64,7 @@
 
       <!-- Verify-email rescue block -->
       <InfoPanel
-          v-if="errorMessage && isEmailNotVerifiedError"
+          v-if="showVerifyHint"
           variant="muted"
           class="!bg-surface border border-border-brand"
       >
@@ -102,12 +102,14 @@
 
 <script setup lang="ts">
 import { computed, ref } from 'vue'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
-import { http } from '@/shared/api/http'
+import { isAxiosError } from 'axios'
 import { useAuthStore } from '@/entities/auth/model/authStore'
 import { useErrorHandler } from '@/shared/composables/useErrorHandler'
 import { useAuth } from '@/shared/composables/useAuth'
+import { useToastStore } from '@/shared/lib/getApiErrorMessage'
+import { ErrorCodes } from '@/constants/errorCodes'
 import AuthSplitShell from '@/shared/ui/AuthSplitShell.vue'
 import AuthHeroCards from '@/shared/ui/AuthHeroCards.vue'
 import InfoPanel from '@/shared/ui/InfoPanel.vue'
@@ -118,7 +120,9 @@ import AppButton from '@/shared/ui/AppButton.vue'
 
 const { t } = useI18n()
 const route = useRoute()
+const router = useRouter()
 const authStore = useAuthStore()
+const toastStore = useToastStore()
 const { handleError } = useErrorHandler()
 const { redirectAfterLogin } = useAuth()
 
@@ -133,6 +137,7 @@ const errorMessage = ref('')
 const loading = ref(false)
 const showValidation = ref(false)
 const showPassword = ref(false)
+const showVerifyHint = ref(false)
 
 const emailError = computed(() => {
   if (!email.value) return t('validation.required')
@@ -145,15 +150,11 @@ const passwordError = computed(() => {
   return password.value.length >= 8 ? '' : t('validation.passwordMin', { min: 8 })
 })
 
-const isEmailNotVerifiedError = computed(() => {
-  const msg = errorMessage.value.toLowerCase()
-  return msg.includes('подтвержден') || msg.includes('verify') || msg.includes('verified') || msg.includes('тастыкта')
-})
-
 const handleLogin = async () => {
   if (loading.value) return
 
   showValidation.value = true
+  showVerifyHint.value = false
 
   if (emailError.value || passwordError.value) {
     return
@@ -162,24 +163,34 @@ const handleLogin = async () => {
   loading.value = true
 
   try {
-    const { data } = await http.post('/api/auth/login', {
-      email: email.value,
-      password: password.value,
-    })
-
-    authStore.setAuth({
-      email: data.email,
-      roles: data.roles,
-      firstName: data.firstName,
-      lastName: data.lastName,
-      avatarUrl: data.avatarUrl,
-      username: data.username,
-    })
-
+    await authStore.login({ email: email.value, password: password.value })
     errorMessage.value = ''
-
     await redirectAfterLogin()
-  } catch (error: any) {
+  } catch (error: unknown) {
+    if (isAxiosError(error)) {
+      const errorCode = error.response?.data?.errorCode as string | undefined
+
+      if (error.response?.status === 401 && errorCode === ErrorCodes.EMAIL_NOT_VERIFIED) {
+        showVerifyHint.value = true
+        errorMessage.value = 'Пожалуйста, подтвердите ваш email.'
+        toastStore.warning(errorMessage.value)
+        await router.push({ path: '/verify-email', query: { email: authStore.pendingVerificationEmail || email.value } })
+        return
+      }
+
+      if (error.response?.status === 401 && errorCode === ErrorCodes.INVALID_CREDENTIALS) {
+        errorMessage.value = 'Неверный email или пароль.'
+        toastStore.error(errorMessage.value)
+        return
+      }
+
+      if (error.response?.status === 401 && errorCode === ErrorCodes.ACCOUNT_DISABLED) {
+        errorMessage.value = 'Аккаунт заблокирован.'
+        toastStore.error(errorMessage.value)
+        return
+      }
+    }
+
     errorMessage.value = handleError(error, t('auth.loginErrorFallback'), { toast: false })
   } finally {
     loading.value = false
