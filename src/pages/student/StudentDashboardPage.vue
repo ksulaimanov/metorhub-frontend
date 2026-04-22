@@ -112,15 +112,15 @@
           <div class="h-24 w-24 mb-6 rounded-full bg-gradient-to-tr from-brand-soft to-surface shadow-inner ring-1 ring-border-subtle flex items-center justify-center">
             <span class="text-4xl">🎓</span>
           </div>
-          <h3 class="text-2xl font-extrabold text-text-primary mb-2">У вас еще нет завершенных уроков</h3>
+          <h3 class="text-2xl font-extrabold text-text-primary mb-2">{{ t('studentDashboard.emptyCompletedTitle') }}</h3>
           <p class="text-text-secondary leading-relaxed mb-8">
-            Начните свой путь к новым знаниям прямо сейчас. Выберите ментора, забронируйте первый звонок и достигайте своих целей быстрее!
+            {{ t('studentDashboard.emptyCompletedDesc') }}
           </p>
           <button
               class="inline-flex min-h-[44px] items-center justify-center gap-2 rounded-2xl bg-brand px-6 py-2 pb-2.5 font-bold text-white shadow-md shadow-brand/20 transition hover:-translate-y-0.5 hover:bg-brand-hover active:scale-[0.98]"
               @click="navigateToMentors"
           >
-            Записаться к первому ментору
+            {{ t('studentDashboard.emptyCompletedAction') }}
           </button>
         </div>
       </div>
@@ -163,14 +163,15 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from 'vue'
-import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
+import { useRouter } from 'vue-router'
+import { onMounted, ref } from 'vue'
 import { Calendar, Clock, CheckCircle2, Target } from 'lucide-vue-next'
 import { useAuthStore } from '@/entities/auth/model/authStore'
 import { getStudentDashboard } from '@/shared/api/dashboardApi'
 import { getMyMentorApplicationStatus } from '@/shared/api/mentorApplicationApi'
 import { getApiErrorMessage } from '@/shared/lib/getApiErrorMessage'
+import { resolveDashboardPath } from '@/shared/lib/auth/resolveDashboardPath'
 import type { StudentDashboard } from '@/shared/types/dashboard'
 import type { MentorApplicationStatusResponse } from '@/shared/types/mentorApplication'
 import PrivateLayout from '@/widgets/layout/PrivateLayout.vue'
@@ -215,7 +216,14 @@ const loadDashboard = async () => {
 
 const switchToMentor = async () => {
   await authStore.fetchProfile()
-  router.push('/mentor/dashboard')
+  // Используем resolveDashboardPath для динамического определения маршрута на основе ролей
+  const dashboardRoute = resolveDashboardPath(authStore.roles)
+  if (dashboardRoute !== '/') {
+    router.push(dashboardRoute)
+  } else {
+    // Если ролей нет, перенаправляем на главную
+    router.push('/')
+  }
 }
 
 const reapply = () => {

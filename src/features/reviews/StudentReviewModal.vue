@@ -11,12 +11,12 @@
             <X class="h-5 w-5" />
           </button>
 
-          <h2 class="text-xl font-bold text-text-primary mb-2">Оставьте отзыв</h2>
-          <p class="text-sm text-slate-400 mb-6">Поделитесь впечатлениями о прошедшем уроке</p>
+          <h2 class="text-xl font-bold text-text-primary mb-2">{{ t('studentBookings.reviewTitle') }}</h2>
+          <p class="text-sm text-slate-400 mb-6">{{ t('studentBookings.reviewHint') }}</p>
 
           <div class="grid gap-4">
             <div>
-              <label class="block text-sm font-medium text-text-primary mb-1.5">Рейтинг</label>
+              <label class="block text-sm font-medium text-text-primary mb-1.5">{{ t('reviews.ratingLabel') }}</label>
               <div class="flex items-center gap-2">
                 <button
                   v-for="star in 5"
@@ -33,17 +33,17 @@
             </div>
 
             <div>
-              <label class="block text-sm font-medium text-text-primary mb-1.5">Комментарий</label>
+              <label class="block text-sm font-medium text-text-primary mb-1.5">{{ t('reviews.commentLabel') }}</label>
               <textarea
                   v-model="comment"
                   class="min-h-24 w-full rounded-xl border border-border-brand bg-surface px-4 py-3 text-sm outline-none transition placeholder:text-slate-400/60 focus:border-brand focus:ring-2 focus:ring-brand/20"
-                  placeholder="Расскажите, что вам понравилось..."
+                  :placeholder="t('studentBookings.reviewPlaceholder')"
               />
             </div>
 
             <div class="flex flex-col gap-3">
               <AppButton size="md" :loading="loading" @click="submit">
-                Отправить отзыв
+                {{ t('studentBookings.submitReview') }}
               </AppButton>
               <p v-if="errorMsg" class="text-sm font-medium text-red-600">{{ errorMsg }}</p>
             </div>
@@ -56,12 +56,14 @@
 
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { X, Star } from 'lucide-vue-next'
 import { useNotificationStore } from '@/entities/notification/model/notificationStore'
 import { createStudentReview } from '@/shared/api/reviewApi'
 import { useToastStore } from '@/shared/lib/getApiErrorMessage'
 import AppButton from '@/shared/ui/AppButton.vue'
 
+const { t } = useI18n()
 const notificationStore = useNotificationStore()
 const toastStore = useToastStore()
 
@@ -91,10 +93,10 @@ const submit = async () => {
   errorMsg.value = ''
   try {
     await createStudentReview({ bookingId: bookingId.value, rating: rating.value, comment: comment.value })
-    toastStore.success('Спасибо за ваш отзыв!')
+    toastStore.success(t('studentBookings.reviewThanks'))
     close()
   } catch (err: any) {
-    errorMsg.value = err?.response?.data?.message || 'Ошибка отправки отзыва'
+    errorMsg.value = err?.response?.data?.message || t('studentBookings.reviewError')
   } finally {
     loading.value = false
   }
@@ -111,4 +113,3 @@ const submit = async () => {
   opacity: 0;
 }
 </style>
-

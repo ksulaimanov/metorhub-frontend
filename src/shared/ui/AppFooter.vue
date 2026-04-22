@@ -121,7 +121,7 @@
                 aria-label="Copy support email"
             >
               <Copy class="h-4 w-4" />
-              Копировать
+              {{ t('common.copy') }}
             </button>
           </div>
         </div>
@@ -174,7 +174,7 @@
       <div :class="variant === 'full' ? 'mt-8 pt-6' : 'mt-4 pt-4'">
         <div class="mx-auto mb-4 h-[1px] w-full max-w-3xl bg-gradient-to-r from-transparent via-white/20 to-transparent border-0" />
         <p class="text-center text-[11px] font-medium tracking-wide text-sidebar-text/60">
-          © {{ new Date().getFullYear() }} JaiMentorship. Бардык укуктар корголгон.
+          © {{ new Date().getFullYear() }} JaiMentorship. {{ t('footer.rights') }}
         </p>
       </div>
     </div>
@@ -196,7 +196,7 @@ const SUPPORT_EMAIL = 'ksulaimanov.dev@gmail.com'
 
 const copyEmail = () => {
   navigator.clipboard.writeText(SUPPORT_EMAIL)
-  toastStore.success('Email copied to clipboard')
+  toastStore.success(t('support.emailCopied'))
 }
 
 withDefaults(defineProps<{

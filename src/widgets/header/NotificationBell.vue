@@ -13,12 +13,12 @@
     <Transition name="slide-up">
       <div v-if="isOpen" class="absolute right-0 top-12 w-80 rounded-2xl bg-surface p-4 shadow-xl ring-1 ring-border-brand/80 sm:w-96 z-50 origin-top-right backdrop-blur-3xl">
         <div class="flex items-center justify-between mb-4">
-          <h3 class="text-base font-bold text-text-primary">Уведомления</h3>
-          <button class="text-xs text-brand hover:underline" @click="markAllAsRead">Прочитать все</button>
+          <h3 class="text-base font-bold text-text-primary">{{ t('notifications.title') }}</h3>
+          <button class="text-xs text-brand hover:underline" @click="markAllAsRead">{{ t('notifications.markAllAsRead') }}</button>
         </div>
 
         <div v-if="notificationStore.notifications.length === 0" class="py-8 text-center text-sm text-text-muted">
-          Нет новых уведомлений
+          {{ t('notifications.empty') }}
         </div>
 
         <div v-else class="flex max-h-[320px] flex-col gap-2 overflow-y-auto">
@@ -50,9 +50,11 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { Bell, Star } from 'lucide-vue-next'
 import { useNotificationStore } from '@/entities/notification/model/notificationStore'
 
+const { t } = useI18n()
 const isOpen = ref(false)
 const notificationStore = useNotificationStore()
 
@@ -80,4 +82,3 @@ const markAllAsRead = () => {
   transform: translateY(-8px) scale(0.95);
 }
 </style>
-

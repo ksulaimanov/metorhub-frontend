@@ -56,7 +56,7 @@
         </div>
         <div class="h-[1px] bg-gradient-to-r from-transparent via-white/20 to-transparent border-0" />
         <p class="mt-0.5 text-sm font-bold text-text-primary">
-          {{ mentor.pricePerHour ? `${mentor.pricePerHour} KGS / ч.` : t('mentorDirectory.priceFree') }}
+          {{ mentor.pricePerHour ? `${mentor.pricePerHour} ${t('mentorDirectory.priceSuffix')}` : t('mentorDirectory.priceNotSet') }}
         </p>
       </div>
 

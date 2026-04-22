@@ -7,16 +7,19 @@
     </template>
     <div v-else class="flex items-center gap-1.5 text-text-secondary">
       <Star class="h-4 w-4 text-border-brand" />
-      <span class="text-sm">Новый ментор</span>
+      <span class="text-sm">{{ t('mentorProfile.newMentor') }}</span>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
+import { useI18n } from 'vue-i18n'
 import { Star } from 'lucide-vue-next'
 import StarRating from '@/shared/ui/StarRating.vue'
 
-const props = defineProps<{
+const { t } = useI18n()
+
+defineProps<{
   rating?: number | null
   reviewsCount?: number
 }>()

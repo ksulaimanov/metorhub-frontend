@@ -40,8 +40,9 @@
 
           <!-- Authenticated: show dashboard link -->
           <template v-if="authStore.isAuthenticated">
-            <RouterLink
-                :to="dashboardRoute"
+            <button
+                type="button"
+                @click="debugNav"
                 class="relative flex items-center gap-2.5 rounded-full border border-white/20 bg-surface-secondary p-1 pr-4 shadow-[0_0_15px_rgba(108,92,231,0.2)] transition hover:bg-surface-secondary active:scale-[0.98] after:content-[''] after:absolute after:left-3 after:right-3 after:bottom-1 after:h-[2px] after:w-0 after:bg-brand after:transition-all after:duration-300 hover:after:w-[calc(100%-1.5rem)]"
             >
               <ProfileAvatar
@@ -50,7 +51,7 @@
                 class="!h-8 !w-8 text-xs ring-0"
               />
               <span class="text-sm font-bold text-text-primary">{{ t('nav.dashboard') }}</span>
-            </RouterLink>
+            </button>
           </template>
 
           <!-- Not authenticated: login + register -->
@@ -140,6 +141,11 @@ withDefaults(defineProps<{
 })
 
 const dashboardRoute = computed(() => resolveDashboardPath(authStore.roles))
+
+const debugNav = () => {
+  console.log('AUTH_USER:', authStore.user)
+  console.log('DASHBOARD_PATH:', resolveDashboardPath(authStore.roles))
+}
 
 const isHeaderScrolled = ref(false)
 

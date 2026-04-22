@@ -36,10 +36,7 @@
 
         <!-- Headline -->
         <h1 class="text-4xl sm:text-5xl lg:text-[5.5rem] font-extrabold tracking-tight text-white mb-8 leading-[1.1] drop-shadow-2xl">
-          {{ t('home.heroTitle') || titlePrefix }} <br class="hidden sm:block" />
-          <span class="text-transparent bg-clip-text bg-gradient-to-r from-indigo-300 via-purple-300 to-indigo-300 animate-gradient-x bg-[length:200%_auto] block mt-2 drop-shadow-lg">
-            {{ titleHighlight }}
-          </span>
+          {{ t('home.heroTitle') }}
         </h1>
 
         <p class="text-lg sm:text-xl md:text-2xl text-slate-200 mb-12 max-w-2xl leading-relaxed mx-auto drop-shadow-md">
@@ -49,9 +46,9 @@
         <!-- CTAs -->
         <div class="flex flex-col sm:flex-row items-center gap-5 w-full justify-center">
           <template v-if="auth.isAuthenticated">
-            <RouterLink to="/student/dashboard" class="w-full sm:w-auto">
+            <RouterLink :to="dashboardRoute" class="w-full sm:w-auto">
               <button class="cta-shine relative overflow-hidden w-full sm:w-auto inline-flex justify-center items-center gap-2 rounded-full bg-white text-black px-10 py-4 text-lg font-bold transition-all hover:bg-slate-200 hover:-translate-y-1 shadow-[0_0_30px_rgba(255,255,255,0.3)] hover:shadow-[0_0_50px_rgba(255,255,255,0.5)]">
-                Go to Dashboard
+                {{ t('home.ctaDashboard') }}
                 <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg>
               </button>
             </RouterLink>
@@ -60,14 +57,14 @@
             <RouterLink to="/mentors" class="w-full sm:w-auto">
               <!-- Primary CTA -->
               <button class="cta-shine relative overflow-hidden w-full sm:w-auto inline-flex justify-center items-center gap-2 rounded-full bg-white text-[#0A0A0A] px-10 py-4 text-lg font-extrabold transition-all hover:bg-gray-100 hover:-translate-y-1 shadow-[0_4px_30px_rgba(255,255,255,0.4)] hover:shadow-[0_10px_50px_rgba(255,255,255,0.6)]">
-                {{ t('home.ctaFindMentor') || 'Менторду табуу' }}
+                {{ t('home.ctaFindMentor') }}
                 <svg class="w-5 h-5 transition-transform group-hover:translate-x-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg>
               </button>
             </RouterLink>
             <RouterLink to="/register" class="w-full sm:w-auto">
               <!-- Secondary CTA -->
               <button class="cta-shine relative overflow-hidden w-full sm:w-auto inline-flex justify-center items-center gap-2 rounded-full bg-white/10 border border-white/20 text-white px-10 py-4 text-lg font-bold backdrop-blur-md transition hover:bg-white/20 hover:border-white/30 hover:-translate-y-0.5">
-                {{ t('home.ctaRegister') || 'Катталуу' }}
+                {{ t('home.ctaRegister') }}
               </button>
             </RouterLink>
           </template>
@@ -102,19 +99,14 @@
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useAuthStore } from '@/entities/auth/model/authStore'
+import { resolveDashboardPath } from '@/shared/lib/auth/resolveDashboardPath'
 import AuroraBackground from '@/shared/ui/AuroraBackground.vue'
 import KyrgyzDivider from '@/shared/ui/KyrgyzDivider.vue'
 
-const { t, locale } = useI18n()
+const { t } = useI18n()
 const auth = useAuthStore()
 
-// Compute Title Parts mapping string from i18n
-const titlePrefix = computed(() => {
-  return locale.value === 'kg' ? 'Менторду табыңыз жана' : 'Найдите ментора и'
-})
-const titleHighlight = computed(() => {
-  return locale.value === 'kg' ? 'ыңгайлуу форматта окууну баштаңыз' : 'начните обучение в удобном формате'
-})
+const dashboardRoute = computed(() => resolveDashboardPath(auth.roles))
 </script>
 
 <style scoped>

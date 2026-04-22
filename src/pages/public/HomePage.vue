@@ -148,7 +148,7 @@
               <UserCheck class="h-10 w-10 text-text-primary opacity-80" />
             </div>
             <h3 class="text-2xl font-extrabold text-text-primary mb-3">{{ t('home.featuredEmpty') }}</h3>
-            <p class="text-base text-text-secondary max-w-md">Менторлор базасы жакында жаңыланат. Бир аз күтө тұруңузду суранабыз.</p>
+            <p class="text-base text-text-secondary max-w-md">{{ t('home.featuredEmptyDesc') }}</p>
           </div>
         </div>
       </section>

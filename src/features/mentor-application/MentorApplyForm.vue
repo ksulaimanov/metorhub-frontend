@@ -21,7 +21,7 @@
     <!-- Live Preview Card -->
     <div v-if="!isSuccess" class="rounded-2xl border border-violet-100 bg-violet-50/50 p-5 dark:border-violet-800 dark:bg-violet-900/20">
       <h3 class="mb-4 text-sm font-semibold text-slate-800 dark:text-slate-200">
-        Предпросмотр профиля для учеников
+        {{ t('mentorApplication.previewTitle') }}
       </h3>
       <div class="flex items-start gap-4">
         <!-- Replaced with requested AppAvatar / ProfileAvatar component with Violet-600 background -->
@@ -32,14 +32,14 @@
         />
         <div class="flex-1">
           <div class="text-base font-bold text-slate-900 dark:text-white">
-            {{ authStore.displayName || 'Имя Фамилия' }}
+            {{ authStore.displayName || t('mentorApplication.previewNameFallback') }}
           </div>
           <div class="mt-1 text-sm text-slate-600 dark:text-slate-400 line-clamp-2">
             <span v-if="form.motivationText">{{ form.motivationText }}</span>
-            <span v-else class="italic opacity-60">Заполните поля ниже, чтобы увидеть, как будет выглядеть ваш профиль...</span>
+            <span v-else class="italic opacity-60">{{ t('mentorApplication.previewPlaceholder') }}</span>
           </div>
           <div v-if="form.portfolioUrl" class="mt-2 text-xs font-medium text-violet-600 dark:text-violet-400">
-            🔗 Портфолио прикреплено
+            {{ t('mentorApplication.previewPortfolioAttached') }}
           </div>
         </div>
       </div>
