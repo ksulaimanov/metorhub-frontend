@@ -25,7 +25,7 @@ export const notificationService = {
     if (stompClient && stompClient.connected) return
 
     // Create socket with credentials if cross-origin cookies are needed
-    const socket = new SockJS(`${baseURL}/ws`)
+    const socket = new SockJS(`${baseURL}/ws-stomp`)
     stompClient = Stomp.over(socket)
 
     // Disable debug logs to keep console clean

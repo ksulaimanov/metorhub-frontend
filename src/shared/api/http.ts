@@ -53,6 +53,15 @@ http.interceptors.request.use((config) => {
 http.interceptors.response.use(
     (response) => response,
     async (error) => {
+        // --- Handle 404 Not Found & 405 Method Not Allowed (prevent white screen) ---
+        if (error.response?.status === 404 || error.response?.status === 405) {
+            console.error(`API Error ${error.response.status}: ${error.config?.url}`);
+            const t = i18n.global.t as (key: string) => string
+            const toastStore = useToastStore()
+            toastStore.error(error.response?.status === 404 ? t('errors.notFound') || 'Resource not found.' : t('errors.methodNotAllowed') || 'Method not allowed.')
+            return Promise.reject(error)
+        }
+
         // --- Handle 429 Too Many Requests (rate limiting) ---
         if (error.response?.status === 429) {
             const t = i18n.global.t as (key: string) => string
@@ -63,6 +72,13 @@ http.interceptors.response.use(
 
         // --- Handle 403 Forbidden ---
         if (error.response?.status === 403) {
+            const errDataStr = JSON.stringify(error.response?.data || '').toLowerCase()
+            if (errDataStr.includes('verif') || errDataStr.includes('email') || errDataStr.includes('unverified')) {
+                // Если это ошибка верификации email, игнорируем глобальный редирект,
+                // так как это обрабатывается на уровне store/router guard (редирект на /verify-email)
+                return Promise.reject(error)
+            }
+
             const t = i18n.global.t as (key: string) => string
             const toastStore = useToastStore()
             toastStore.error(t('errors.forbidden') || 'Access denied.')
@@ -75,6 +91,7 @@ http.interceptors.response.use(
         // --- Handle 401 Unauthorized ---
         if (error.response?.status === 401 && originalRequest) {
             if (shouldSkipRefresh(originalRequest)) {
+                await forceLogout()
                 return Promise.reject(error)
             }
 

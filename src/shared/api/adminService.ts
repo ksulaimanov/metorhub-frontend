@@ -20,11 +20,10 @@ export const adminUsersApi = {
   },
 
   async toggleBlock(id: number, status: string): Promise<void> {
-    await http.put(`/api/admin/users/${id}/status`, { status })
+    await http.patch(`/api/admin/users/${id}/status`, { status })
   },
 
   async resetPhoto(id: number): Promise<void> {
-    await http.post(`/api/admin/users/${id}/reset-photo`)
+    await http.delete(`/api/admin/users/${id}/avatar`)
   }
 }
-
