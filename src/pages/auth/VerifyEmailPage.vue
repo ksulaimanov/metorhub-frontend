@@ -15,22 +15,22 @@
     <p class="mt-2 text-sm text-text-secondary">{{ t('auth.verifySubtitle') }}</p>
 
     <form class="mt-8 space-y-5" @submit.prevent="handleVerify">
-      <AppField :label="t('auth.email')" :error="showValidation ? emailError : ''">
+      <AppField :label="t('auth.email')" :error="showValidation ? (fieldErrors.email || emailError) : ''">
         <AppInput
             v-model.trim="email"
             type="email"
             autocomplete="email"
-            :error="showValidation && !!emailError"
+            :error="showValidation && !!(fieldErrors.email || emailError)"
             :placeholder="t('auth.emailPlaceholder')"
         />
       </AppField>
 
-      <AppField :label="t('auth.verifyCode')" :error="showValidation ? codeError : ''">
+      <AppField :label="t('auth.verifyCode')" :error="showValidation ? (fieldErrors.code || codeError) : ''">
         <AppInput
             v-model.trim="code"
             inputmode="numeric"
             maxlength="6"
-            :error="showValidation && !!codeError"
+            :error="showValidation && !!(fieldErrors.code || codeError)"
             :placeholder="t('auth.verifyCodePlaceholder')"
             class="tracking-[0.35em]"
         />
@@ -101,6 +101,7 @@ import { useI18n } from 'vue-i18n'
 import { http } from '@/shared/api/http'
 import { useToastStore } from '@/shared/lib/getApiErrorMessage'
 import { useErrorHandler } from '@/shared/composables/useErrorHandler'
+import { useFormErrors } from '@/shared/composables/useFormErrors'
 import AuthSplitShell from '@/shared/ui/AuthSplitShell.vue'
 import AuthHeroCards from '@/shared/ui/AuthHeroCards.vue'
 import InfoPanel from '@/shared/ui/InfoPanel.vue'
@@ -114,6 +115,7 @@ const route = useRoute()
 const router = useRouter()
 const toastStore = useToastStore()
 const { handleError } = useErrorHandler()
+const { fieldErrors, handleApiError, clearErrors } = useFormErrors()
 
 const loginLink = computed(() => {
   const redirect = route.query.redirect as string | undefined
@@ -171,6 +173,7 @@ const handleVerify = async () => {
 
   showValidation.value = true
   errorMessage.value = ''
+  clearErrors()
 
   if (emailError.value || codeError.value) {
     return
@@ -192,7 +195,12 @@ const handleVerify = async () => {
       if (redirect) query.redirect = redirect
       await router.push({ path: '/login', query })
     }, 1200)
-  } catch (error: any) {
+  } catch (error: unknown) {
+    if (handleApiError(error)) {
+      errorMessage.value = t('auth.verifyErrorFallback')
+      return
+    }
+
     errorMessage.value = handleError(error, t('auth.verifyErrorFallback'), { toast: false })
   } finally {
     verifying.value = false
@@ -204,6 +212,7 @@ const handleResend = async () => {
 
   showValidation.value = true
   errorMessage.value = ''
+  clearErrors()
 
   if (emailError.value) {
     return
@@ -219,7 +228,12 @@ const handleResend = async () => {
 
     toastStore.success(t('auth.verifyResendSuccess'))
     startCooldown(60)
-  } catch (error: any) {
+  } catch (error: unknown) {
+    if (handleApiError(error)) {
+      errorMessage.value = t('auth.verifyResendFailed')
+      return
+    }
+
     errorMessage.value = handleError(error, t('auth.verifyResendFailed'), { toast: false })
   } finally {
     resending.value = false

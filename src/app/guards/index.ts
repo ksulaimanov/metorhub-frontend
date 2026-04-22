@@ -2,55 +2,7 @@ import type { Router } from 'vue-router'
 import { useAuthStore } from '@/entities/auth/model/authStore'
 import { resolveDashboardPath } from '@/shared/lib/auth/resolveDashboardPath'
 
-const AUTH_COOKIE_HINTS = ['token', 'auth', 'session', 'jwt', 'jsessionid', 'refresh']
-
-const hasAuthCookie = () => {
-    if (typeof document === 'undefined') {
-        return false
-    }
-
-    const cookieNames = document.cookie
-        .split(';')
-        .map((chunk) => chunk.trim().split('=')[0]?.toLowerCase())
-        .filter(Boolean) as string[]
-
-    return cookieNames.some((name) => AUTH_COOKIE_HINTS.some((hint) => name.includes(hint)))
-}
-
-
 export function setupRouteGuards(router: Router) {
-    let initialAuthCheck = false
-    let authBootstrapPromise: Promise<void> | null = null
-
-    const ensureAuthBootstrapped = async () => {
-        const auth = useAuthStore()
-        const hasSessionCandidate = auth.isAuthenticated || hasAuthCookie()
-
-        if (!hasSessionCandidate || (initialAuthCheck && !authBootstrapPromise)) {
-            return
-        }
-
-        if (auth.profileLoaded && auth.user) {
-            initialAuthCheck = true
-            return
-        }
-
-        authBootstrapPromise ??= auth
-            .fetchProfile()
-            .catch((err) => {
-                if (err?.message === 'EMAIL_NOT_VERIFIED') {
-                    // Это ожидаемая ситуация
-                }
-                return undefined
-            })
-            .finally(() => {
-                initialAuthCheck = true
-                authBootstrapPromise = null
-            })
-
-        await authBootstrapPromise
-    }
-
     const hasRequiredRole = (userRole: unknown, requiredRole: string): boolean => {
         const extractRoles = (input: unknown): string[] => {
             if (!input) return []
@@ -76,24 +28,12 @@ export function setupRouteGuards(router: Router) {
     }
 
     router.beforeEach(async (to) => {
-        if (to.path === '/verify-email') {
-            const auth = useAuthStore()
-            // Даже если мы на verify-email, попробуем загрузить профиль, чтобы заполнить стор (если нужно),
-            // но нам не нужно применять редирект тут.
-            await ensureAuthBootstrapped().catch(() => {})
-            return
-        }
-
         const auth = useAuthStore()
         const requiresAuth = Boolean(to.meta.requiresAuth)
         const guestOnly = Boolean(to.meta.guestOnly)
         const requiredRole = to.meta.role as string | undefined
 
-        await ensureAuthBootstrapped()
-
-        console.log('Guard Check:', { to: to.path, isAuthenticated: auth.isAuthenticated, user: auth.user, isEmailVerified: auth.isEmailVerified })
-
-        if (auth.isAuthenticated && auth.isEmailVerified === false) {
+        if (auth.isAuthenticated && auth.isEmailVerified === false && to.path !== '/verify-email') {
             return { path: '/verify-email', replace: true }
         }
 
@@ -119,6 +59,10 @@ export function setupRouteGuards(router: Router) {
             if (to.path !== dashboardPath) {
                 return { path: dashboardPath, replace: true }
             }
+        }
+
+        if (to.path === '/verify-email') {
+            return
         }
 
         // allow navigation

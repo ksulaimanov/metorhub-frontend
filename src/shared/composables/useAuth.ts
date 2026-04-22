@@ -18,7 +18,7 @@ export function useAuth() {
     const isAuthenticated = computed(() => auth.isAuthenticated)
     const isStudent = computed(() => auth.isStudent)
     const isMentor = computed(() => auth.isMentor)
-    const isAdmin = computed(() => auth.roles.includes(ROLES.ADMIN as any))
+    const isAdmin = computed(() => auth.roles.includes(ROLES.ADMIN))
 
     function getSafeRedirectTarget(rawRedirect?: string): string | null {
         if (!rawRedirect || typeof rawRedirect !== 'string') {
