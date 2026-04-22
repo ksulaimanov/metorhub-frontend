@@ -20,15 +20,34 @@ export function useAuth() {
     const isMentor = computed(() => auth.isMentor)
     const isAdmin = computed(() => auth.roles.includes(ROLES.ADMIN as any))
 
+    function getSafeRedirectTarget(rawRedirect?: string): string | null {
+        if (!rawRedirect || typeof rawRedirect !== 'string') {
+            return null
+        }
+
+        // Разрешаем только внутренние пути вида /path, чтобы не допускать внешние redirect'ы.
+        if (!rawRedirect.startsWith('/') || rawRedirect.startsWith('//')) {
+            return null
+        }
+
+        const resolved = router.resolve(rawRedirect)
+        if (resolved.meta.guestOnly) {
+            return null
+        }
+
+        return resolved.fullPath
+    }
+
     /** Redirect после успешного логина — сначала в intended route, потом в dashboard */
-    function redirectAfterLogin() {
-        const redirect = route.query.redirect as string | undefined
-        if (redirect) {
-            router.push(redirect)
+    async function redirectAfterLogin() {
+        const redirect = getSafeRedirectTarget(route.query.redirect as string | undefined)
+        const target = redirect || resolveDashboardPath(auth.roles)
+
+        if (router.currentRoute.value.fullPath === target) {
             return
         }
 
-        router.push(resolveDashboardPath(auth.roles))
+        await router.replace(target)
     }
 
     async function logout() {

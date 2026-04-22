@@ -6,6 +6,7 @@ import { getEmptyAuthUser, mapProfileToAuthUser } from '@/shared/lib/auth/authMa
 const buildInitialState = (): AuthState => ({
   isAuthenticated: false,
   profileLoaded: false,
+  isEmailVerified: true,
   ...getEmptyAuthUser(),
 })
 
@@ -50,6 +51,7 @@ export const useAuthStore = defineStore('auth', {
       const empty = getEmptyAuthUser()
       this.isAuthenticated = false
       this.profileLoaded = false
+      this.isEmailVerified = true
       this.email = empty.email
       this.roles = empty.roles
       this.firstName = empty.firstName
@@ -73,12 +75,27 @@ export const useAuthStore = defineStore('auth', {
       try {
         const { fetchCurrentUserProfile } = await import('@/shared/api/authApi')
         const profile = await fetchCurrentUserProfile()
+        this.isEmailVerified = true
         this.applyUser(mapProfileToAuthUser(profile))
       } catch (error: any) {
-        if (error?.response?.status === 401 || error?.response?.status === 403) {
+        const errorData = error?.response?.data
+        const status = error?.response?.status
+        const errStr = JSON.stringify(errorData || '').toLowerCase()
+
+        // Если ошибка говорит о неподтвержденном email (или мы получаем 403 с соотв. текстом)
+        if (status === 403 && (errStr.includes('verif') || errStr.includes('email') || errStr.includes('unverified'))) {
+          // Оставляем isAuthenticated как есть, чтобы не выбрасывало на /login
+          this.isAuthenticated = true
+          this.profileLoaded = true
+          this.isEmailVerified = false
+          throw new Error('EMAIL_NOT_VERIFIED')
+        }
+
+        if (status === 401 || status === 403) {
           // Session is invalid/expired: only clear client auth state, no extra auth calls.
           this.clearClientAuthData()
         }
+        throw error
       }
     },
 

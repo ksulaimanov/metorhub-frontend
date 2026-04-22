@@ -40,7 +40,7 @@ const router = createRouter({
         { path: '/register', name: 'register', component: RegisterPage, meta: { guestOnly: true, title: 'Регистрация — JaiMentorship' } },
         { path: '/forgot-password', name: 'forgot-password', component: ForgotPasswordPage, meta: { guestOnly: true, title: 'Восстановление пароля — JaiMentorship' } },
         { path: '/reset-password', name: 'reset-password', component: ResetPasswordPage, meta: { guestOnly: true, title: 'Сброс пароля — JaiMentorship' } },
-        { path: '/verify-email', name: 'verify-email', component: VerifyEmailPage, meta: { guestOnly: true, title: 'Подтверждение email — JaiMentorship' } },
+        { path: '/verify-email', name: 'verify-email', component: VerifyEmailPage, meta: { title: 'Подтверждение email — JaiMentorship' } },
 
         // --- student ---
         { path: '/student/dashboard', name: 'student-dashboard', component: StudentDashboardPage, meta: { requiresAuth: true, role: 'ROLE_STUDENT', title: 'Мой кабинет — JaiMentorship' } },

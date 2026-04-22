@@ -12,6 +12,7 @@ export interface AuthUser {
 export interface AuthState extends AuthUser {
   isAuthenticated: boolean
   profileLoaded: boolean
+  isEmailVerified: boolean
 }
 
 export interface AuthProfileResponse {

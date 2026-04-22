@@ -44,7 +44,7 @@
                 >
                   <div class="flex items-center gap-3 rounded-2xl border border-border-brand bg-surface px-4 py-2.5 text-sm font-medium text-brand-soft shadow-[0_0_20px_rgba(108,92,231,0.25)]">
                     <span class="h-4 w-4 rounded-full border-2 border-brand/30 border-t-brand animate-spin" aria-hidden="true" />
-                    Загрузка...
+                    {{ t('common.loading') }}
                   </div>
                 </div>
 
@@ -63,11 +63,14 @@
 
 <script setup lang="ts">
 import { computed } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { useRoute } from 'vue-router'
 import PublicLayout from '@/widgets/layout/PublicLayout.vue'
 import AuroraBackground from '@/shared/ui/AuroraBackground.vue'
 import KyrgyzOrnamentPattern from '@/shared/ui/KyrgyzOrnamentPattern.vue'
 import AuthCard from '@/shared/ui/AuthCard.vue'
+
+const { t } = useI18n()
 
 defineProps<{
   badge?: string

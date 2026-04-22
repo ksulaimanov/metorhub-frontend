@@ -178,7 +178,7 @@ const handleLogin = async () => {
 
     errorMessage.value = ''
 
-    redirectAfterLogin()
+    await redirectAfterLogin()
   } catch (error: any) {
     errorMessage.value = handleError(error, t('auth.loginErrorFallback'), { toast: false })
   } finally {
