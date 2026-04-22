@@ -13,6 +13,7 @@
     "@vueuse/core": "^14.2.1",
     "axios": "^1.15.0",
     "clsx": "^2.1.1",
+    "date-fns-tz": "^3.2.0",
     "follow-redirects": "^1.16.0",
     "lucide-vue-next": "^0.577.0",
     "picomatch": "^4.0.4",
