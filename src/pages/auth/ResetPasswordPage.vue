@@ -15,36 +15,36 @@
     </p>
 
     <form class="mt-8 space-y-2" @submit.prevent="handleSubmit">
-      <AppField :label="t('resetPassword.emailLabel')" :error="showValidation ? emailError : ''">
+      <AppField :label="t('resetPassword.emailLabel')" :error="showValidation ? (fieldErrors.email || emailError) : ''">
         <AppInput
             v-model.trim="email"
             type="email"
             autocomplete="email"
             class="text-text-primary"
-            :error="showValidation && !!emailError"
+            :error="showValidation && !!(fieldErrors.email || emailError)"
             :placeholder="t('resetPassword.emailPlaceholder')"
         />
       </AppField>
 
-      <AppField :label="t('resetPassword.codeLabel')" :error="showValidation ? codeError : ''">
+      <AppField :label="t('resetPassword.codeLabel')" :error="showValidation ? (fieldErrors.code || codeError) : ''">
         <AppInput
             v-model.trim="code"
             inputmode="numeric"
             maxlength="6"
             class="tracking-[0.35em] text-text-primary"
-            :error="showValidation && !!codeError"
+            :error="showValidation && !!(fieldErrors.code || codeError)"
             :placeholder="t('resetPassword.codePlaceholder')"
         />
       </AppField>
 
-      <AppField :label="t('resetPassword.newPasswordLabel')" :error="showValidation ? newPasswordError : ''">
+      <AppField :label="t('resetPassword.newPasswordLabel')" :error="showValidation ? (fieldErrors.newPassword || newPasswordError) : ''">
         <div class="relative">
           <AppInput
               v-model="newPassword"
               :type="showPassword ? 'text' : 'password'"
               autocomplete="new-password"
               class="pr-24 text-text-primary"
-              :error="showValidation && !!newPasswordError"
+              :error="showValidation && !!(fieldErrors.newPassword || newPasswordError)"
               :placeholder="t('resetPassword.newPasswordPlaceholder')"
           />
           <button
@@ -111,6 +111,7 @@ import { useI18n } from 'vue-i18n'
 import { http } from '@/shared/api/http'
 import { useToastStore } from '@/shared/lib/getApiErrorMessage'
 import { useErrorHandler } from '@/shared/composables/useErrorHandler'
+import { useFormErrors } from '@/shared/composables/useFormErrors'
 import AuthSplitShell from '@/shared/ui/AuthSplitShell.vue'
 import AuthHeroCards from '@/shared/ui/AuthHeroCards.vue'
 import InfoPanel from '@/shared/ui/InfoPanel.vue'
@@ -124,6 +125,7 @@ const route = useRoute()
 const router = useRouter()
 const toastStore = useToastStore()
 const { handleError } = useErrorHandler()
+const { fieldErrors, handleApiError, clearErrors } = useFormErrors()
 
 const email = ref(typeof route.query.email === 'string' ? route.query.email : '')
 const code = ref('')
@@ -160,6 +162,7 @@ const handleSubmit = async () => {
   if (loading.value) return
 
   showValidation.value = true
+  clearErrors()
 
   if (
       emailError.value ||
@@ -185,7 +188,12 @@ const handleSubmit = async () => {
     setTimeout(async () => {
       await router.push('/login')
     }, 1200)
-  } catch (error: any) {
+  } catch (error: unknown) {
+    if (handleApiError(error)) {
+      errorMessage.value = t('resetPassword.errorFallback')
+      return
+    }
+
     errorMessage.value = handleError(error, t('resetPassword.errorFallback'), { toast: false })
   } finally {
     loading.value = false

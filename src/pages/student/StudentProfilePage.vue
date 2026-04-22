@@ -170,6 +170,7 @@ import { useI18n } from 'vue-i18n'
 import { http } from '@/shared/api/http'
 import { useToastStore } from '@/shared/lib/getApiErrorMessage'
 import { useErrorHandler } from '@/shared/composables/useErrorHandler'
+import { useFormErrors } from '@/shared/composables/useFormErrors'
 import PrivateLayout from '@/widgets/layout/PrivateLayout.vue'
 import AppCard from '@/shared/ui/AppCard.vue'
 import AppButton from '@/shared/ui/AppButton.vue'
@@ -185,6 +186,7 @@ import StudentProfileView from '@/features/student-profile/StudentProfileView.vu
 const { t } = useI18n()
 const toastStore = useToastStore()
 const { handleError } = useErrorHandler()
+const { fieldErrors, handleApiError, clearErrors } = useFormErrors()
 
 const mode = ref<'view' | 'edit'>('view')
 const avatarMessage = ref('')
@@ -213,33 +215,10 @@ const form = reactive({
   publicEmail: '',
 })
 
-const fieldErrors = reactive({
-  firstName: '',
-  lastName: '',
-})
-
 const fullName = computed(() => {
   const full = `${form.firstName} ${form.lastName}`.trim()
   return full || t('studentProfile.notFilled')
 })
-
-const validate = () => {
-  fieldErrors.firstName = ''
-  fieldErrors.lastName = ''
-  let isValid = true
-
-  if (!form.firstName.trim()) {
-    fieldErrors.firstName = t('studentProfile.firstNameRequired')
-    isValid = false
-  }
-
-  if (!form.lastName.trim()) {
-    fieldErrors.lastName = t('studentProfile.lastNameRequired')
-    isValid = false
-  }
-
-  return isValid
-}
 
 const loadProfile = async () => {
   loading.value = true
@@ -257,7 +236,9 @@ const loadProfile = async () => {
 }
 
 const saveProfile = async () => {
-  if (!validate()) {
+  clearErrors()
+
+  if (!form.firstName.trim() || !form.lastName.trim()) {
     toastStore.error(t('studentProfile.validationError'))
     return
   }
@@ -271,7 +252,11 @@ const saveProfile = async () => {
     successMessage.value = t('studentProfile.saveSuccess')
     toastStore.success(t('studentProfile.saveSuccess'))
     mode.value = 'view'
-  } catch (error) {
+  } catch (error: unknown) {
+    if (handleApiError(error)) {
+      saveError.value = t('studentProfile.validationError')
+      return
+    }
     console.error(error)
     saveError.value = handleError(error, t('studentProfile.saveError'))
   } finally {
@@ -301,7 +286,7 @@ const handleAvatarUpload = async (event: Event) => {
     form.avatarKey = data.avatarKey
     form.avatarUrl = data.avatarUrl
     toastStore.success(t('studentProfile.avatarUploaded'))
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error(error)
     avatarError.value = handleError(error, t('studentProfile.avatarUploadError'))
   } finally {
@@ -323,7 +308,7 @@ const handleAvatarDelete = async () => {
     form.avatarKey = ''
     form.avatarUrl = ''
     toastStore.success(t('studentProfile.avatarDeleted'))
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error(error)
     avatarError.value = handleError(error, t('studentProfile.avatarDeleteError'))
   } finally {

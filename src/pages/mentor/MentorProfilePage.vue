@@ -55,6 +55,7 @@
               :success-message="successMessage"
               :error-message="saveError"
               :show-validation="showValidation"
+              :field-errors="fieldErrors"
               @save="saveProfile"
               @cancel="handleCancel"
           />
@@ -70,6 +71,7 @@ import { useI18n } from 'vue-i18n'
 import { http } from '@/shared/api/http'
 import { useToastStore } from '@/shared/lib/getApiErrorMessage'
 import { useErrorHandler } from '@/shared/composables/useErrorHandler'
+import { useFormErrors } from '@/shared/composables/useFormErrors'
 import PrivateLayout from '@/widgets/layout/PrivateLayout.vue'
 import AppSectionTitle from '@/shared/ui/AppSectionTitle.vue'
 import AppButton from '@/shared/ui/AppButton.vue'
@@ -83,6 +85,7 @@ import MentorProfileEditForm from '@/features/mentor-profile-edit/MentorProfileE
 const { t } = useI18n()
 const toastStore = useToastStore()
 const { handleError } = useErrorHandler()
+const { fieldErrors, handleApiError, clearErrors } = useFormErrors()
 
 const mode = ref<'view' | 'edit'>('view')
 const loading = ref(false)
@@ -124,7 +127,7 @@ const loadProfile = async () => {
     const { data } = await http.get('/api/mentor/profile')
     Object.assign(form, data)
   } catch (e) {
-    pageError.value = handleError(e as any, t('mentorProfile.pageLoadError'), { toast: false })
+    pageError.value = handleError(e as unknown, t('mentorProfile.pageLoadError'), { toast: false })
   } finally {
     loading.value = false
   }
@@ -132,6 +135,7 @@ const loadProfile = async () => {
 
 const saveProfile = async () => {
   showValidation.value = true
+  clearErrors()
 
   if (!form.firstName || !form.lastName) return
   if (!form.lessonFormatOnline && !form.lessonFormatOffline && !form.lessonFormatHybrid) {
@@ -149,8 +153,12 @@ const saveProfile = async () => {
     toastStore.success(t('mentorProfile.saveSuccessToast'))
     showValidation.value = false
     mode.value = 'view'
-  } catch (e) {
-    saveError.value = handleError(e as any, t('mentorProfile.saveError'), { toast: false })
+  } catch (e: unknown) {
+    if (handleApiError(e)) {
+      saveError.value = t('mentorProfile.saveError')
+      return
+    }
+    saveError.value = handleError(e, t('mentorProfile.saveError'), { toast: false })
   } finally {
     saving.value = false
   }

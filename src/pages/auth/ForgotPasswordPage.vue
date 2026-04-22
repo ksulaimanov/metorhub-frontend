@@ -15,13 +15,13 @@
     </p>
 
     <form class="mt-8 space-y-2" @submit.prevent="handleSubmit">
-      <AppField :label="t('forgotPassword.emailLabel')" :error="showValidation ? emailError : ''">
+      <AppField :label="t('forgotPassword.emailLabel')" :error="showValidation ? (fieldErrors.email || emailError) : ''">
         <AppInput
             v-model.trim="email"
             type="email"
             autocomplete="email"
             class="text-text-primary"
-            :error="showValidation && !!emailError"
+            :error="showValidation && !!(fieldErrors.email || emailError)"
             :placeholder="t('forgotPassword.emailPlaceholder')"
         />
       </AppField>
@@ -66,6 +66,7 @@ import { useI18n } from 'vue-i18n'
 import { http } from '@/shared/api/http'
 import { useToastStore } from '@/shared/lib/getApiErrorMessage'
 import { useErrorHandler } from '@/shared/composables/useErrorHandler'
+import { useFormErrors } from '@/shared/composables/useFormErrors'
 import AuthSplitShell from '@/shared/ui/AuthSplitShell.vue'
 import AuthHeroCards from '@/shared/ui/AuthHeroCards.vue'
 import InfoPanel from '@/shared/ui/InfoPanel.vue'
@@ -78,6 +79,7 @@ const { t } = useI18n()
 const router = useRouter()
 const toastStore = useToastStore()
 const { handleError } = useErrorHandler()
+const { fieldErrors, handleApiError, clearErrors } = useFormErrors()
 
 const email = ref('')
 const errorMessage = ref('')
@@ -96,6 +98,7 @@ const handleSubmit = async () => {
   if (loading.value) return
 
   showValidation.value = true
+  clearErrors()
 
   if (emailError.value) return
 
@@ -115,7 +118,12 @@ const handleSubmit = async () => {
         query: { email: email.value },
       })
     }, 1000)
-  } catch (error: any) {
+  } catch (error: unknown) {
+    if (handleApiError(error)) {
+      errorMessage.value = t('forgotPassword.errorFallback')
+      return
+    }
+
     errorMessage.value = handleError(error, t('forgotPassword.errorFallback'), { toast: false })
   } finally {
     loading.value = false

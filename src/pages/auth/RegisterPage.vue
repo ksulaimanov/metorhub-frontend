@@ -15,25 +15,25 @@
     <p class="mt-2 text-sm text-text-secondary">{{ t('auth.registerSubtitle') }}</p>
 
     <form class="mt-8 space-y-2" @submit.prevent="handleRegister">
-      <AppField :label="t('auth.email')" :error="showValidation ? emailError : ''">
+      <AppField :label="t('auth.email')" :error="showValidation ? (fieldErrors.email || emailError) : ''">
         <AppInput
             v-model.trim="email"
             type="email"
             autocomplete="email"
             class="text-text-primary"
-            :error="showValidation && !!emailError"
+            :error="showValidation && !!(fieldErrors.email || emailError)"
             :placeholder="t('auth.emailPlaceholder')"
         />
       </AppField>
 
-      <AppField :label="t('auth.password')" :error="showValidation ? passwordError : ''" :hint="t('validation.passwordMin', { min: 8 })">
+      <AppField :label="t('auth.password')" :error="showValidation ? (fieldErrors.password || passwordError) : ''" :hint="t('validation.passwordMin', { min: 8 })">
         <div class="relative">
           <AppInput
               v-model="password"
               :type="showPassword ? 'text' : 'password'"
               autocomplete="new-password"
               class="pr-24 text-text-primary"
-              :error="showValidation && !!passwordError"
+              :error="showValidation && !!(fieldErrors.password || passwordError)"
               :placeholder="t('auth.passwordPlaceholder')"
           />
           <button
@@ -95,6 +95,7 @@ import { useI18n } from 'vue-i18n'
 import { http } from '@/shared/api/http'
 import { useToastStore } from '@/shared/lib/getApiErrorMessage'
 import { useErrorHandler } from '@/shared/composables/useErrorHandler'
+import { useFormErrors } from '@/shared/composables/useFormErrors'
 import AuthSplitShell from '@/shared/ui/AuthSplitShell.vue'
 import AuthHeroCards from '@/shared/ui/AuthHeroCards.vue'
 import AppErrorState from '@/shared/ui/AppErrorState.vue'
@@ -107,6 +108,7 @@ const router = useRouter()
 const route = useRoute()
 const toastStore = useToastStore()
 const { handleError } = useErrorHandler()
+const { fieldErrors, handleApiError, clearErrors } = useFormErrors()
 
 const loginLink = computed(() => {
   const redirect = route.query.redirect as string | undefined
@@ -144,6 +146,7 @@ const handleRegister = async () => {
   showValidation.value = true
   errorMessage.value = ''
   successMessage.value = ''
+  clearErrors()
 
   if (emailError.value || passwordError.value || passwordConfirmError.value) {
     return
@@ -166,7 +169,12 @@ const handleRegister = async () => {
       if (redirect) query.redirect = redirect
       await router.push({ path: '/verify-email', query })
     }, 900)
-  } catch (error: any) {
+  } catch (error: unknown) {
+    if (handleApiError(error)) {
+      errorMessage.value = t('auth.registerFailed')
+      return
+    }
+
     errorMessage.value = handleError(error, t('auth.registerErrorFallback'), { toast: false })
   } finally {
     loading.value = false

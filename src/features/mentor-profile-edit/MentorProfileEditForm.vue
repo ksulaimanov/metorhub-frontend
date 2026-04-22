@@ -9,11 +9,11 @@
         </div>
 
         <div class="grid gap-4 md:grid-cols-2">
-          <AppField :label="t('mentorProfile.firstName')" :error="showValidation && !form.firstName ? t('validation.required') : ''">
+          <AppField :label="t('mentorProfile.firstName')" :error="showValidation ? (fieldErrors.firstName || (!form.firstName ? t('validation.required') : '')) : ''">
             <AppInput v-model="form.firstName" :placeholder="t('mentorProfile.firstNamePlaceholder')" />
           </AppField>
 
-          <AppField :label="t('mentorProfile.lastName')" :error="showValidation && !form.lastName ? t('validation.required') : ''">
+          <AppField :label="t('mentorProfile.lastName')" :error="showValidation ? (fieldErrors.lastName || (!form.lastName ? t('validation.required') : '')) : ''">
             <AppInput v-model="form.lastName" :placeholder="t('mentorProfile.lastNamePlaceholder')" />
           </AppField>
 
@@ -64,37 +64,37 @@
           <label class="flex cursor-pointer items-start gap-3 rounded-2xl border p-4 transition"
                  :class="form.lessonFormatOnline ? 'border-brand bg-brand-soft/30' : 'border-border-brand hover:border-brand/50'">
             <input v-model="form.lessonFormatOnline" type="checkbox" class="mt-1 h-4 w-4 accent-brand" />
-            <div>
+            <span class="block">
               <p class="font-medium text-text-primary">{{ t('mentorProfile.formatOnline') }}</p>
               <p class="text-sm text-text-secondary">{{ t('mentorProfile.formatOnlineDesc') }}</p>
-            </div>
+            </span>
           </label>
 
           <label class="flex cursor-pointer items-start gap-3 rounded-2xl border p-4 transition"
                  :class="form.lessonFormatOffline ? 'border-brand bg-brand-soft/30' : 'border-border-brand hover:border-brand/50'">
             <input v-model="form.lessonFormatOffline" type="checkbox" class="mt-1 h-4 w-4 accent-brand" />
-            <div>
+            <span class="block">
               <p class="font-medium text-text-primary">{{ t('mentorProfile.formatOffline') }}</p>
               <p class="text-sm text-text-secondary">{{ t('mentorProfile.formatOfflineDesc') }}</p>
-            </div>
+            </span>
           </label>
 
           <label class="flex cursor-pointer items-start gap-3 rounded-2xl border p-4 transition"
                  :class="form.lessonFormatHybrid ? 'border-brand bg-brand-soft/30' : 'border-border-brand hover:border-brand/50'">
             <input v-model="form.lessonFormatHybrid" type="checkbox" class="mt-1 h-4 w-4 accent-brand" />
-            <div>
+            <span class="block">
               <p class="font-medium text-text-primary">{{ t('mentorProfile.formatHybrid') }}</p>
               <p class="text-sm text-text-secondary">{{ t('mentorProfile.formatHybridDesc') }}</p>
-            </div>
+            </span>
           </label>
 
           <label class="flex cursor-pointer items-start gap-3 rounded-2xl border p-4 transition"
                  :class="form.public ? 'border-brand bg-brand-soft/30' : 'border-border-brand hover:border-brand/50'">
             <input v-model="form.public" type="checkbox" class="mt-1 h-4 w-4 accent-brand" />
-            <div>
+            <span class="block">
               <p class="font-medium text-text-primary">{{ t('mentorProfile.publicProfileLabel') }}</p>
               <p class="text-sm text-text-secondary">{{ t('mentorProfile.publicProfileDesc') }}</p>
-            </div>
+            </span>
           </label>
         </div>
 
@@ -220,6 +220,7 @@ const props = defineProps<{
   successMessage: string
   errorMessage: string
   showValidation: boolean
+  fieldErrors: Record<string, string>
 }>()
 
 defineEmits<{
