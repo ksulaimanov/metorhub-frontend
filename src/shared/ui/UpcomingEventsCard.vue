@@ -63,7 +63,7 @@
           <!-- Date/Time -->
           <div class="flex items-center gap-2">
             <span class="font-medium text-text-primary">🕒</span>
-            <span>{{ formatDateTime(event.startAt) }}</span>
+            <span>{{ formatDateTime(event.startAt, event.timezone) }}</span>
           </div>
 
           <!-- Format -->
@@ -109,6 +109,7 @@ import type { UpcomingEvent } from '@/shared/types/dashboard'
 import AppCard from '@/shared/ui/AppCard.vue'
 import AppBadge from '@/shared/ui/AppBadge.vue'
 import AppEventSkeleton from '@/shared/ui/AppEventSkeleton.vue'
+import { formatSlotTime } from '@/shared/lib/dateFormatter'
 
 const { t, locale } = useI18n()
 
@@ -140,7 +141,7 @@ defineEmits<{
 }>()
 
 const statusVariant = (status: string): 'default' | 'success' | 'warning' | 'danger' | 'info' => {
-  const map: Record<string, any> = {
+  const map: Record<string, 'default' | 'success' | 'warning' | 'danger' | 'info'> = {
     PENDING: 'warning',
     CONFIRMED: 'success',
     COMPLETED: 'info',
@@ -149,7 +150,11 @@ const statusVariant = (status: string): 'default' | 'success' | 'warning' | 'dan
   return map[status] || 'default'
 }
 
-const formatDateTime = (value: string) => {
+const formatDateTime = (value: string, timezone?: string) => {
+  if (timezone) {
+    return formatSlotTime(value, timezone)
+  }
+
   const date = new Date(value)
   const today = new Date()
   const tomorrow = new Date(today)

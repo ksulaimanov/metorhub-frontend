@@ -9,6 +9,7 @@ export interface UpcomingEvent {
   description?: string
   startAt: string
   endAt: string
+  timezone?: string
   mentorName: string
   studentName?: string
   lessonFormat: 'ONLINE' | 'OFFLINE' | 'HYBRID'
@@ -45,4 +46,3 @@ export interface AdminDashboard {
   stats: DashboardStats
   recentEvents: UpcomingEvent[]
 }
-

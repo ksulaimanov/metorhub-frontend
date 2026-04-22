@@ -11,6 +11,7 @@ export interface StudentBookingItem {
     id: number
     startAt: string
     endAt: string
+    timezone: string
     lessonFormat: 'ONLINE' | 'OFFLINE' | 'HYBRID'
     status: BookingStatus
     studentNote: string | null
@@ -26,6 +27,7 @@ export interface MentorBookingItem {
     id: number
     startAt: string
     endAt: string
+    timezone: string
     lessonFormat: 'ONLINE' | 'OFFLINE' | 'HYBRID'
     status: BookingStatus
     studentNote: string | null
@@ -35,4 +37,3 @@ export interface MentorBookingItem {
     studentAvatarUrl: string | null
     studentId: number | null
 }
-

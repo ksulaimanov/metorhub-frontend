@@ -1,3 +1,5 @@
+import { fromZonedTime } from 'date-fns-tz'
+
 /**
  * Форматирует дату и время в русском формате
  * Для отображения: "25 марта 2026, 14:30"
@@ -80,3 +82,25 @@ export const parseDateTimeFromInput = (value: string): string => {
   return date.toISOString()
 }
 
+/**
+ * Форматирует слот/бронь с учётом IANA timezone, не сдвигая локальное время.
+ * @param isoLocal локальная дата-время без timezone, например "2024-01-15T14:30:00"
+ * @param timezone IANA timezone, например "Asia/Bishkek"
+ */
+export const formatSlotTime = (isoLocal: string, timezone: string): string => {
+  if (!isoLocal || !timezone) return isoLocal || ''
+
+  try {
+    const zonedDate = fromZonedTime(isoLocal, timezone)
+    return new Intl.DateTimeFormat('ru-RU', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+      timeZone: timezone,
+    }).format(zonedDate)
+  } catch {
+    return isoLocal
+  }
+}

@@ -3,7 +3,7 @@
     <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
       <div class="min-w-0">
         <p class="text-base font-semibold text-white">
-          {{ formatDateTime(slot.startAt) }} — {{ formatDateTime(slot.endAt) }}
+          {{ formatDateTime(slot.startAt, slot.timezone) }} — {{ formatDateTime(slot.endAt, slot.timezone) }}
         </p>
         <div class="mt-2 flex flex-wrap items-center gap-2 text-sm text-slate-400">
           <AppBadge>{{ t(`common.lessonFormat.${slot.lessonFormat}`, slot.lessonFormat) }}</AppBadge>
@@ -25,7 +25,7 @@ import { useI18n } from 'vue-i18n'
 import AppCard from '@/shared/ui/AppCard.vue'
 import AppBadge from '@/shared/ui/AppBadge.vue'
 import SlotStatusBadge from '@/features/availability/SlotStatusBadge.vue'
-import { formatDateTimeForDisplay } from '@/shared/lib/dateFormatter'
+import { formatDateTimeForDisplay, formatSlotTime } from '@/shared/lib/dateFormatter'
 
 const { t } = useI18n()
 
@@ -34,6 +34,7 @@ defineProps<{
     id: number
     startAt: string
     endAt: string
+    timezone: string
     lessonFormat: string
     meetingLink: string | null
     addressText: string | null
@@ -43,7 +44,5 @@ defineProps<{
   }
 }>()
 
-const formatDateTime = (value: string) => formatDateTimeForDisplay(value)
+const formatDateTime = (value: string, timezone?: string) => timezone ? formatSlotTime(value, timezone) : formatDateTimeForDisplay(value)
 </script>
-
-
