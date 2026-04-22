@@ -61,6 +61,17 @@ export const useToastStore = defineStore('toast', () => {
     }
 })
 
+interface ApiErrorShape {
+    response?: {
+        data?: {
+            fieldErrors?: Record<string, string>
+            message?: string
+            error?: string
+        }
+    }
+    message?: string
+}
+
 /**
  * Функция для извлечения сообщения об ошибке из ответа API
  * Обрабатывает различные форматы ответа от бэкенда:
@@ -68,34 +79,29 @@ export const useToastStore = defineStore('toast', () => {
  * 2. Простое сообщение об ошибке (message)
  * 3. Fallback текст если сервер не ответил или нет интернета
  */
-export const getApiErrorMessage = (error: any, fallbackMessage: string = 'Произошла ошибка. Попробуйте ещё раз.'): string => {
-    // Проверяем, есть ли ошибки валидации полей
-    if (error?.response?.data?.fieldErrors && typeof error.response.data.fieldErrors === 'object') {
-        const fieldErrors = error.response.data.fieldErrors
+export const getApiErrorMessage = (error: unknown, fallbackMessage: string = 'Произошла ошибка. Попробуйте ещё раз.'): string => {
+    const apiError = error as ApiErrorShape
+
+    if (apiError?.response?.data?.fieldErrors && typeof apiError.response.data.fieldErrors === 'object') {
+        const fieldErrors = apiError.response.data.fieldErrors
         const errorMessages = Object.values(fieldErrors).filter((msg) => typeof msg === 'string')
 
         if (errorMessages.length > 0) {
-            // Возвращаем первую ошибку валидации
             return errorMessages[0] as string
         }
     }
 
-    // Проверяем простое сообщение об ошибке
-    if (error?.response?.data?.message && typeof error.response.data.message === 'string') {
-        return error.response.data.message
+    if (apiError?.response?.data?.message && typeof apiError.response.data.message === 'string') {
+        return apiError.response.data.message
     }
 
-    // Проверяем поле error
-    if (error?.response?.data?.error && typeof error.response.data.error === 'string') {
-        return error.response.data.error
+    if (apiError?.response?.data?.error && typeof apiError.response.data.error === 'string') {
+        return apiError.response.data.error
     }
 
-    // Если это не ошибка сети/сервера, а другая axios ошибка
-    if (error?.message && typeof error.message === 'string' && !error?.response) {
-        // Это может быть ошибка сети или таймаута
+    if (apiError?.message && typeof apiError.message === 'string' && !apiError?.response) {
         return fallbackMessage
     }
 
-    // Возвращаем fallback сообщение по умолчанию
     return fallbackMessage
 }
