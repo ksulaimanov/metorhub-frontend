@@ -1,8 +1,9 @@
 import SockJS from 'sockjs-client'
 import Stomp from 'webstomp-client'
+import type { NotificationDto } from '@/entities/notification/model/notificationStore'
 
-let stompClient: any = null
-type NotificationCallback = (notification: any) => void
+let stompClient: Stomp.Client | null = null
+type NotificationCallback = (notification: Partial<NotificationDto> & { read?: boolean }) => void
 const callbacks: NotificationCallback[] = []
 
 const baseURL = import.meta.env.VITE_API_BASE_URL?.trim()
@@ -24,28 +25,26 @@ export const notificationService = {
   connect() {
     if (stompClient && stompClient.connected) return
 
-    // Create socket with credentials if cross-origin cookies are needed
     const socket = new SockJS(`${baseURL}/ws-stomp`)
     stompClient = Stomp.over(socket)
 
-    // Disable debug logs to keep console clean
     stompClient.debug = () => {}
 
     stompClient.connect(
-      {}, // Empty headers since we use cookies now
+      {},
       () => {
-        stompClient.subscribe('/user/topic/notifications', (message: any) => {
+        stompClient?.subscribe('/user/topic/notifications', (message: { body: string }) => {
           try {
-            const notification = JSON.parse(message.body)
+            const notification = JSON.parse(message.body) as Partial<NotificationDto> & { read?: boolean }
             callbacks.forEach(cb => cb(notification))
           } catch (e) {
             console.error('Failed to parse notification message', e)
           }
         })
       },
-      (error: any) => {
+      (error: unknown) => {
         console.error('WS error', error)
-        setTimeout(() => this.connect(), 5000) // reconnect with delay
+        window.setTimeout(() => this.connect(), 5000)
       }
     )
   },

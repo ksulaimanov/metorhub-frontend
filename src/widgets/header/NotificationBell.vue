@@ -26,14 +26,14 @@
               v-for="notif in notificationStore.notifications"
               :key="notif.id"
               class="group relative flex cursor-pointer gap-3 rounded-xl p-3 transition"
-              :class="notif.read ? 'bg-surface-secondary opacity-70' : 'bg-brand-soft/30 hover:bg-brand-soft/50 ring-1 ring-brand/20'"
+              :class="notif.isRead ? 'bg-surface-secondary opacity-70' : 'bg-brand-soft/30 hover:bg-brand-soft/50 ring-1 ring-brand/20'"
               @click="handleNotificationClick(notif)"
           >
             <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-surface shadow-sm ring-1 ring-border-brand/40">
               <Star v-if="notif.type === 'REVIEW_REMINDER'" class="h-5 w-5 text-amber-500" />
             </div>
             <div class="min-w-0 flex-1">
-              <p class="truncate text-sm font-semibold text-text-primary" :class="!notif.read && 'text-brand'">{{ notif.title }}</p>
+              <p class="truncate text-sm font-semibold text-text-primary" :class="!notif.isRead && 'text-brand'">{{ notif.title }}</p>
               <p class="mt-0.5 text-xs text-text-secondary line-clamp-2">
                 {{ notif.message }}
               </p>
@@ -52,16 +52,16 @@
 import { ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { Bell, Star } from 'lucide-vue-next'
-import { useNotificationStore } from '@/entities/notification/model/notificationStore'
+import { useNotificationStore, type NotificationDto } from '@/entities/notification/model/notificationStore'
 
 const { t } = useI18n()
 const isOpen = ref(false)
 const notificationStore = useNotificationStore()
 
-const handleNotificationClick = (notif: any) => {
+const handleNotificationClick = (notif: NotificationDto) => {
   notificationStore.markAsRead(notif.id)
   isOpen.value = false
-  if (notif.type === 'REVIEW_REMINDER' && notif.payload?.bookingId) {
+  if (notif.type === 'REVIEW_REMINDER' && typeof notif.payload?.bookingId === 'number') {
     notificationStore.openReviewModal(notif.payload.bookingId)
   }
 }

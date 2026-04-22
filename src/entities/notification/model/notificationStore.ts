@@ -1,16 +1,16 @@
 import { defineStore } from 'pinia'
 
-export interface AppNotification {
+export interface NotificationDto {
   id: number
   type: 'REVIEW_REMINDER' | 'SYSTEM'
   title: string
   message: string
-  payload?: any
-  read: boolean
+  payload?: Record<string, unknown>
+  isRead: boolean
 }
 
 interface NotificationState {
-  notifications: AppNotification[]
+  notifications: NotificationDto[]
   isReviewModalOpen: boolean
   reviewBookingId: number | null
 }
@@ -24,28 +24,28 @@ export const useNotificationStore = defineStore('notifications', {
         title: 'Оставьте отзыв',
         message: 'Поделитесь впечатлениями о недавнем уроке.',
         payload: { bookingId: 101 },
-        read: false
+        isRead: false,
       }
-    ], // Mock initial data for demonstration as requested
+    ],
     isReviewModalOpen: false,
     reviewBookingId: null,
   }),
   getters: {
-    unreadCount: (state) => state.notifications.filter(n => !n.read).length
+    unreadCount: (state) => state.notifications.filter(n => !n.isRead).length
   },
   actions: {
     markAsRead(id: number) {
       const notif = this.notifications.find(n => n.id === id)
-      if (notif) notif.read = true
+      if (notif) notif.isRead = true
     },
-    addNotification(notif: any) {
+    addNotification(notif: Partial<NotificationDto> & { read?: boolean; payload?: Record<string, unknown> }) {
       this.notifications.unshift({
         id: notif.id || Date.now(),
         type: notif.type || 'SYSTEM',
         title: notif.title || 'New Notification',
         message: notif.message || '',
         payload: notif.payload,
-        read: false
+        isRead: Boolean(notif.isRead ?? notif.read ?? false),
       })
     },
     openReviewModal(bookingId: number) {
