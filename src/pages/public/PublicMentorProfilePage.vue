@@ -133,7 +133,7 @@
                 @click="activeTab = 'about'"
               >
                 {{ t('publicMentorProfile.aboutMentor') }}
-                <div v-if="activeTab === 'about'" class="absolute bottom-0 left-0 right-0 h-0.5 bg-brand rounded-t-full"></div>
+                <span v-if="activeTab === 'about'" class="absolute bottom-0 left-0 right-0 h-0.5 bg-brand rounded-t-full"></span>
               </button>
               <button
                 class="px-4 py-2 font-medium text-sm transition-colors relative whitespace-nowrap"
@@ -141,7 +141,7 @@
                 @click="activeTab = 'reviews'"
               >
                 {{ t('publicMentorProfile.reviewsTitle') }} ({{ reviews.length }})
-                <div v-if="activeTab === 'reviews'" class="absolute bottom-0 left-0 right-0 h-0.5 bg-brand rounded-t-full"></div>
+                <span v-if="activeTab === 'reviews'" class="absolute bottom-0 left-0 right-0 h-0.5 bg-brand rounded-t-full"></span>
               </button>
             </div>
 
@@ -244,7 +244,7 @@
                   <div class="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
                     <div class="min-w-0">
                       <p class="text-base font-semibold text-text-primary">
-                        {{ formatDateTime(slot.startAt) }} — {{ formatDateTime(slot.endAt) }}
+                        {{ formatDateTime(slot.startAt, slot.timezone) }} — {{ formatDateTime(slot.endAt, slot.timezone) }}
                       </p>
 
                       <div class="mt-2 flex flex-wrap gap-1.5">
@@ -280,7 +280,7 @@
                       <div class="min-w-0 flex-1">
                         <p class="font-semibold text-emerald-800">{{ t('publicMentorProfile.bookingSuccessTitle') }}</p>
                         <p class="mt-1 text-sm text-emerald-700">
-                          {{ t('publicMentorProfile.bookingSuccessDesc', { mentor: mentorName, date: formatDateTime(slot.startAt) }) }}
+                          {{ t('publicMentorProfile.bookingSuccessDesc', { mentor: mentorName, date: formatDateTime(slot.startAt, slot.timezone) }) }}
                         </p>
                         <div class="mt-4 flex flex-wrap gap-3">
                           <RouterLink
@@ -340,7 +340,8 @@ import { getPublicMentorProfile, getPublicMentorReviews, getPublicMentorSlots } 
 import { createStudentBooking } from '@/shared/api/bookingApi'
 import { useToastStore } from '@/shared/lib/getApiErrorMessage'
 import { getApiErrorMessage } from '@/shared/lib/getApiErrorMessage'
-import { formatDateTimeForDisplay } from '@/shared/lib/dateFormatter'
+import { fromZonedTime } from 'date-fns-tz'
+import { formatDateTimeForDisplay, formatSlotTime } from '@/shared/lib/dateFormatter'
 import type { PublicMentorProfile, AvailabilitySlot, MentorReview } from '@/shared/types/mentor'
 import { CheckCircle2 } from 'lucide-vue-next'
 import PublicLayout from '@/widgets/layout/PublicLayout.vue'
@@ -449,9 +450,9 @@ const bookSlot = async (slotId: number) => {
     bookedSlotId.value = slotId
     studentNotes.value[slotId] = ''
     await loadSlots()
-  } catch (e: any) {
+  } catch (e: unknown) {
     console.error(e)
-    const status = e?.response?.status
+    const status = (e as { response?: { status?: number } })?.response?.status
     if (status === 401 || status === 403) {
       toastStore.error(t('publicMentorProfile.loginRequired'))
       await router.push({ path: '/login', query: { redirect: route.fullPath } })
@@ -463,7 +464,13 @@ const bookSlot = async (slotId: number) => {
   }
 }
 
-const isSlotPast = (slot: AvailabilitySlot) => new Date(slot.endAt) < new Date()
+const isSlotPast = (slot: AvailabilitySlot) => {
+  try {
+    return new Date(fromZonedTime(slot.endAt, slot.timezone)) < new Date()
+  } catch {
+    return new Date(slot.endAt) < new Date()
+  }
+}
 
 const slotButtonLabel = (slot: AvailabilitySlot) => {
   if (activeBookingFormId.value === slot.id) return t('publicMentorProfile.hideForm')
@@ -473,7 +480,7 @@ const slotButtonLabel = (slot: AvailabilitySlot) => {
   return t('publicMentorProfile.bookBtn')
 }
 
-const formatDateTime = (value: string) => formatDateTimeForDisplay(value)
+const formatDateTime = (value: string, timezone?: string) => timezone ? formatSlotTime(value, timezone) : formatDateTimeForDisplay(value)
 
 const scrollToSlots = () => {
   document.getElementById('slots')?.scrollIntoView({ behavior: 'smooth', block: 'start' })

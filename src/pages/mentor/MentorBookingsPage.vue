@@ -80,7 +80,7 @@
                 </div>
                 <div class="min-w-0">
                   <p class="truncate text-base font-semibold text-text-primary">{{ studentName(booking) }}</p>
-                  <p class="text-sm text-text-secondary">{{ formatDateTime(booking.startAt) }}</p>
+                  <p class="text-sm text-text-secondary">{{ formatDateTime(booking.startAt, booking.timezone) }}</p>
                 </div>
               </div>
 
@@ -96,11 +96,11 @@
             <div class="grid gap-2 rounded-xl bg-surface-secondary p-3.5 text-sm sm:grid-cols-2">
               <div>
                 <p class="text-xs text-text-secondary">{{ t('mentorBookings.startLabel') }}</p>
-                <p class="mt-0.5 font-medium text-text-primary">{{ formatDateTime(booking.startAt) }}</p>
+                <p class="mt-0.5 font-medium text-text-primary">{{ formatDateTime(booking.startAt, booking.timezone) }}</p>
               </div>
               <div>
                 <p class="text-xs text-text-secondary">{{ t('mentorBookings.endLabel') }}</p>
-                <p class="mt-0.5 font-medium text-text-primary">{{ formatDateTime(booking.endAt) }}</p>
+                <p class="mt-0.5 font-medium text-text-primary">{{ formatDateTime(booking.endAt, booking.timezone) }}</p>
               </div>
             </div>
 
@@ -180,7 +180,7 @@ import { useI18n } from 'vue-i18n'
 import { CalendarX, X } from 'lucide-vue-next'
 import { getMentorBookings, updateMentorBookingStatus } from '@/shared/api/bookingApi'
 import { useErrorHandler } from '@/shared/composables/useErrorHandler'
-import { formatDateTimeForDisplay } from '@/shared/lib/dateFormatter'
+import { formatDateTimeForDisplay, formatSlotTime } from '@/shared/lib/dateFormatter'
 import type { MentorBookingItem, BookingStatus } from '@/shared/types/booking'
 import PrivateLayout from '@/widgets/layout/PrivateLayout.vue'
 import AppSectionTitle from '@/shared/ui/AppSectionTitle.vue'
@@ -202,17 +202,28 @@ const pageError = ref('')
 const updatingId = ref<number | null>(null)
 const activeTab = ref<BookingStatus | 'all'>('all')
 
-const previewStudent = ref<any>(null)
+interface StudentPreview {
+  firstName?: string
+  lastName?: string
+  username?: string
+  avatarUrl?: string
+  learningGoals?: string
+  completedLessons?: number
+  activeCourses?: number
+}
+
+const previewStudent = ref<StudentPreview | null>(null)
 
 const openStudentPreview = (booking: MentorBookingItem) => {
   // In a real app, this could fetch full student profile from API
   previewStudent.value = {
-    firstName: booking.studentFirstName,
-    lastName: booking.studentLastName,
-    avatarUrl: booking.studentAvatarUrl,
-    learningGoals: booking.studentNote, // fallback to note if no bio
-    completedLessons: Math.floor(Math.random() * 5), // placeholder stats
-    activeCourses: Math.floor(Math.random() * 2) + 1, // placeholder stats
+    firstName: booking.studentFirstName ?? undefined,
+    lastName: booking.studentLastName ?? undefined,
+    username: undefined,
+    avatarUrl: booking.studentAvatarUrl ?? undefined,
+    learningGoals: booking.studentNote ?? undefined,
+    completedLessons: Math.floor(Math.random() * 5),
+    activeCourses: Math.floor(Math.random() * 2) + 1,
   }
 }
 
@@ -307,7 +318,7 @@ const studentInitials = (b: MentorBookingItem) => {
   return (first + last).toUpperCase() || 'S'
 }
 
-const formatDateTime = (value: string) => formatDateTimeForDisplay(value)
+const formatDateTime = (value: string, timezone?: string) => timezone ? formatSlotTime(value, timezone) : formatDateTimeForDisplay(value)
 
 const formatStatus = (value: BookingStatus) => {
   const map: Record<BookingStatus, string> = {

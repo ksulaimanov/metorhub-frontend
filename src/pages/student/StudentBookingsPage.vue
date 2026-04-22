@@ -76,7 +76,7 @@
                 </div>
                 <div class="min-w-0">
                   <p class="truncate text-base font-semibold text-text-primary">{{ mentorName(booking) }}</p>
-                  <p class="text-sm text-text-secondary">{{ formatDateTime(booking.startAt) }}</p>
+                  <p class="text-sm text-text-secondary">{{ formatDateTime(booking.startAt, booking.timezone) }}</p>
                 </div>
               </div>
 
@@ -91,11 +91,11 @@
             <div class="grid gap-2 rounded-xl bg-surface-secondary p-3.5 text-sm sm:grid-cols-2">
               <div>
                 <p class="text-xs text-text-secondary">{{ t('studentBookings.startLabel') }}</p>
-                <p class="mt-0.5 font-medium text-text-primary">{{ formatDateTime(booking.startAt) }}</p>
+                <p class="mt-0.5 font-medium text-text-primary">{{ formatDateTime(booking.startAt, booking.timezone) }}</p>
               </div>
               <div>
                 <p class="text-xs text-text-secondary">{{ t('studentBookings.endLabel') }}</p>
-                <p class="mt-0.5 font-medium text-text-primary">{{ formatDateTime(booking.endAt) }}</p>
+                <p class="mt-0.5 font-medium text-text-primary">{{ formatDateTime(booking.endAt, booking.timezone) }}</p>
               </div>
             </div>
 
@@ -201,7 +201,7 @@ import { CalendarX } from 'lucide-vue-next'
 import { getStudentBookings, cancelStudentBooking } from '@/shared/api/bookingApi'
 import { createStudentReview } from '@/shared/api/reviewApi'
 import { useErrorHandler } from '@/shared/composables/useErrorHandler'
-import { formatDateTimeForDisplay } from '@/shared/lib/dateFormatter'
+import { formatDateTimeForDisplay, formatSlotTime } from '@/shared/lib/dateFormatter'
 import type { StudentBookingItem, BookingStatus } from '@/shared/types/booking'
 import PrivateLayout from '@/widgets/layout/PrivateLayout.vue'
 import AppSectionTitle from '@/shared/ui/AppSectionTitle.vue'
@@ -319,7 +319,7 @@ const mentorInitials = (b: StudentBookingItem) => {
   return (first + last).toUpperCase() || 'M'
 }
 
-const formatDateTime = (value: string) => formatDateTimeForDisplay(value)
+const formatDateTime = (value: string, timezone?: string) => timezone ? formatSlotTime(value, timezone) : formatDateTimeForDisplay(value)
 
 const formatStatus = (value: BookingStatus) => {
   const map: Record<BookingStatus, string> = {
