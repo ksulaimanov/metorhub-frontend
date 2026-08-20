@@ -1,0 +1,62 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: Typecheck & build
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      # 20 — та же мажорная версия, что в Dockerfile.
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: npm
+
+      - run: npm ci
+
+      # `npm run build` = vue-tsc -b && vite build, то есть типы проверяются здесь же.
+      - name: Build
+        run: npm run build
+        env:
+          VITE_API_BASE_URL: http://localhost:8080
+
+      - name: Upload dist
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: dist/
+          retention-days: 7
+
+  image:
+    name: Docker image
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: docker/setup-buildx-action@v3
+
+      # Пока только проверяем сборку образа; публикация — вместе с registry.
+      - name: Build image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          push: false
+          tags: mentorhub-frontend:${{ github.sha }}
+          build-args: |
+            VITE_API_BASE_URL=http://localhost:8080
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
