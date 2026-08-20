@@ -1,26 +1,26 @@
 <template>
-  <div class="space-y-6" :aria-label="t('common.loading')">
+  <div class="space-y-6" role="status" :aria-label="t('common.loading')">
     <!-- Header skeleton -->
     <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
       <div class="space-y-2">
-        <div class="h-7 w-48 animate-pulse rounded-lg bg-brand-soft" />
-        <div class="h-4 w-36 animate-pulse rounded-lg bg-brand-soft/60" />
+        <div class="h-7 w-48 animate-pulse rounded-lg bg-surface-sunken" />
+        <div class="h-4 w-36 animate-pulse rounded-lg bg-surface-sunken" />
       </div>
-      <div class="h-6 w-20 animate-pulse rounded-full bg-brand-soft" />
+      <div class="h-6 w-20 animate-pulse rounded-full bg-surface-sunken" />
     </div>
 
     <!-- Section skeletons -->
     <AppCard v-for="s in sections" :key="s">
-      <div class="mb-4 h-5 w-40 animate-pulse rounded-lg bg-brand-soft" />
+      <div class="mb-4 h-5 w-40 animate-pulse rounded-lg bg-surface-sunken" />
       <div class="space-y-0">
         <div
           v-for="r in rowsPerSection"
           :key="r"
-          class="flex flex-col gap-1 border-b border-border-brand py-3 last:border-b-0 sm:flex-row sm:gap-4"
+          class="flex flex-col gap-1 border-b border-border-subtle py-3 last:border-b-0 sm:flex-row sm:gap-4"
         >
-          <div class="h-4 w-28 shrink-0 animate-pulse rounded-lg bg-brand-soft/60" />
+          <div class="h-4 w-28 shrink-0 animate-pulse rounded-lg bg-surface-sunken" />
           <div
-            class="h-4 animate-pulse rounded-lg bg-brand-soft/40"
+            class="h-4 animate-pulse rounded-lg bg-surface-sunken/60"
             :style="{ width: rowWidths[(s * rowsPerSection + r) % rowWidths.length] }"
           />
         </div>

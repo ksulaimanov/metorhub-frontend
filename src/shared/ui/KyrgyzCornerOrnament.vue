@@ -1,6 +1,6 @@
 <template>
   <svg
-    class="pointer-events-none absolute text-brand dark:text-zinc-600"
+    class="pointer-events-none absolute text-brand"
     :class="positionClass"
     :style="{ opacity }"
     viewBox="0 0 60 60"

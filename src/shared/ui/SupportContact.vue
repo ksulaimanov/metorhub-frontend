@@ -45,7 +45,7 @@
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n'
 import { Send, Mail, HelpCircle } from 'lucide-vue-next'
-import { useToastStore } from '@/shared/lib/getApiErrorMessage'
+import { useToastStore } from '@/shared/model/toastStore'
 
 const { t } = useI18n()
 const toastStore = useToastStore()

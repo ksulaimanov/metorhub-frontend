@@ -2,13 +2,17 @@
   <textarea
       v-bind="$attrs"
       :value="modelValue"
+      :aria-invalid="error || undefined"
       @input="$emit('update:modelValue', ($event.target as HTMLTextAreaElement).value)"
       :class="[
-        'w-full resize-y rounded-2xl border px-4 py-3.5 sm:py-3 text-base sm:text-sm outline-none transition',
-        'placeholder:text-text-secondary/60',
+        'w-full resize-y rounded-xl border px-3.5 py-2.5 text-base sm:text-sm leading-relaxed',
+        'bg-surface text-text-primary placeholder:text-text-muted',
+        'transition-[border-color,box-shadow] duration-150 ease-out',
+        'focus:outline-none focus-visible:outline-none',
+        'disabled:cursor-not-allowed disabled:bg-surface-sunken disabled:text-text-muted',
         error
-          ? 'border-red-500 bg-red-50 focus:border-red-500 focus:ring-2 focus:ring-red-200'
-          : 'border-border-brand bg-surface focus:border-brand focus:ring-2 focus:ring-brand-soft',
+          ? 'border-danger focus:border-danger focus:ring-2 focus:ring-danger/25'
+          : 'border-border-default hover:border-border-strong focus:border-brand focus:ring-2 focus:ring-brand/25',
       ]"
   />
 </template>

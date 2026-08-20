@@ -2,7 +2,7 @@
   <div
     v-bind="$attrs"
     :class="cn(
-      'relative flex flex-col w-full bg-zinc-50 dark:bg-zinc-900 transition-bg',
+      'relative flex flex-col w-full bg-surface-sunken transition-bg',
       props.class
     )"
   >
@@ -11,7 +11,7 @@
         :class="cn(
           '[--white-gradient:repeating-linear-gradient(100deg,var(--color-white)_0%,var(--color-white)_7%,transparent_10%,transparent_12%,var(--color-white)_16%)]',
           '[--dark-gradient:repeating-linear-gradient(100deg,var(--color-black)_0%,var(--color-black)_7%,transparent_10%,transparent_12%,var(--color-black)_16%)]',
-          '[--aurora:repeating-linear-gradient(100deg,var(--color-blue-500)_10%,var(--color-brand)_15%,var(--color-accent)_20%,var(--color-violet-400)_25%,var(--color-blue-400)_30%)]',
+          '[--aurora:repeating-linear-gradient(100deg,var(--color-brand)_10%,var(--color-accent)_15%,var(--color-warning)_20%,var(--color-accent)_25%,var(--color-brand)_30%)]',
           '[background-image:var(--white-gradient),var(--aurora)]',
           'dark:[background-image:var(--dark-gradient),var(--aurora)]',
           '[background-size:300%,_200%]',

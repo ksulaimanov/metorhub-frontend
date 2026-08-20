@@ -1,28 +1,42 @@
 <template>
-  <div class="pointer-events-none fixed top-4 sm:top-4 inset-x-4 sm:inset-x-auto sm:right-4 z-[100] flex flex-col items-center sm:items-end gap-2 sm:max-w-sm">
+  <!-- Always mounted so screen readers pick up toasts inserted later. -->
+  <div
+      class="pointer-events-none fixed inset-x-4 top-4 z-[100] flex flex-col items-center gap-2 sm:inset-x-auto sm:right-4 sm:max-w-sm sm:items-end"
+      aria-live="polite"
+      aria-atomic="false"
+  >
     <transition-group name="toast">
       <div
           v-for="toast in toastStore.toasts"
           :key="toast.id"
-          class="pointer-events-auto w-full sm:w-auto overflow-hidden rounded-xl border bg-surface/90 backdrop-blur-xl shadow-lg ring-1"
-          :class="toastClass(toast.type)"
+          class="pointer-events-auto w-full overflow-hidden rounded-xl border bg-surface shadow-md sm:w-auto sm:min-w-[20rem]"
+          :class="borderByType(toast.type)"
+          :role="toast.type === 'error' ? 'alert' : 'status'"
       >
-        <div class="flex items-start justify-between gap-3 px-3 py-2.5 sm:px-4 sm:py-3 cursor-pointer" @click="toastStore.removeToast(toast.id)">
+        <div class="flex items-start gap-3 px-4 py-3">
+          <component
+              :is="iconByType(toast.type)"
+              class="mt-0.5 h-4 w-4 shrink-0"
+              :class="accentByType(toast.type)"
+              aria-hidden="true"
+          />
+
           <div class="min-w-0 flex-1">
-            <p class="text-xs sm:text-sm font-semibold">
+            <p class="text-sm font-semibold text-text-primary">
               {{ titleByType(toast.type) }}
             </p>
-            <p class="mt-0.5 text-xs sm:text-sm leading-relaxed text-text-secondary">
+            <p v-if="toast.message" class="mt-0.5 text-sm leading-relaxed text-text-secondary">
               {{ toast.message }}
             </p>
           </div>
 
           <button
               type="button"
-              class="rounded-lg p-2 min-w-[44px] min-h-[44px] flex items-center justify-center text-text-secondary transition hover:bg-surface-secondary hover:text-text-primary mt-[-4px] mr-[-4px]"
-              @click.stop="toastStore.removeToast(toast.id)"
+              class="-mr-1.5 -mt-1 flex h-8 w-8 shrink-0 items-center justify-center rounded-lg text-text-muted transition-colors hover:bg-surface-hover hover:text-text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand"
+              :aria-label="t('common.close')"
+              @click="toastStore.removeToast(toast.id)"
           >
-            <span class="text-xl leading-none">&times;</span>
+            <X class="h-4 w-4" aria-hidden="true" />
           </button>
         </div>
       </div>
@@ -31,40 +45,50 @@
 </template>
 
 <script setup lang="ts">
-import type { ToastType } from '@/shared/lib/getApiErrorMessage'
-import { useToastStore } from '@/shared/lib/getApiErrorMessage'
+import { useToastStore, type ToastType } from '@/shared/model/toastStore'
 import { useI18n } from 'vue-i18n'
+import { CheckCircle2, AlertCircle, Info, AlertTriangle, X } from 'lucide-vue-next'
 
 const { t } = useI18n()
 const toastStore = useToastStore()
 
-const titleByType = (type: ToastType) => {
-  const map: Record<ToastType, string> = {
-    success: t('toast.success'),
-    error: t('toast.error'),
-    info: t('toast.info'),
-    warning: t('toast.warning'),
-  }
+const titleByType = (type: ToastType) =>
+    ({
+      success: t('toast.success'),
+      error: t('toast.error'),
+      info: t('toast.info'),
+      warning: t('toast.warning'),
+    })[type]
 
-  return map[type]
-}
+const iconByType = (type: ToastType) =>
+    ({
+      success: CheckCircle2,
+      error: AlertCircle,
+      info: Info,
+      warning: AlertTriangle,
+    })[type]
 
-const toastClass = (type: ToastType) => {
-  const map: Record<ToastType, string> = {
-    success: 'border-emerald-200 ring-emerald-100',
-    error: 'border-red-200 ring-red-100',
-    info: 'border-blue-200 ring-blue-100',
-    warning: 'border-amber-200 ring-amber-100',
-  }
+const accentByType = (type: ToastType) =>
+    ({
+      success: 'text-success',
+      error: 'text-danger',
+      info: 'text-info',
+      warning: 'text-warning',
+    })[type]
 
-  return map[type]
-}
+const borderByType = (type: ToastType) =>
+    ({
+      success: 'border-success-border',
+      error: 'border-danger-border',
+      info: 'border-info-border',
+      warning: 'border-warning-border',
+    })[type]
 </script>
 
 <style scoped>
 .toast-enter-active,
 .toast-leave-active {
-  transition: all 0.2s ease;
+  transition: opacity 0.2s ease, transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .toast-enter-from,

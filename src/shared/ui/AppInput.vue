@@ -2,12 +2,17 @@
   <input
       v-bind="$attrs"
       :value="modelValue"
+      :aria-invalid="error || undefined"
       @input="$emit('update:modelValue', ($event.target as HTMLInputElement).value)"
       :class="[
-        'w-full rounded-xl px-4 py-3.5 sm:py-3 text-base sm:text-sm outline-none transition-all duration-300 text-text-primary placeholder:text-text-secondary ring-1',
+        'w-full min-h-11 sm:min-h-10 rounded-xl border px-3.5 text-base sm:text-sm',
+        'bg-surface text-text-primary placeholder:text-text-muted',
+        'transition-[border-color,box-shadow] duration-150 ease-out',
+        'focus:outline-none focus-visible:outline-none',
+        'disabled:cursor-not-allowed disabled:bg-surface-sunken disabled:text-text-muted',
         error
-          ? 'ring-red-500 bg-red-50/50 focus:ring-red-500 focus:ring-2 focus:ring-offset-2 focus:ring-offset-surface text-red-900 dark:text-red-100'
-          : 'ring-border-brand/40 bg-surface/50 border border-border-subtle hover:ring-text-muted/50 focus:bg-surface focus:ring-brand/50 focus:ring-2 focus:shadow-[0_0_15px_rgba(108,92,231,0.3)]',
+          ? 'border-danger focus:border-danger focus:ring-2 focus:ring-danger/25'
+          : 'border-border-default hover:border-border-strong focus:border-brand focus:ring-2 focus:ring-brand/25',
       ]"
   />
 </template>

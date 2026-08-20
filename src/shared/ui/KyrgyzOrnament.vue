@@ -7,7 +7,7 @@
   >
     <svg
       viewBox="0 0 100 100"
-      class="h-full w-full fill-current text-brand dark:text-[#E9E6FF]"
+      class="h-full w-full fill-current text-brand"
       xmlns="http://www.w3.org/2000/svg"
       preserveAspectRatio="xMidYMid meet"
     >

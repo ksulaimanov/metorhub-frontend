@@ -1,13 +1,13 @@
 <template>
   <div>
     <!-- Desktop table skeleton -->
-    <div class="hidden md:block" :aria-label="t('common.loading')">
+    <div class="hidden md:block" role="status" :aria-label="t('common.loading')">
       <AppCard padding="none" radius="lg">
         <table class="w-full text-left text-sm">
           <thead>
-            <tr class="border-b border-border-brand">
+            <tr class="border-b border-border-subtle">
               <th v-for="col in columns" :key="col" class="px-5 py-3">
-                <div class="h-3 animate-pulse rounded-lg bg-brand-soft" :style="{ width: headerWidths[col % headerWidths.length] }" />
+                <div class="h-3 animate-pulse rounded-lg bg-surface-sunken" :style="{ width: headerWidths[col % headerWidths.length] }" />
               </th>
             </tr>
           </thead>
@@ -15,11 +15,11 @@
             <tr
               v-for="row in rows"
               :key="row"
-              class="border-b border-border-brand last:border-b-0"
+              class="border-b border-border-subtle last:border-b-0"
             >
               <td v-for="col in columns" :key="col" class="px-5 py-4">
                 <div
-                  class="h-4 animate-pulse rounded-lg bg-brand-soft/70"
+                  class="h-4 animate-pulse rounded-lg bg-surface-sunken"
                   :style="{ width: cellWidths[(row * columns + col) % cellWidths.length] }"
                 />
               </td>
@@ -34,14 +34,14 @@
       <AppCard v-for="i in rows" :key="i" padding="sm" radius="md">
         <div class="flex items-start justify-between gap-2">
           <div class="min-w-0 flex-1 space-y-2">
-            <div class="h-4 w-3/4 animate-pulse rounded-lg bg-brand-soft" />
-            <div class="h-3 w-1/2 animate-pulse rounded-lg bg-brand-soft/60" />
+            <div class="h-4 w-3/4 animate-pulse rounded-lg bg-surface-sunken" />
+            <div class="h-3 w-1/2 animate-pulse rounded-lg bg-surface-sunken" />
           </div>
-          <div class="h-6 w-16 animate-pulse rounded-full bg-brand-soft" />
+          <div class="h-6 w-16 animate-pulse rounded-full bg-surface-sunken" />
         </div>
         <div class="mt-2 flex gap-2">
-          <div class="h-3 w-20 animate-pulse rounded-lg bg-brand-soft/60" />
-          <div class="h-3 w-28 animate-pulse rounded-lg bg-brand-soft/60" />
+          <div class="h-3 w-20 animate-pulse rounded-lg bg-surface-sunken" />
+          <div class="h-3 w-28 animate-pulse rounded-lg bg-surface-sunken" />
         </div>
       </AppCard>
     </div>

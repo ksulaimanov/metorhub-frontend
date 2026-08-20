@@ -13,8 +13,8 @@
       <button
         :disabled="currentPage === 0"
         :aria-label="t('common.pagination.prevPage')"
-        class="inline-flex h-8 w-8 items-center justify-center rounded-xl text-sm transition disabled:pointer-events-none disabled:opacity-40"
-        :class="currentPage === 0 ? '' : 'text-text-secondary hover:bg-brand-soft hover:text-text-primary'"
+        class="inline-flex h-9 w-9 items-center justify-center rounded-xl text-sm transition disabled:pointer-events-none disabled:opacity-40"
+        :class="currentPage === 0 ? '' : 'text-text-secondary hover:bg-surface-hover hover:text-text-primary'"
         @click="emit('update:currentPage', currentPage - 1)"
       >
         <ChevronLeft class="h-4 w-4" />
@@ -24,10 +24,11 @@
         <span v-if="page === -1" class="px-1 text-sm text-text-muted">…</span>
         <button
           v-else
-          class="inline-flex h-8 min-w-[2rem] items-center justify-center rounded-xl text-sm font-medium transition"
+          :aria-current="page === currentPage ? 'page' : undefined"
+          class="inline-flex h-9 min-w-9 items-center justify-center rounded-xl text-sm font-medium transition"
           :class="page === currentPage
-            ? 'bg-brand text-white'
-            : 'text-text-secondary hover:bg-brand-soft hover:text-text-primary'"
+            ? 'bg-brand text-on-brand'
+            : 'text-text-secondary hover:bg-surface-hover hover:text-on-brand'"
           @click="emit('update:currentPage', page)"
         >
           {{ page + 1 }}
@@ -37,8 +38,8 @@
       <button
         :disabled="currentPage >= totalPages - 1"
         :aria-label="t('common.pagination.nextPage')"
-        class="inline-flex h-8 w-8 items-center justify-center rounded-xl text-sm transition disabled:pointer-events-none disabled:opacity-40"
-        :class="currentPage >= totalPages - 1 ? '' : 'text-text-secondary hover:bg-brand-soft hover:text-text-primary'"
+        class="inline-flex h-9 w-9 items-center justify-center rounded-xl text-sm transition disabled:pointer-events-none disabled:opacity-40"
+        :class="currentPage >= totalPages - 1 ? '' : 'text-text-secondary hover:bg-surface-hover hover:text-text-primary'"
         @click="emit('update:currentPage', currentPage + 1)"
       >
         <ChevronRight class="h-4 w-4" />

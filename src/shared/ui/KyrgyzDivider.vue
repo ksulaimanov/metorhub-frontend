@@ -55,7 +55,7 @@ const props = withDefaults(defineProps<{
   size: 'md',
 })
 
-const color = '#5B3FD3'
+const color = '#8b5cf6'
 
 const sizeClass = computed(() =>
     props.size === 'sm' ? 'h-4 w-20' : 'h-5 w-24',

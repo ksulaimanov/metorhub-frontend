@@ -17,11 +17,11 @@
     <!-- Error State -->
     <div
         v-else-if="error"
-        class="rounded-2xl border border-red-200 bg-red-50 p-4 text-center"
+        class="rounded-2xl border border-danger-border bg-danger-soft p-4 text-center"
     >
-      <p class="text-sm font-medium text-red-700">{{ error }}</p>
+      <p class="text-sm font-medium text-danger">{{ error }}</p>
       <button
-          class="mt-3 text-sm font-semibold text-red-600 underline hover:text-red-700"
+          class="mt-3 text-sm font-semibold text-danger underline hover:text-danger"
           @click="$emit('retry')"
       >
         {{ t('common.retry') }}

@@ -23,10 +23,8 @@ const props = withDefaults(defineProps<Props>(), {
 })
 
 const cardClasses = computed(() => [
-  'relative overflow-hidden rounded-[2rem] border border-border-brand bg-surface backdrop-blur-2xl',
-  props.compact
-    ? 'p-4 shadow-sm'
-    : 'p-6 shadow-[0_8px_32px_rgba(0,0,0,0.4)] sm:p-10',
+  'relative overflow-hidden rounded-2xl border border-border-subtle bg-surface',
+  props.compact ? 'p-4' : 'p-6 shadow-sm sm:p-8',
 ])
 </script>
 

@@ -40,7 +40,7 @@ const props = withDefaults(defineProps<{
   size: 'md',
 })
 
-const color = '#5B3FD3'
+const color = '#8b5cf6'
 const opacity = 0.15
 
 const positionClass = computed(() => {

@@ -1,5 +1,5 @@
 <template>
-  <footer class="relative overflow-hidden bg-surface backdrop-blur-xl">
+  <footer class="relative overflow-hidden bg-sidebar-bg">
     <div class="pointer-events-none absolute inset-x-0 top-0 z-20 h-[1px] bg-gradient-to-r from-transparent via-white/20 to-transparent" />
     <KyrgyzOrnamentPattern :opacity="0.08" :scale="1.5" class="text-sidebar-text mix-blend-screen" />
 
@@ -11,8 +11,8 @@
           <!-- Brand -->
           <div>
             <div class="flex items-center gap-2">
-              <AppLogo class="h-7 w-7 shrink-0 text-text-primary" />
-              <span class="text-lg font-extrabold tracking-tight text-text-primary">JaiMentorship</span>
+              <AppLogo class="h-7 w-7 shrink-0 text-sidebar-text-active" />
+              <span class="text-lg font-extrabold tracking-tight text-sidebar-text-active">JaiMentorship</span>
             </div>
             <p class="mt-4 text-sm leading-relaxed text-sidebar-text/90">
               {{ t('footer.tagline') }}
@@ -21,15 +21,15 @@
 
           <!-- Platform -->
           <div>
-            <h4 class="mt-1 text-sm font-semibold text-text-primary uppercase tracking-wider">{{ t('footer.platform') }}</h4>
+            <h4 class="mt-1 text-sm font-semibold text-sidebar-text-active uppercase tracking-wider">{{ t('footer.platform') }}</h4>
             <ul class="mt-4 space-y-3">
               <li>
-                <RouterLink to="/about" class="text-sm text-sidebar-text/90 transition hover:text-text-primary">
+                <RouterLink to="/about" class="text-sm text-sidebar-text/90 transition hover:text-sidebar-text-active">
                   {{ t('nav.about') }}
                 </RouterLink>
               </li>
               <li>
-                <RouterLink to="/mentors" class="text-sm text-sidebar-text/90 transition hover:text-text-primary">
+                <RouterLink to="/mentors" class="text-sm text-sidebar-text/90 transition hover:text-sidebar-text-active">
                   {{ t('nav.mentors') }}
                 </RouterLink>
               </li>
@@ -38,15 +38,15 @@
 
           <!-- Account -->
           <div>
-            <h4 class="mt-1 text-sm font-semibold text-text-primary uppercase tracking-wider">{{ t('footer.account') }}</h4>
+            <h4 class="mt-1 text-sm font-semibold text-sidebar-text-active uppercase tracking-wider">{{ t('footer.account') }}</h4>
             <ul class="mt-4 space-y-3">
               <li>
-                <RouterLink to="/login" class="text-sm text-sidebar-text/90 transition hover:text-text-primary">
+                <RouterLink to="/login" class="text-sm text-sidebar-text/90 transition hover:text-sidebar-text-active">
                   {{ t('nav.login') }}
                 </RouterLink>
               </li>
               <li>
-                <RouterLink to="/register" class="text-sm text-sidebar-text/90 transition hover:text-text-primary">
+                <RouterLink to="/register" class="text-sm text-sidebar-text/90 transition hover:text-sidebar-text-active">
                   {{ t('nav.register') }}
                 </RouterLink>
               </li>
@@ -55,15 +55,15 @@
 
           <!-- For Mentors -->
           <div>
-            <h4 class="mt-1 text-sm font-semibold text-text-primary uppercase tracking-wider">{{ t('footer.forMentors') }}</h4>
+            <h4 class="mt-1 text-sm font-semibold text-sidebar-text-active uppercase tracking-wider">{{ t('footer.forMentors') }}</h4>
             <ul class="mt-4 space-y-3">
               <li>
-                <RouterLink to="/mentor/apply" class="text-sm text-sidebar-text/90 transition hover:text-text-primary">
+                <RouterLink to="/mentor/apply" class="text-sm text-sidebar-text/90 transition hover:text-sidebar-text-active">
                   {{ t('nav.becomeMentor') }}
                 </RouterLink>
               </li>
               <li>
-                <RouterLink to="/mentor/application/status" class="text-sm text-sidebar-text/90 transition hover:text-text-primary">
+                <RouterLink to="/mentor/application/status" class="text-sm text-sidebar-text/90 transition hover:text-sidebar-text-active">
                   {{ t('nav.applicationStatus') }}
                 </RouterLink>
               </li>
@@ -72,7 +72,7 @@
 
           <!-- Legal -->
           <div>
-            <h4 class="mt-1 text-sm font-semibold text-text-primary uppercase tracking-wider">{{ t('footer.legal') }}</h4>
+            <h4 class="mt-1 text-sm font-semibold text-sidebar-text-active uppercase tracking-wider">{{ t('footer.legal') }}</h4>
             <ul class="mt-4 space-y-3">
               <li>
                 <span class="cursor-default text-sm text-sidebar-text/75 transition hover:text-sidebar-text/95">
@@ -90,7 +90,7 @@
 
         <!-- Ornamental separator -->
         <div class="mt-12 mb-8">
-          <OrnamentDivider :opacity="0.3" class="text-brand-soft" />
+          <OrnamentDivider :opacity="0.3" class="text-brand" />
         </div>
 
         <!-- Support -->
@@ -101,14 +101,14 @@
                 href="https://t.me/ksulaimanov"
                 target="_blank"
                 rel="noopener noreferrer"
-                class="inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-medium text-sidebar-text/90 transition hover:bg-surface/10 hover:text-text-primary"
+                class="inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-medium text-sidebar-text/90 transition hover:bg-surface/10 hover:text-sidebar-text-active"
             >
               <Send class="h-4 w-4" />
               Telegram
             </a>
             <a
                 :href="`mailto:${SUPPORT_EMAIL}`"
-                class="inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-medium text-sidebar-text/90 transition hover:bg-surface/10 hover:text-text-primary"
+                class="inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-medium text-sidebar-text/90 transition hover:bg-surface/10 hover:text-sidebar-text-active"
                 aria-label="Contact support via email"
             >
               <Mail class="h-4 w-4" />
@@ -116,7 +116,7 @@
             </a>
             <button
                 type="button"
-                class="inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-medium text-sidebar-text/90 transition hover:bg-surface/10 hover:text-text-primary"
+                class="inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-medium text-sidebar-text/90 transition hover:bg-surface/10 hover:text-sidebar-text-active"
                 @click="copyEmail"
                 aria-label="Copy support email"
             >
@@ -131,14 +131,14 @@
       <template v-else>
         <div class="flex flex-col items-center gap-3 sm:flex-row sm:justify-between">
           <div class="flex items-center gap-4">
-            <RouterLink to="/" class="flex items-center gap-1.5 text-sm font-semibold text-text-primary transition hover:text-sidebar-text">
-              <AppLogo class="h-5 w-5 shrink-0 text-text-primary" />
+            <RouterLink to="/" class="flex items-center gap-1.5 text-sm font-semibold text-sidebar-text-active transition hover:text-accent">
+              <AppLogo class="h-5 w-5 shrink-0 text-accent" />
               JaiMentorship
             </RouterLink>
             <span class="hidden h-3.5 w-px bg-sidebar-hover sm:block" />
             <div class="hidden items-center gap-3 sm:flex">
-              <RouterLink to="/about" class="text-xs text-sidebar-text transition hover:text-text-primary">{{ t('nav.about') }}</RouterLink>
-              <RouterLink to="/mentors" class="text-xs text-sidebar-text transition hover:text-text-primary">{{ t('nav.mentors') }}</RouterLink>
+              <RouterLink to="/about" class="text-xs text-sidebar-text transition hover:text-sidebar-text-active">{{ t('nav.about') }}</RouterLink>
+              <RouterLink to="/mentors" class="text-xs text-sidebar-text transition hover:text-sidebar-text-active">{{ t('nav.mentors') }}</RouterLink>
             </div>
           </div>
           <div class="flex items-center gap-3">
@@ -146,14 +146,14 @@
                 href="https://t.me/ksulaimanov"
                 target="_blank"
                 rel="noopener noreferrer"
-                class="inline-flex items-center gap-1 text-xs text-sidebar-text transition hover:text-text-primary p-1"
+                class="inline-flex items-center gap-1 text-xs text-sidebar-text transition hover:text-sidebar-text-active p-1"
             >
               <Send class="h-3.5 w-3.5" />
               Telegram
             </a>
             <a
                 :href="`mailto:${SUPPORT_EMAIL}`"
-                class="inline-flex items-center gap-1 text-xs text-sidebar-text transition hover:text-text-primary p-1 hover:underline"
+                class="inline-flex items-center gap-1 text-xs text-sidebar-text transition hover:text-sidebar-text-active p-1 hover:underline"
                 aria-label="Contact support via email"
             >
               <Mail class="h-3.5 w-3.5" />
@@ -161,7 +161,7 @@
             </a>
              <button
                 type="button"
-                class="inline-flex items-center gap-1 text-xs text-sidebar-text hover:text-text-primary p-1"
+                class="inline-flex items-center gap-1 text-xs text-sidebar-text hover:text-sidebar-text-active p-1"
                 @click="copyEmail"
             >
               <Copy class="h-3.5 w-3.5" />
@@ -187,7 +187,7 @@ import { Send, Mail, Copy } from 'lucide-vue-next'
 import AppLogo from '@/shared/ui/AppLogo.vue'
 import OrnamentDivider from '@/shared/ui/OrnamentDivider.vue'
 import KyrgyzOrnamentPattern from '@/shared/ui/KyrgyzOrnamentPattern.vue'
-import { useToastStore } from '@/shared/lib/getApiErrorMessage'
+import { useToastStore } from '@/shared/model/toastStore'
 
 const { t } = useI18n()
 const toastStore = useToastStore()

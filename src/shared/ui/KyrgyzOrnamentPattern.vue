@@ -32,7 +32,7 @@
         </pattern>
       </defs>
       <!-- Base pattern fill -->
-      <rect width="100%" height="100%" :fill="`url(#${patternId})`" class="text-brand dark:text-zinc-500" />
+      <rect width="100%" height="100%" :fill="`url(#${patternId})`" class="text-brand" />
     </svg>
     <!-- Dark/Light gradient to fade pattern naturally -->
     <div v-if="fade" class="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-bg"></div>

@@ -1,12 +1,12 @@
 <template>
   <div
       :class=" [
-        'relative flex shrink-0 items-center justify-center overflow-hidden rounded-2xl bg-gradient-to-br from-brand to-accent font-bold text-white shadow-sm ring-2 ring-surface transition-transform duration-300',
+        'relative flex shrink-0 items-center justify-center overflow-hidden rounded-2xl bg-gradient-to-br from-brand to-accent font-bold text-on-brand shadow-sm ring-2 ring-surface transition-transform duration-300',
         sizeClasses[size],
         textClasses[size],
       ]"
   >
-    <div v-if="loading" class="absolute inset-0 animate-pulse bg-slate-200 dark:bg-slate-700" />
+    <div v-if="loading" class="absolute inset-0 animate-pulse bg-surface-sunken" />
     <img
         v-if="!loading && resolvedSrc && !imgError"
         :src="resolvedSrc"
