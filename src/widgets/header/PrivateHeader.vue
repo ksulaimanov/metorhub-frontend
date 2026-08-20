@@ -8,7 +8,7 @@
         </RouterLink>
 
         <button
-            class="rounded-xl bg-brand px-4 py-2 text-sm font-medium text-white md:hidden"
+            class="rounded-xl bg-brand px-4 py-2 text-sm font-medium text-on-brand md:hidden"
             @click="logout"
         >
           {{ t('auth.logout') }}
@@ -57,7 +57,7 @@
         <NotificationBell v-if="authStore.isStudent" />
 
         <button
-            class="hidden rounded-xl bg-brand px-4 py-2 text-white md:inline-flex"
+            class="hidden rounded-xl bg-brand px-4 py-2 text-on-brand md:inline-flex"
             @click="logout"
         >
           {{ t('auth.logout') }}

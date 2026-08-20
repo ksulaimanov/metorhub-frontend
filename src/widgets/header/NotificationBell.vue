@@ -5,13 +5,13 @@
         @click="isOpen = !isOpen"
     >
       <Bell class="h-5 w-5" />
-      <span v-if="notificationStore.unreadCount > 0" class="absolute -right-1 -top-1 flex h-4 min-w-[1rem] items-center justify-center rounded-full bg-red-500 px-1 text-[10px] font-bold text-white shadow-sm">
+      <span v-if="notificationStore.unreadCount > 0" class="absolute -right-1 -top-1 flex h-4 min-w-[1rem] items-center justify-center rounded-full bg-danger-soft px-1 text-[10px] font-bold text-white shadow-sm">
         {{ notificationStore.unreadCount }}
       </span>
     </button>
 
     <Transition name="slide-up">
-      <div v-if="isOpen" class="absolute right-0 top-12 w-80 rounded-2xl bg-surface p-4 shadow-xl ring-1 ring-border-brand/80 sm:w-96 z-50 origin-top-right backdrop-blur-3xl">
+      <div v-if="isOpen" class="absolute right-0 top-12 w-80 rounded-2xl bg-surface p-4 shadow-xl ring-1 ring-border-brand/80 sm:w-96 z-50 origin-top-right">
         <div class="flex items-center justify-between mb-4">
           <h3 class="text-base font-bold text-text-primary">{{ t('notifications.title') }}</h3>
           <button class="text-xs text-brand hover:underline" @click="markAllAsRead">{{ t('notifications.markAllAsRead') }}</button>
@@ -30,7 +30,7 @@
               @click="handleNotificationClick(notif)"
           >
             <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-surface shadow-sm ring-1 ring-border-brand/40">
-              <Star v-if="notif.type === 'REVIEW_REMINDER'" class="h-5 w-5 text-amber-500" />
+              <Star v-if="notif.type === 'REVIEW_REMINDER'" class="h-5 w-5 text-warning" />
             </div>
             <div class="min-w-0 flex-1">
               <p class="truncate text-sm font-semibold text-text-primary" :class="!notif.isRead && 'text-brand'">{{ notif.title }}</p>

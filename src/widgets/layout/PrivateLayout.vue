@@ -1,6 +1,6 @@
 <template>
-  <div class="flex h-screen bg-gradient-to-b from-[#0f172a] via-[#1e1b4b] to-[#0f172a] text-white">
-    <KyrgyzOrnamentPattern :opacity="0.05" :scale="1.5" class="fixed inset-0 z-0 pointer-events-none mix-blend-overlay" />
+  <div class="flex h-screen bg-bg text-text-primary">
+    <KyrgyzOrnamentPattern :opacity="0.05" :scale="1.5" class="fixed inset-0 z-0 pointer-events-none" />
 
     <!-- Sidebar -->
     <SidebarNav
@@ -13,11 +13,11 @@
     <!-- Main content area -->
     <div class="flex flex-1 flex-col overflow-hidden relative z-10">
       <!-- Top header bar -->
-      <header class="sticky top-0 z-20 flex h-16 items-center justify-between border-b border-white/10 bg-surface/10 px-4 backdrop-blur-xl sm:px-6">
+      <header class="sticky top-0 z-20 flex h-16 items-center justify-between border-b border-border-subtle bg-bg/85 backdrop-blur px-4 sm:px-6">
         <!-- Left: mobile menu toggle + brand on mobile -->
         <div class="flex items-center gap-3">
           <button
-              class="rounded-xl p-2 text-slate-300 transition hover:bg-white/10 hover:text-white lg:hidden"
+              class="rounded-xl p-2 text-text-secondary transition hover:bg-surface-hover hover:text-text-primary lg:hidden"
               @click="mobileMenuOpen = true"
           >
             <Menu class="h-5 w-5" />
@@ -25,7 +25,7 @@
 
           <RouterLink to="/" class="flex items-center gap-2 lg:hidden">
             <AppLogo class="h-7 w-7 shrink-0" />
-            <span class="text-base font-extrabold tracking-tight text-white">JaiMentorship</span>
+            <span class="text-base font-semibold tracking-tight text-text-primary">JaiMentorship</span>
           </RouterLink>
         </div>
 
@@ -35,18 +35,18 @@
           <LanguageSwitcher />
 
           <div class="hidden items-center gap-2.5 sm:flex">
-            <div class="h-5 w-px bg-white/20" />
+            <div class="h-5 w-px bg-border-default" />
             <div class="flex items-center gap-2">
-              <div class="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-brand/20 border border-brand/30 text-xs font-bold text-white shadow-[0_0_15px_rgba(108,92,231,0.4)]">
+              <div class="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-brand text-xs font-semibold text-on-brand">
                 {{ authStore.initials }}
               </div>
-              <span class="max-w-[140px] truncate text-sm font-medium text-white">{{ authStore.displayName }}</span>
+              <span class="max-w-[140px] truncate text-sm font-medium text-text-primary">{{ authStore.displayName }}</span>
             </div>
           </div>
 
           <button
               @click="logout"
-              class="inline-flex items-center gap-1.5 rounded-xl px-3 py-2 text-sm font-medium text-slate-300 transition hover:bg-red-500/10 hover:text-red-400 group"
+              class="inline-flex items-center gap-1.5 rounded-xl px-3 py-2 text-sm font-medium text-text-secondary transition hover:bg-danger-soft hover:text-danger group"
           >
             <LogOut class="h-4 w-4 group-hover:scale-110 transition-transform" />
             <span class="hidden sm:inline">{{ t('privateNav.logout') }}</span>

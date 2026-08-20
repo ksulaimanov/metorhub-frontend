@@ -9,14 +9,10 @@
       alt=""
     />
 
-    <AuroraBackground
-      :showRadialGradient="true"
-      class="absolute inset-0 z-[1] !bg-transparent"
-      auroraOpacity="opacity-20 dark:opacity-25"
-    />
-
-    <div class="absolute inset-0 bg-black/40 z-[1]"></div>
-    <div class="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-[#0b122b] to-transparent z-[2]"></div>
+    <!-- Warm scrim: keeps the photo readable and ties it to the paper palette. -->
+    <div class="absolute inset-0 z-[1] bg-[#16151D]/55"></div>
+    <!-- Fades into the page background so there is no seam below the hero. -->
+    <div class="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-bg to-transparent z-[2]"></div>
     <div class="pointer-events-none absolute bottom-0 left-0 right-0 z-[3] px-6" aria-hidden="true">
       <div class="mx-auto max-w-5xl">
         <KyrgyzDivider variant="subtle" size="md" />
@@ -27,19 +23,17 @@
     <div class="relative z-10 container mx-auto px-6 min-h-screen flex items-center">
       <div class="w-full py-24 lg:py-32 flex flex-col items-center text-center">
         <!-- Badge -->
-        <div class="group relative inline-flex items-center justify-center p-px mb-8 text-sm font-medium leading-6 text-white bg-slate-800/60 rounded-full cursor-default border border-white/20 backdrop-blur-md shadow-[0_0_20px_rgba(99,102,241,0.2)]">
-          <span class="px-4 py-1.5 flex items-center gap-2">
-            <span class="w-2 h-2 rounded-full bg-indigo-400 animate-pulse shadow-[0_0_10px_rgba(99,102,241,0.8)]"></span>
-            {{ t('home.heroBadge') }}
-          </span>
+        <div class="relative mb-8 inline-flex items-center gap-2 rounded-full border border-white/25 bg-white/10 px-4 py-1.5 text-sm font-medium leading-6 text-white">
+          <span class="h-1.5 w-1.5 rounded-full bg-accent" aria-hidden="true"></span>
+          {{ t('home.heroBadge') }}
         </div>
 
-        <!-- Headline -->
-        <h1 class="text-4xl sm:text-5xl lg:text-[5.5rem] font-extrabold tracking-tight text-white mb-8 leading-[1.1] drop-shadow-2xl">
+        <!-- Headline: serif display face carries the editorial tone. -->
+        <h1 class="font-display text-4xl font-medium leading-[1.08] tracking-tight text-white mb-6 sm:text-5xl lg:text-7xl">
           {{ t('home.heroTitle') }}
         </h1>
 
-        <p class="text-lg sm:text-xl md:text-2xl text-slate-200 mb-12 max-w-2xl leading-relaxed mx-auto drop-shadow-md">
+        <p class="mx-auto mb-10 max-w-2xl text-lg leading-relaxed text-white/80 sm:text-xl">
           {{ t('home.heroSubtitle') }}
         </p>
 
@@ -47,7 +41,7 @@
         <div class="flex flex-col sm:flex-row items-center gap-5 w-full justify-center">
           <template v-if="auth.isAuthenticated">
             <RouterLink :to="dashboardRoute" class="w-full sm:w-auto">
-              <button class="cta-shine relative overflow-hidden w-full sm:w-auto inline-flex justify-center items-center gap-2 rounded-full bg-white text-black px-10 py-4 text-lg font-bold transition-all hover:bg-slate-200 hover:-translate-y-1 shadow-[0_0_30px_rgba(255,255,255,0.3)] hover:shadow-[0_0_50px_rgba(255,255,255,0.5)]">
+              <button class="relative overflow-hidden w-full sm:w-auto inline-flex justify-center items-center gap-2 rounded-full bg-[#F8F8FC] text-[#16151D] px-8 py-4 text-base font-semibold transition-all hover:bg-white hover:-translate-y-0.5 shadow-md">
                 {{ t('home.ctaDashboard') }}
                 <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg>
               </button>
@@ -56,14 +50,14 @@
           <template v-else>
             <RouterLink to="/mentors" class="w-full sm:w-auto">
               <!-- Primary CTA -->
-              <button class="cta-shine relative overflow-hidden w-full sm:w-auto inline-flex justify-center items-center gap-2 rounded-full bg-white text-[#0A0A0A] px-10 py-4 text-lg font-extrabold transition-all hover:bg-gray-100 hover:-translate-y-1 shadow-[0_4px_30px_rgba(255,255,255,0.4)] hover:shadow-[0_10px_50px_rgba(255,255,255,0.6)]">
+              <button class="relative overflow-hidden w-full sm:w-auto inline-flex justify-center items-center gap-2 rounded-full bg-[#F8F8FC] text-[#16151D] px-8 py-4 text-base font-semibold transition-all hover:bg-white hover:-translate-y-0.5 shadow-md">
                 {{ t('home.ctaFindMentor') }}
                 <svg class="w-5 h-5 transition-transform group-hover:translate-x-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg>
               </button>
             </RouterLink>
             <RouterLink to="/register" class="w-full sm:w-auto">
               <!-- Secondary CTA -->
-              <button class="cta-shine relative overflow-hidden w-full sm:w-auto inline-flex justify-center items-center gap-2 rounded-full bg-white/10 border border-white/20 text-white px-10 py-4 text-lg font-bold backdrop-blur-md transition hover:bg-white/20 hover:border-white/30 hover:-translate-y-0.5">
+              <button class="relative overflow-hidden w-full sm:w-auto inline-flex justify-center items-center gap-2 rounded-full border border-white/30 bg-white/10 text-white px-8 py-4 text-base font-semibold transition hover:bg-white/20 hover:border-white/50 hover:-translate-y-0.5">
                 {{ t('home.ctaRegister') }}
               </button>
             </RouterLink>
@@ -71,15 +65,15 @@
         </div>
 
         <!-- Social proof / Micro stats -->
-        <div class="mt-14 flex flex-wrap justify-center gap-4 sm:gap-8 text-sm sm:text-base font-semibold text-slate-300">
-          <span class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#0A0A0A]/50 border border-white/10 backdrop-blur-md shadow-lg">
-            <span class="text-indigo-400 text-lg">✓</span> {{ t('home.proofMentors') }}
+        <div class="mt-14 flex flex-wrap justify-center gap-3 text-sm font-medium text-white/85">
+          <span class="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-4 py-2">
+            <Check class="h-4 w-4 text-accent" aria-hidden="true" /> {{ t('home.proofMentors') }}
           </span>
-          <span class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#0A0A0A]/50 border border-white/10 backdrop-blur-md shadow-lg">
-            <span class="text-purple-400 text-lg">⚡</span> {{ t('home.proofFormats') }}
+          <span class="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-4 py-2">
+            <Zap class="h-4 w-4 text-accent" aria-hidden="true" /> {{ t('home.proofFormats') }}
           </span>
-          <span class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#0A0A0A]/50 border border-white/10 backdrop-blur-md shadow-lg">
-            <span class="text-yellow-400 text-lg">★</span> {{ t('home.proofFree') }}
+          <span class="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-4 py-2">
+            <Star class="h-4 w-4 text-accent" aria-hidden="true" /> {{ t('home.proofFree') }}
           </span>
         </div>
       </div>
@@ -100,8 +94,8 @@ import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useAuthStore } from '@/entities/auth/model/authStore'
 import { resolveDashboardPath } from '@/shared/lib/auth/resolveDashboardPath'
-import AuroraBackground from '@/shared/ui/AuroraBackground.vue'
 import KyrgyzDivider from '@/shared/ui/KyrgyzDivider.vue'
+import { Check, Zap, Star } from 'lucide-vue-next'
 
 const { t } = useI18n()
 const auth = useAuthStore()
@@ -129,29 +123,10 @@ const dashboardRoute = computed(() => resolveDashboardPath(auth.roles))
   animation: slow-zoom 25s linear infinite;
 }
 
-@keyframes cta-shine {
-  0% { transform: translateX(-140%) skewX(-20deg); }
-  20% { transform: translateX(240%) skewX(-20deg); }
-  100% { transform: translateX(240%) skewX(-20deg); }
-}
-
-.cta-shine::before {
-  content: '';
-  position: absolute;
-  top: -20%;
-  left: 0;
-  width: 35%;
-  height: 140%;
-  pointer-events: none;
-  background: linear-gradient(110deg, transparent 0%, rgba(255, 255, 255, 0.45) 50%, transparent 100%);
-  animation: cta-shine 4.5s ease-in-out infinite;
-}
-
 @media (prefers-reduced-motion: reduce) {
   .animate-gradient-x,
   .animate-slow-zoom,
-  .animate-bounce,
-  .cta-shine::before {
+  .animate-bounce {
     animation: none !important;
     transform: none !important;
   }

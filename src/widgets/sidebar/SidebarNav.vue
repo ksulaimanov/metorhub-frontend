@@ -2,14 +2,14 @@
   <!-- Desktop sidebar -->
   <aside
       :class=" [
-        'sidebar-transition hidden flex-col border-r border-white/10 bg-white/5 backdrop-blur-3xl lg:flex',
+        'sidebar-transition hidden flex-col border-r border-white/10 bg-surface lg:flex',
         collapsed ? 'w-[68px]' : 'w-[240px]',
       ]"
   >
     <!-- Brand -->
     <div class="flex h-16 items-center gap-2.5 px-4" :class="collapsed ? 'justify-center' : ''">
-      <AppLogo class="h-8 w-8 shrink-0 text-white drop-shadow-[0_0_10px_rgba(255,255,255,0.4)]" />
-      <span v-if="!collapsed" class="text-base font-extrabold tracking-tight text-white drop-shadow-[0_0_10px_rgba(255,255,255,0.3)]">JaiMentorship</span>
+      <AppLogo class="h-8 w-8 shrink-0 text-white drop-shadow-sm" />
+      <span v-if="!collapsed" class="text-base font-extrabold tracking-tight text-white drop-shadow-sm">JaiMentorship</span>
     </div>
     <div class="mx-3 h-[1px] bg-gradient-to-r from-transparent via-white/20 to-transparent border-0" />
 
@@ -21,11 +21,11 @@
           :first-name="authStore.firstName || authStore.initials"
           :last-name="authStore.lastName"
           size="sm"
-          class="shrink-0 ring-offset-transparent border border-white/20 shadow-[0_0_15px_rgba(108,92,231,0.3)]"
+          class="shrink-0 ring-offset-transparent border border-white/20 shadow-sm"
         />
         <div v-if="!collapsed" class="min-w-0 flex-1">
           <p class="truncate text-sm font-medium text-white">{{ authStore.displayName }}</p>
-          <span class="mt-0.5 inline-block rounded bg-brand/20 border border-brand/30 px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-brand-soft">
+          <span class="mt-0.5 inline-block rounded bg-brand/20 border border-brand/30 px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-brand">
             {{ t(`roles.${role}`) }}
           </span>
         </div>
