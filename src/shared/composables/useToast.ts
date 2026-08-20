@@ -1,4 +1,4 @@
-import { useToastStore } from '@/shared/lib/getApiErrorMessage'
+import { useToastStore } from '@/shared/model/toastStore'
 
 /**
  * Тонкая обёртка над toast-стором.

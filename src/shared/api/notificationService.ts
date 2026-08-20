@@ -1,8 +1,8 @@
 import SockJS from 'sockjs-client'
-import Stomp from 'webstomp-client'
+import Stomp, { type Client as StompClient } from 'webstomp-client'
 import type { NotificationDto } from '@/entities/notification/model/notificationStore'
 
-let stompClient: Stomp.Client | null = null
+let stompClient: StompClient | null = null
 type NotificationCallback = (notification: Partial<NotificationDto> & { read?: boolean }) => void
 const callbacks: NotificationCallback[] = []
 

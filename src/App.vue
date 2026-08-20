@@ -11,7 +11,7 @@ import AppToastContainer from '@/shared/ui/AppToastContainer.vue'
 import { useAuthStore } from '@/entities/auth/model/authStore'
 import { notificationService } from '@/shared/api/notificationService'
 import { useNotificationStore, type NotificationDto } from '@/entities/notification/model/notificationStore'
-import { useToastStore } from '@/shared/lib/getApiErrorMessage'
+import { useToastStore } from '@/shared/model/toastStore'
 
 const authStore = useAuthStore()
 

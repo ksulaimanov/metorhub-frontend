@@ -1,6 +1,6 @@
 import axios, { AxiosError, AxiosHeaders, type InternalAxiosRequestConfig } from 'axios'
 import i18n from '@/shared/i18n'
-import { useToastStore } from '@/shared/lib/getApiErrorMessage'
+import { useToastStore } from '@/shared/model/toastStore'
 import router from '@/app/router'
 import { ErrorCodes } from '@/constants/errorCodes'
 

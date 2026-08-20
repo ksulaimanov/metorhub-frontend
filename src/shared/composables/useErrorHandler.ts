@@ -1,7 +1,7 @@
 import { isAxiosError } from 'axios'
 import { useI18n } from 'vue-i18n'
 import { ErrorCodes } from '@/constants/errorCodes'
-import { useToastStore } from '@/shared/lib/getApiErrorMessage'
+import { useToastStore } from '@/shared/model/toastStore'
 
 export interface HandleErrorOptions {
   /** Show toast notification. Default: true. Set to false for inline-only error display. */
