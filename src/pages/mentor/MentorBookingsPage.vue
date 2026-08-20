@@ -14,8 +14,8 @@
             type="button"
             class="rounded-full px-4 py-2 text-sm font-medium transition"
             :class="activeTab === tab.value
-              ? 'bg-brand text-white'
-              : 'bg-white/5 backdrop-blur-xl text-slate-400 ring-1 ring-border-brand hover:bg-brand-soft'"
+              ? 'bg-brand text-on-brand'
+              : 'bg-surface text-text-secondary ring-1 ring-border-brand hover:bg-brand-soft'"
             @click="activeTab = tab.value"
         >
           {{ tab.label }}
@@ -38,7 +38,7 @@
       </AppErrorState>
 
       <!-- ─── Empty ─── -->
-      <div v-else-if="filteredBookings.length === 0" class="rounded-3xl bg-surface p-10 text-center shadow-sm ring-1 ring-border-brand">
+      <div v-else-if="filteredBookings.length === 0" class="rounded-2xl bg-surface p-10 text-center shadow-sm ring-1 ring-border-brand">
         <div class="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-brand-soft">
           <CalendarX class="h-6 w-6 text-brand" />
         </div>
@@ -51,7 +51,7 @@
         <RouterLink
             v-if="activeTab === 'all'"
             to="/mentor/slots"
-            class="mt-5 inline-flex rounded-xl bg-brand px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-brand-hover"
+            class="mt-5 inline-flex rounded-xl bg-brand px-5 py-2.5 text-sm font-semibold text-on-brand transition hover:bg-brand-hover"
         >
           {{ t('mentorBookings.manageSlots') }}
         </RouterLink>
@@ -161,9 +161,9 @@
     <Teleport to="body">
       <Transition name="slide-panel">
         <div v-if="previewStudent" class="fixed inset-0 z-50 flex justify-end">
-          <div class="fixed inset-0 bg-black/20 backdrop-blur-sm transition-opacity" @click="closeStudentPreview" />
+          <div class="fixed inset-0 bg-black/20 transition-opacity" @click="closeStudentPreview" />
           <div class="relative w-full max-w-sm h-full bg-surface shadow-2xl flex flex-col">
-            <button @click="closeStudentPreview" class="absolute top-4 right-4 z-20 p-2 rounded-full bg-surface/50 backdrop-blur-md text-text-secondary hover:text-text-primary hover:bg-surface transition-colors">
+            <button @click="closeStudentPreview" class="absolute top-4 right-4 z-20 p-2 rounded-full bg-surface/50 text-text-secondary hover:text-text-primary hover:bg-surface transition-colors">
               <X class="h-5 w-5" />
             </button>
             <StudentPreviewCard :student="previewStudent" />

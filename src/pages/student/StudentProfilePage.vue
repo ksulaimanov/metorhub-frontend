@@ -42,13 +42,13 @@
 
                 <div class="min-w-0">
                   <h2 class="text-xl font-semibold text-white">{{ fullName }}</h2>
-                  <p class="mt-1 text-sm text-slate-400">{{ t('studentProfile.avatarHint') }}</p>
+                  <p class="mt-1 text-sm text-text-secondary">{{ t('studentProfile.avatarHint') }}</p>
                 </div>
               </div>
 
               <div class="flex shrink-0 flex-col gap-3 sm:flex-row">
                 <label
-                    class="inline-flex cursor-pointer items-center justify-center rounded-2xl border border-border-brand bg-white/5 backdrop-blur-xl px-4 py-3 text-sm font-semibold text-text-primary transition hover:bg-brand-soft disabled:cursor-not-allowed disabled:opacity-50"
+                    class="inline-flex cursor-pointer items-center justify-center rounded-2xl border border-border-brand bg-surface px-4 py-3 text-sm font-semibold text-text-primary transition hover:bg-brand-soft disabled:cursor-not-allowed disabled:opacity-50"
                 >
                   <input type="file" class="hidden" accept="image/png,image/jpeg,image/webp" :disabled="avatarUploading" @change="handleAvatarUpload" />
                   {{ avatarUploading ? t('studentProfile.uploadingPhoto') : t('studentProfile.uploadPhoto') }}
@@ -66,8 +66,8 @@
               </div>
             </div>
 
-            <p v-if="avatarMessage" class="mt-4 text-sm font-medium text-emerald-600">{{ avatarMessage }}</p>
-            <p v-if="avatarError" class="mt-4 text-sm font-medium text-red-600">{{ avatarError }}</p>
+            <p v-if="avatarMessage" class="mt-4 text-sm font-medium text-success">{{ avatarMessage }}</p>
+            <p v-if="avatarError" class="mt-4 text-sm font-medium text-danger">{{ avatarError }}</p>
           </AppCard>
 
           <form class="space-y-6" @submit.prevent="saveProfile">
@@ -144,8 +144,8 @@
             <!-- Submit -->
             <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
               <div class="min-h-[24px]">
-                <p v-if="successMessage" class="text-sm font-medium text-emerald-600">{{ successMessage }}</p>
-                <p v-else-if="saveError" class="text-sm font-medium text-red-600">{{ saveError }}</p>
+                <p v-if="successMessage" class="text-sm font-medium text-success">{{ successMessage }}</p>
+                <p v-else-if="saveError" class="text-sm font-medium text-danger">{{ saveError }}</p>
               </div>
 
               <div class="flex items-center gap-3">
@@ -168,7 +168,7 @@
 import { computed, onMounted, reactive, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { http } from '@/shared/api/http'
-import { useToastStore } from '@/shared/lib/getApiErrorMessage'
+import { useToastStore } from '@/shared/model/toastStore'
 import { useErrorHandler } from '@/shared/composables/useErrorHandler'
 import { useFormErrors } from '@/shared/composables/useFormErrors'
 import PrivateLayout from '@/widgets/layout/PrivateLayout.vue'

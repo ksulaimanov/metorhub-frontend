@@ -1,12 +1,12 @@
 <template>
   <PublicLayout>
-    <div class="relative bg-gradient-to-b from-[#0f172a] via-[#1e1b4b] to-[#0f172a] min-h-screen text-text-primary pb-10">
+    <div class="relative bg-bg min-h-screen text-text-primary pb-10">
       <KyrgyzOrnamentPattern :opacity="0.05" :scale="1.5" class="fixed inset-0 z-0 pointer-events-none mix-blend-overlay" />
 
-      <!-- ”€”€”€ Hero intro ”€”€”€ -->
+      <!-- Hero intro -->
       <AuroraBackground :showRadialGradient="true" aurora-opacity="opacity-10 dark:opacity-20" class="relative !bg-transparent h-auto overflow-hidden">
         <div class="relative z-10 mx-auto max-w-7xl px-4 pb-8 pt-12 sm:px-6 lg:pt-14">
-          <p class="inline-flex rounded-full bg-brand-soft/20 px-4 py-1.5 text-sm font-medium text-brand-soft border border-brand/30">
+          <p class="inline-flex rounded-full bg-brand-soft/20 px-4 py-1.5 text-sm font-medium text-brand border border-brand/30">
             {{ t('mentorDirectory.heroBadge') }}
           </p>
           <h1 class="mt-4 max-w-xl text-3xl font-extrabold leading-tight text-text-primary sm:text-4xl">
@@ -20,8 +20,8 @@
       </AuroraBackground>
 
       <section class="relative z-10 mx-auto max-w-7xl px-4 pb-16 sm:px-6 mt-8">
-        <!-- ”€”€”€ Filters ”€”€”€ -->
-        <div class="rounded-2xl bg-surface backdrop-blur-xl p-5 shadow-[0_8px_30px_rgba(0,0,0,0.12)] border border-border-brand md:p-6">
+        <!-- Filters -->
+        <div class="rounded-2xl bg-surface p-5 shadow-md border border-border-brand md:p-6">
           <div class="grid gap-4 md:grid-cols-4">
             <div class="md:col-span-2">
               <label class="mb-1.5 block text-sm font-medium text-text-secondary">{{ t('mentorDirectory.searchLabel') }}</label>
@@ -29,7 +29,7 @@
                   v-model="query"
                   type="text"
                   :placeholder="t('mentorDirectory.searchPlaceholder')"
-                  class="w-full rounded-xl border border-border-brand bg-black/20 text-text-primary px-4 py-2.5 text-sm outline-none transition placeholder:text-slate-500 focus:border-brand/50 focus:bg-surface focus:ring-2 focus:ring-brand/30 focus:shadow-[0_0_15px_rgba(108,92,231,0.3)]"
+                  class="w-full rounded-xl border border-border-brand bg-black/20 text-text-primary px-4 py-2.5 text-sm outline-none transition placeholder:text-text-secondary focus:border-brand/50 focus:bg-surface focus:ring-2 focus:ring-brand/30 focus:shadow-sm"
               />
             </div>
 
@@ -39,7 +39,7 @@
                   v-model="city"
                   type="text"
                   :placeholder="t('mentorDirectory.cityPlaceholder')"
-                  class="w-full rounded-xl border border-border-brand bg-black/20 text-text-primary px-4 py-2.5 text-sm outline-none transition placeholder:text-slate-500 focus:border-brand/50 focus:bg-surface focus:ring-2 focus:ring-brand/30 focus:shadow-[0_0_15px_rgba(108,92,231,0.3)]"
+                  class="w-full rounded-xl border border-border-brand bg-black/20 text-text-primary px-4 py-2.5 text-sm outline-none transition placeholder:text-text-secondary focus:border-brand/50 focus:bg-surface focus:ring-2 focus:ring-brand/30 focus:shadow-sm"
               />
             </div>
 
@@ -47,7 +47,7 @@
               <label class="mb-1.5 block text-sm font-medium text-text-secondary">{{ t('mentorDirectory.sortLabel') }}</label>
               <select
                   v-model="sortBy"
-                  class="w-full rounded-xl border border-border-brand bg-black/20 text-text-primary px-4 py-2.5 text-sm outline-none transition focus:border-brand/50 focus:bg-surface focus:ring-2 focus:ring-brand/30 focus:shadow-[0_0_15px_rgba(108,92,231,0.3)]"
+                  class="w-full rounded-xl border border-border-brand bg-black/20 text-text-primary px-4 py-2.5 text-sm outline-none transition focus:border-brand/50 focus:bg-surface focus:ring-2 focus:ring-brand/30 focus:shadow-sm"
               >
                 <option value="" class="text-black">{{ t('mentorDirectory.sortDefault') }}</option>
                 <option value="ratingDesc" class="text-black">{{ t('mentorDirectory.sortRating') }}</option>
@@ -64,7 +64,7 @@
             <label
                 :class=" [
                   'flex cursor-pointer items-center gap-2 rounded-full px-4 py-2 text-sm font-medium border transition-all',
-                  online ? 'bg-brand/20 text-brand-soft border-brand/50 shadow-[0_0_10px_rgba(108,92,231,0.3)]' : 'bg-black/20 text-text-secondary border-border-brand hover:bg-surface',
+                  online ? 'bg-brand/20 text-brand border-brand/50 shadow-sm' : 'bg-black/20 text-text-secondary border-border-brand hover:bg-surface',
                 ]"
             >
               <input v-model="online" type="checkbox" class="sr-only" />
@@ -74,7 +74,7 @@
             <label
                 :class=" [
                   'flex cursor-pointer items-center gap-2 rounded-full px-4 py-2 text-sm font-medium border transition-all',
-                  offline ? 'bg-brand/20 text-brand-soft border-brand/50 shadow-[0_0_10px_rgba(108,92,231,0.3)]' : 'bg-black/20 text-text-secondary border-border-brand hover:bg-surface',
+                  offline ? 'bg-brand/20 text-brand border-brand/50 shadow-sm' : 'bg-black/20 text-text-secondary border-border-brand hover:bg-surface',
                 ]"
             >
               <input v-model="offline" type="checkbox" class="sr-only" />
@@ -84,7 +84,7 @@
             <label
                 :class=" [
                   'flex cursor-pointer items-center gap-2 rounded-full px-4 py-2 text-sm font-medium border transition-all',
-                  hybrid ? 'bg-brand/20 text-brand-soft border-brand/50 shadow-[0_0_10px_rgba(108,92,231,0.3)]' : 'bg-black/20 text-text-secondary border-border-brand hover:bg-surface',
+                  hybrid ? 'bg-brand/20 text-brand border-brand/50 shadow-sm' : 'bg-black/20 text-text-secondary border-border-brand hover:bg-surface',
                 ]"
             >
               <input v-model="hybrid" type="checkbox" class="sr-only" />
@@ -102,7 +102,7 @@
           </div>
         </div>
 
-        <!-- ”€”€”€ Results meta ”€”€”€ -->
+        <!-- Results meta -->
         <div class="mt-6 flex flex-wrap items-center justify-between gap-3">
           <p v-if="!loading" class="text-sm text-text-secondary">
             {{ t('mentorDirectory.foundMentors') }}:
@@ -111,10 +111,10 @@
           <p class="text-sm text-text-muted">{{ t('mentorDirectory.foundHint') }}</p>
         </div>
 
-        <!-- ”€”€”€ Content ”€”€”€ -->
+        <!-- Content -->
         <div class="mt-6">
           <div class="absolute -z-10 top-20 left-1/4 w-96 h-96 bg-brand/20 blur-[120px] rounded-full pointer-events-none" />
-          <div class="absolute -z-10 top-40 right-1/4 w-96 h-96 bg-violet-500/10 blur-[120px] rounded-full pointer-events-none" />
+          <div class="absolute -z-10 top-40 right-1/4 w-96 h-96 bg-brand-soft blur-[120px] rounded-full pointer-events-none" />
 
           <!-- Skeleton loading -->
           <div v-if="loading" class="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
@@ -158,20 +158,20 @@
               v-else-if="error"
               :title="t('mentorDirectory.loadError')"
               :description="error"
-              class="!bg-red-500/10 !border-red-500/20"
+              class="!bg-danger-soft !border-danger-border"
           />
 
           <!-- Empty -->
-          <div v-else-if="mentors.length === 0" class="rounded-2xl bg-surface backdrop-blur-xl p-10 text-center border border-border-brand">
-            <div class="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-brand/20 shadow-[0_0_20px_rgba(108,92,231,0.4)]">
-              <Search class="h-6 w-6 text-brand-soft" />
+          <div v-else-if="mentors.length === 0" class="rounded-2xl bg-surface p-10 text-center border border-border-brand">
+            <div class="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-brand/20 shadow-md">
+              <Search class="h-6 w-6 text-brand" />
             </div>
             <h3 class="mt-4 text-lg font-semibold text-text-primary">{{ t('mentorDirectory.emptyTitle') }}</h3>
             <p class="mt-2 text-sm text-text-muted">{{ t('mentorDirectory.emptyDesc') }}</p>
             <button
                 v-if="hasActiveFilters"
                 type="button"
-                class="mt-5 inline-flex rounded-xl bg-brand px-5 py-2.5 text-sm font-semibold text-text-primary shadow-[0_0_20px_rgba(108,92,231,0.4)] transition hover:bg-brand-hover hover:-translate-y-0.5"
+                class="mt-5 inline-flex rounded-xl bg-brand px-5 py-2.5 text-sm font-semibold text-on-brand shadow-md transition hover:bg-brand-hover hover:-translate-y-0.5"
                 @click="resetFilters"
             >
               {{ t('mentorDirectory.resetFilters') }}

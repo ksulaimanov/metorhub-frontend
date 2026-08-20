@@ -2,7 +2,7 @@
   <PublicLayout>
     <section class="mx-auto flex min-h-[calc(100vh-73px)] max-w-7xl items-center px-4 py-10 sm:px-6">
       <div class="flex w-full flex-col items-center justify-center text-center">
-        <p class="inline-flex rounded-full bg-red-100 px-4 py-2 text-sm font-medium text-red-700">
+        <p class="inline-flex rounded-full bg-danger-soft px-4 py-2 text-sm font-medium text-danger">
           {{ t('notFound.badge') }}
         </p>
 
@@ -17,7 +17,7 @@
         <div class="mt-8 flex flex-wrap items-center justify-center gap-4">
           <RouterLink
               to="/"
-              class="rounded-2xl bg-brand px-6 py-3 text-base font-semibold text-white transition hover:bg-brand-hover"
+              class="rounded-2xl bg-brand px-6 py-3 text-base font-semibold text-on-brand transition hover:bg-brand-hover"
           >
             {{ t('notFound.goHome') }}
           </RouterLink>

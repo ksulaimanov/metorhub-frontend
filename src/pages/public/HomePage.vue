@@ -9,15 +9,15 @@
         <HeroSection />
       </div>
 
-      <!-- ”€”€”€ 2. Features ”€”€”€ -->
+      <!-- 2. Features -->
       <section class="relative z-10 mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:py-24 mt-8">
         <div class="grid gap-6 sm:grid-cols-2 md:grid-cols-3">
           <div
               v-for="(item, i) in trustItems"
               :key="i"
-              class="flex items-start gap-4 rounded-2xl bg-surface backdrop-blur-xl p-6 shadow-sm shadow-brand/5 border border-border-brand hover:shadow-[0_8px_30px_rgba(108,92,231,0.15)] transition-all hover:scale-[1.02] hover:border-brand/30"
+              class="flex items-start gap-4 rounded-2xl bg-surface p-6 shadow-sm shadow-brand/5 border border-border-brand hover:shadow-md transition-all hover:scale-[1.02] hover:border-brand/30"
           >
-            <div class="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-brand/20 text-brand shadow-[0_0_20px_rgba(108,92,231,0.4)]">
+            <div class="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-brand/20 text-brand shadow-md">
               <component :is="item.icon" class="h-6 w-6" />
             </div>
             <div>
@@ -34,7 +34,7 @@
       </div>
 
       <section class="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:py-24">
-        <div class="relative overflow-hidden rounded-[2rem] bg-gradient-to-br from-brand to-brand-hover text-text-primary shadow-[0_0_40px_rgba(108,92,231,0.4)] border border-border-brand">
+        <div class="relative overflow-hidden rounded-[2rem] bg-gradient-to-br from-brand to-brand-hover text-text-primary shadow-sm border border-border-brand">
           <KyrgyzOrnamentPattern :opacity="0.08" :scale="1.2" class="text-text-primary mix-blend-overlay pointer-events-none" />
           <div class="relative z-10 px-6 py-12 md:px-12 md:py-20">
             <div class="text-center mb-12">
@@ -42,7 +42,7 @@
             </div>
             <div class="grid gap-8 md:grid-cols-3 md:gap-12">
               <div v-for="(step, i) in steps" :key="i" class="flex flex-col items-center text-center">
-                <span class="inline-flex h-16 w-16 items-center justify-center rounded-2xl bg-surface-secondary backdrop-blur-md mx-auto shadow-[0_0_20px_rgba(255,255,255,0.2)] border border-border-brand">
+                <span class="inline-flex h-16 w-16 items-center justify-center rounded-2xl bg-surface-secondary mx-auto shadow-sm border border-border-brand">
                   <component :is="step.icon" class="h-8 w-8 text-text-primary" />
                 </span>
                 <h3 class="mt-6 text-xl font-bold text-text-primary">{{ step.title }}</h3>
@@ -86,7 +86,7 @@
               v-for="mentor in featuredMentors"
               :key="mentor.id"
               :to="`/mentors/${mentor.id}`"
-              class="group rounded-2xl bg-surface backdrop-blur-xl p-5 shadow-sm border border-border-brand transition-all hover:-translate-y-1 hover:shadow-[0_8px_30px_rgba(108,92,231,0.2)] hover:border-brand/40"
+              class="group rounded-2xl bg-surface p-5 shadow-sm border border-border-brand transition-all hover:-translate-y-1 hover:shadow-md hover:border-brand/40"
           >
             <!-- Avatar + Name -->
             <div class="flex items-center gap-3">
@@ -98,7 +98,7 @@
                 class="h-12 w-12"
               />
               <div class="min-w-0">
-                <p class="truncate text-sm font-semibold text-text-primary group-hover:text-brand-soft transition-colors">
+                <p class="truncate text-sm font-semibold text-text-primary group-hover:text-brand transition-colors">
                   {{ mentorName(mentor) }}
                 </p>
                 <p class="truncate text-xs text-text-secondary">
@@ -110,7 +110,7 @@
             <!-- Stats -->
             <div class="mt-4 flex items-center gap-3 text-xs text-text-secondary">
               <span v-if="mentor.averageRating" class="flex items-center gap-1">
-                <Star class="h-3.5 w-3.5 fill-amber-400 text-amber-400" />
+                <Star class="h-3.5 w-3.5 fill-amber-400 text-warning" />
                 {{ mentor.averageRating.toFixed(1) }}
               </span>
               <span v-if="mentor.pricePerHour" class="flex items-center gap-1">
@@ -128,23 +128,23 @@
         <div v-else class="relative w-full overflow-hidden rounded-[2rem] bg-surface border border-border-brand px-6 py-20 sm:px-12 flex flex-col items-center">
           <!-- Visual Ghost Profile Grid as Background Hint -->
           <div class="absolute inset-0 flex items-center justify-center gap-6 opacity-20 dark:opacity-[0.08] pointer-events-none" aria-hidden="true">
-            <div v-for="i in 3" :key="i" class="hidden sm:block w-64 rounded-2xl bg-slate-100 dark:bg-slate-800 p-5 ring-1 ring-slate-200 dark:ring-slate-700">
+            <div v-for="i in 3" :key="i" class="hidden sm:block w-64 rounded-2xl bg-surface-sunken p-5 ring-1 ring-border-default">
               <div class="flex items-center gap-4">
-                <div class="h-16 w-16 rounded-full bg-slate-200 dark:bg-slate-700" />
+                <div class="h-16 w-16 rounded-full bg-surface-sunken" />
                 <div class="space-y-3 flex-1">
-                  <div class="h-4 w-3/4 rounded bg-slate-200 dark:bg-slate-700" />
-                  <div class="h-3 w-1/2 rounded bg-slate-200 dark:bg-slate-700" />
+                  <div class="h-4 w-3/4 rounded bg-surface-sunken" />
+                  <div class="h-3 w-1/2 rounded bg-surface-sunken" />
                 </div>
               </div>
               <div class="mt-8 flex gap-3">
-                <div class="h-8 w-16 rounded bg-slate-200 dark:bg-slate-700" />
-                <div class="h-8 w-24 rounded bg-slate-200 dark:bg-slate-700" />
+                <div class="h-8 w-16 rounded bg-surface-sunken" />
+                <div class="h-8 w-24 rounded bg-surface-sunken" />
               </div>
             </div>
           </div>
 
           <div class="relative z-10 flex flex-col items-center justify-center text-center">
-            <div class="mb-6 flex h-24 w-24 items-center justify-center rounded-full bg-surface-secondary ring-4 ring-white/5 shadow-sm backdrop-blur-md border border-border-brand">
+            <div class="mb-6 flex h-24 w-24 items-center justify-center rounded-full bg-surface-secondary ring-4 ring-white/5 shadow-sm border border-border-brand">
               <UserCheck class="h-10 w-10 text-text-primary opacity-80" />
             </div>
             <h3 class="text-2xl font-extrabold text-text-primary mb-3">{{ t('home.featuredEmpty') }}</h3>
@@ -164,9 +164,9 @@
           <div
             v-for="(feature, i) in features"
             :key="i"
-            class="flex flex-col gap-4 rounded-2xl bg-surface backdrop-blur-xl p-6 shadow-sm border border-border-brand hover:shadow-[0_8px_30px_rgba(108,92,231,0.15)] transition-all hover:-translate-y-1 hover:border-brand/30"
+            class="flex flex-col gap-4 rounded-2xl bg-surface p-6 shadow-sm border border-border-brand hover:shadow-md transition-all hover:-translate-y-1 hover:border-brand/30"
           >
-            <div class="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-brand/20 text-brand shadow-[0_0_20px_rgba(108,92,231,0.3)]">
+            <div class="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-brand/20 text-brand shadow-md">
               <component :is="feature.icon" class="h-6 w-6" />
             </div>
             <div>
@@ -181,23 +181,23 @@
       <section class="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:py-24">
         <div class="grid gap-6 md:grid-cols-2">
           <!-- Student path -->
-          <div class="relative rounded-[2rem] overflow-hidden bg-surface backdrop-blur-xl p-8 border border-border-brand sm:p-10 flex flex-col items-start hover:shadow-[0_8px_30px_rgba(108,92,231,0.2)] transition-all hover:border-brand/40">
+          <div class="relative rounded-[2rem] overflow-hidden bg-surface p-8 border border-border-brand sm:p-10 flex flex-col items-start hover:shadow-md transition-all hover:border-brand/40">
             <KyrgyzCornerOrnament position="top-right" :opacity="0.10" class="text-text-primary" />
-            <span class="inline-flex rounded-full bg-brand/20 px-4 py-1.5 text-sm font-bold text-brand-soft border border-brand/30">
+            <span class="inline-flex rounded-full bg-brand/20 px-4 py-1.5 text-sm font-bold text-brand border border-brand/30">
               {{ t('home.studentBadge') }}
             </span>
             <h3 class="mt-6 text-2xl font-extrabold text-text-primary">{{ t('home.studentTitle') }}</h3>
             <p class="mt-3 text-base leading-relaxed text-text-secondary flex-grow">{{ t('home.studentDesc') }}</p>
             <RouterLink
                 to="/register"
-                class="mt-8 inline-flex items-center justify-center rounded-xl bg-brand px-6 py-3.5 text-base font-bold text-text-primary shadow-[0_0_20px_rgba(108,92,231,0.4)] transition-all hover:bg-brand-hover hover:-translate-y-0.5"
+                class="mt-8 inline-flex items-center justify-center rounded-xl bg-brand px-6 py-3.5 text-base font-bold text-on-brand shadow-md transition-all hover:bg-brand-hover hover:-translate-y-0.5"
             >
               {{ t('home.studentCta') }}
             </RouterLink>
           </div>
 
           <!-- Mentor path -->
-          <div class="relative rounded-[2rem] overflow-hidden bg-surface backdrop-blur-xl p-8 border border-border-brand sm:p-10 flex flex-col items-start hover:shadow-[0_8px_30px_rgba(108,92,231,0.2)] transition-all hover:border-brand/40">
+          <div class="relative rounded-[2rem] overflow-hidden bg-surface p-8 border border-border-brand sm:p-10 flex flex-col items-start hover:shadow-md transition-all hover:border-brand/40">
             <KyrgyzCornerOrnament position="top-right" :opacity="0.10" class="text-text-primary" />
             <span class="inline-flex rounded-full bg-surface-secondary px-4 py-1.5 text-sm font-bold text-text-primary border border-border-brand">
               {{ t('home.mentorBadge') }}
@@ -220,7 +220,7 @@
       </div>
 
       <section class="mx-auto px-4 py-20 sm:px-6 lg:py-32 flex justify-center">
-        <div class="relative w-full max-w-4xl overflow-hidden rounded-[2.5rem] bg-surface border border-border-brand px-6 py-20 text-center shadow-[0_0_50px_rgba(108,92,231,0.15)] sm:px-16 sm:py-20 flex flex-col items-center backdrop-blur-2xl">
+        <div class="relative w-full max-w-4xl overflow-hidden rounded-[2.5rem] bg-surface border border-border-brand px-6 py-20 text-center shadow-sm sm:px-16 sm:py-20 flex flex-col items-center">
           <KyrgyzOrnamentPattern :opacity="0.05" :scale="1.5" class="text-text-primary mix-blend-overlay pointer-events-none" />
 
           <div class="relative z-10 max-w-xl">
@@ -231,7 +231,7 @@
             <div class="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
               <RouterLink
                   to="/register"
-                  class="w-full sm:w-auto inline-flex items-center justify-center rounded-2xl bg-brand px-8 py-4 text-base font-bold text-text-primary shadow-[0_4px_20px_rgba(108,92,231,0.4)] transition hover:bg-brand-hover hover:-translate-y-0.5 active:scale-95"
+                  class="w-full sm:w-auto inline-flex items-center justify-center rounded-2xl bg-brand px-8 py-4 text-base font-bold text-on-brand shadow-sm transition hover:bg-brand-hover hover:-translate-y-0.5 active:scale-95"
               >
                 {{ t('home.closingCtaRegister') }}
               </RouterLink>

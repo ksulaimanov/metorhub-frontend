@@ -14,8 +14,8 @@
             type="button"
             class="rounded-full px-4 py-2 text-sm font-medium transition"
             :class="activeTab === tab.value
-              ? 'bg-brand text-white'
-              : 'bg-white/5 backdrop-blur-xl text-slate-400 ring-1 ring-border-brand hover:bg-brand-soft'"
+              ? 'bg-brand text-on-brand'
+              : 'bg-surface text-text-secondary ring-1 ring-border-brand hover:bg-brand-soft'"
             @click="activeTab = tab.value"
         >
           {{ tab.label }}
@@ -38,7 +38,7 @@
       </AppErrorState>
 
       <!-- ─── Empty ─── -->
-      <div v-else-if="filteredBookings.length === 0" class="rounded-3xl bg-surface p-10 text-center shadow-sm ring-1 ring-border-brand">
+      <div v-else-if="filteredBookings.length === 0" class="rounded-2xl bg-surface p-10 text-center shadow-sm ring-1 ring-border-brand">
         <div class="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-brand-soft">
           <CalendarX class="h-6 w-6 text-brand" />
         </div>
@@ -51,7 +51,7 @@
         <RouterLink
             v-if="activeTab === 'all'"
             to="/mentors"
-            class="mt-5 inline-flex rounded-xl bg-brand px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-brand-hover"
+            class="mt-5 inline-flex rounded-xl bg-brand px-5 py-2.5 text-sm font-semibold text-on-brand transition hover:bg-brand-hover"
         >
           {{ t('studentBookings.findMentor') }}
         </RouterLink>
@@ -172,7 +172,7 @@
                     {{ t('studentBookings.submitReview') }}
                   </AppButton>
 
-                  <p v-if="reviewErrors[booking.id]" class="text-sm font-medium text-red-600">
+                  <p v-if="reviewErrors[booking.id]" class="text-sm font-medium text-danger">
                     {{ reviewErrors[booking.id] }}
                   </p>
                 </div>
@@ -182,10 +182,10 @@
             <!-- Review submitted -->
             <div
                 v-else-if="booking.status === 'COMPLETED' && reviewSubmitted[booking.id]"
-                class="rounded-xl border border-emerald-200 bg-emerald-50 p-5"
+                class="rounded-xl border border-success-border bg-success-soft p-5"
             >
-              <p class="font-semibold text-emerald-700">{{ t('studentBookings.reviewThanks') }}</p>
-              <p class="mt-1 text-sm text-emerald-700">{{ t('studentBookings.reviewThanksDesc') }}</p>
+              <p class="font-semibold text-success">{{ t('studentBookings.reviewThanks') }}</p>
+              <p class="mt-1 text-sm text-success">{{ t('studentBookings.reviewThanksDesc') }}</p>
             </div>
           </div>
         </AppCard>

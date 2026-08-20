@@ -4,7 +4,7 @@
       <!-- Header -->
       <div>
         <h1 class="text-3xl font-bold text-white">{{ t('adminDashboard.title') }}</h1>
-        <p class="mt-2 text-slate-400">{{ t('adminDashboard.subtitle') }}</p>
+        <p class="mt-2 text-text-secondary">{{ t('adminDashboard.subtitle') }}</p>
       </div>
 
       <!-- Stats Grid -->
@@ -12,7 +12,7 @@
       <div v-else class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         <AppCard>
           <div class="flex items-start gap-4">
-            <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white/10 text-brand-soft shadow-[0_0_15px_rgba(108,92,231,0.2)] border border-white/5">
+            <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-surface text-brand shadow-sm border border-white/5">
               <CalendarIcon class="h-5 w-5" />
             </div>
             <div class="min-w-0">
@@ -40,12 +40,12 @@
 
         <AppCard>
           <div class="flex items-start gap-4">
-            <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-emerald-50 text-emerald-600">
+            <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-success-soft text-success">
               <GraduationCap class="h-5 w-5" />
             </div>
             <div class="min-w-0">
               <p class="text-sm text-text-secondary">{{ t('adminDashboard.students') }}</p>
-              <p class="mt-1 text-3xl font-bold text-emerald-600">{{ dashboardData?.stats.totalStudents ?? 0 }}</p>
+              <p class="mt-1 text-3xl font-bold text-success">{{ dashboardData?.stats.totalStudents ?? 0 }}</p>
               <p class="mt-1 text-xs text-text-muted">{{ t('adminDashboard.activeStudents') }}</p>
             </div>
           </div>
@@ -53,13 +53,13 @@
 
         <AppCard>
           <div class="flex items-start gap-4">
-            <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-amber-50 text-amber-500">
+            <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-warning-soft text-warning">
               <Star class="h-5 w-5" />
             </div>
             <div class="min-w-0">
               <p class="text-sm text-text-secondary">{{ t('adminDashboard.avgRating') }}</p>
               <div class="mt-1 flex items-baseline gap-2">
-                <p class="text-3xl font-bold text-amber-500">{{ dashboardData?.stats.averageRating?.toFixed(1) ?? '—' }}</p>
+                <p class="text-3xl font-bold text-warning">{{ dashboardData?.stats.averageRating?.toFixed(1) ?? '—' }}</p>
                 <span class="text-sm text-text-secondary">/ 5.0</span>
               </div>
             </div>
@@ -83,7 +83,7 @@
 
         <AppCard>
           <div class="flex items-start gap-4">
-            <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-emerald-50 text-emerald-600">
+            <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-success-soft text-success">
               <TrendingUp class="h-5 w-5" />
             </div>
             <div class="min-w-0 flex-1">
@@ -96,7 +96,7 @@
                 </div>
                 <div class="mt-2 h-2 w-full overflow-hidden rounded-full bg-brand-soft">
                   <div
-                      class="h-full bg-gradient-to-r from-emerald-400 to-emerald-600"
+                      class="h-full bg-success"
                       :style="{ width: `${calculateCompletion}%` }"
                   ></div>
                 </div>
@@ -169,7 +169,8 @@ import { computed, onMounted, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { Calendar as CalendarIcon, Clock, UserCheck, GraduationCap, Star, TrendingUp, Users, BarChart3 } from 'lucide-vue-next'
 import { getAdminDashboard } from '@/shared/api/dashboardApi'
-import { getApiErrorMessage, useToastStore } from '@/shared/lib/getApiErrorMessage'
+import { getApiErrorMessage } from '@/shared/lib/getApiErrorMessage'
+import { useToastStore } from '@/shared/model/toastStore'
 import type { AdminDashboard } from '@/shared/types/dashboard'
 import PrivateLayout from '@/widgets/layout/PrivateLayout.vue'
 import AppCard from '@/shared/ui/AppCard.vue'

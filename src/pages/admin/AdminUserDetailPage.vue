@@ -2,7 +2,7 @@
   <PrivateLayout role="admin">
     <div class="mx-auto max-w-4xl px-4 sm:px-6 py-8">
       <div class="mb-6 flex items-center gap-4">
-        <RouterLink to="/admin/users" class="inline-flex min-h-[44px] sm:min-h-[36px] min-w-[44px] sm:min-w-[36px] items-center justify-center rounded-xl font-semibold transition-all duration-200 active:scale-[0.98] text-slate-400 hover:bg-white/5 backdrop-blur-xl-secondary hover:text-brand">
+        <RouterLink to="/admin/users" class="inline-flex min-h-[44px] sm:min-h-[36px] min-w-[44px] sm:min-w-[36px] items-center justify-center rounded-xl font-semibold transition-all duration-200 active:scale-[0.98] text-text-secondary hover:bg-surface-hover-secondary hover:text-brand">
           <ArrowLeft class="h-5 w-5" />
         </RouterLink>
         <h1 class="text-2xl font-bold text-white">User Details</h1>
@@ -14,7 +14,7 @@
       </div>
       <div v-else-if="user" class="space-y-6">
         <!-- User Profile Header -->
-        <AppCard class="backdrop-blur-xl bg-surface/90 shadow-lg ring-1 ring-border-brand/40">
+        <AppCard class=" bg-surface/90 shadow-lg ring-1 ring-border-brand/40">
           <div class="flex flex-col sm:flex-row items-center sm:items-start gap-6">
             <ProfileAvatar
               :src="user.avatarUrl"
@@ -43,26 +43,26 @@
 
         <!-- Stats Grid (Glassmorphism layout) -->
         <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-          <div class="rounded-2xl p-4 bg-brand-soft/50 ring-1 ring-border-brand backdrop-blur-sm text-center">
+          <div class="rounded-2xl p-4 bg-brand-soft/50 ring-1 ring-border-brand text-center">
             <p class="text-sm font-medium text-text-secondary mb-1">Total Bookings</p>
             <p class="text-2xl font-extrabold text-brand">{{ user.bookingsCount }}</p>
           </div>
-          <div class="rounded-2xl p-4 bg-emerald-50/50 ring-1 ring-emerald-100 backdrop-blur-sm text-center">
+          <div class="rounded-2xl p-4 bg-success-soft ring-1 ring-success-border text-center">
             <p class="text-sm font-medium text-text-secondary mb-1">Completed</p>
-            <p class="text-2xl font-extrabold text-emerald-600">{{ user.completedCount }}</p>
+            <p class="text-2xl font-extrabold text-success">{{ user.completedCount }}</p>
           </div>
-          <div class="rounded-2xl p-4 bg-amber-50/50 ring-1 ring-amber-100 backdrop-blur-sm text-center">
+          <div class="rounded-2xl p-4 bg-warning-soft ring-1 ring-warning-border text-center">
             <p class="text-sm font-medium text-text-secondary mb-1">Canceled</p>
-            <p class="text-2xl font-extrabold text-amber-600">{{ user.canceledCount }}</p>
+            <p class="text-2xl font-extrabold text-warning">{{ user.canceledCount }}</p>
           </div>
-          <div class="rounded-2xl p-4 bg-surface/80 ring-1 ring-border-subtle backdrop-blur-sm text-center">
+          <div class="rounded-2xl p-4 bg-surface/80 ring-1 ring-border-subtle text-center">
             <p class="text-sm font-medium text-text-secondary mb-1">Joined</p>
             <p class="text-sm font-semibold text-text-primary mt-2">{{ user.joinedAt }}</p>
           </div>
         </div>
 
         <!-- Applications History -->
-        <AppCard class="backdrop-blur-xl bg-surface/90">
+        <AppCard class=" bg-surface/90">
           <h3 class="text-lg font-bold text-text-primary border-b border-border-subtle pb-3 mb-4">Mentor Applications</h3>
           <div v-if="user.applications.length" class="space-y-4">
             <div v-for="app in user.applications" :key="app.id" class="flex justify-between items-center bg-surface-secondary/50 p-4 rounded-xl">
@@ -92,7 +92,7 @@ import AppCard from '@/shared/ui/AppCard.vue'
 import AppButton from '@/shared/ui/AppButton.vue'
 import AppBadge from '@/shared/ui/AppBadge.vue'
 import ProfileAvatar from '@/shared/ui/ProfileAvatar.vue'
-import { useToastStore } from '@/shared/lib/getApiErrorMessage'
+import { useToastStore } from '@/shared/model/toastStore'
 
 const props = defineProps<{
   id: string

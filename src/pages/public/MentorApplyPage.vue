@@ -32,7 +32,7 @@
           <p class="mt-1 text-xs text-text-secondary">{{ t('mentorGate.teaserDesc') }}</p>
           <button
               type="button"
-              class="mt-5 inline-flex rounded-xl bg-brand px-6 py-3 text-sm font-semibold text-white transition hover:bg-brand-hover active:scale-[0.98]"
+              class="mt-5 inline-flex rounded-xl bg-brand px-6 py-3 text-sm font-semibold text-on-brand transition hover:bg-brand-hover active:scale-[0.98]"
               @click="showGate = true"
           >
             {{ t('mentorGate.startAction') }}

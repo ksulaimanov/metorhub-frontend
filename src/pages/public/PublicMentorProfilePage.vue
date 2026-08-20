@@ -199,7 +199,7 @@
 
               <button
                   type="button"
-                  class="mt-6 w-full rounded-xl bg-brand px-5 py-3 text-sm font-semibold text-white shadow-md shadow-brand/10 transition hover:bg-brand-hover active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50"
+                  class="mt-6 w-full rounded-xl bg-brand px-5 py-3 text-sm font-semibold text-on-brand shadow-md shadow-brand/10 transition hover:bg-brand-hover active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50"
                   :disabled="!mentor.hasAvailableSlots"
                   @click="scrollToSlots"
               >
@@ -223,7 +223,7 @@
               </div>
 
               <!-- Slots error -->
-              <div v-else-if="slotsError" class="mt-4 rounded-xl bg-red-50 p-4 text-sm text-red-600">
+              <div v-else-if="slotsError" class="mt-4 rounded-xl bg-danger-soft p-4 text-sm text-danger">
                 {{ slotsError }}
               </div>
 
@@ -263,7 +263,7 @@
 
                     <button
                         type="button"
-                        class="shrink-0 rounded-xl bg-brand px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-brand-hover active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50"
+                        class="shrink-0 rounded-xl bg-brand px-4 py-2.5 text-sm font-semibold text-on-brand transition hover:bg-brand-hover active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50"
                         :disabled="bookingLoadingId === slot.id || !slot.bookable || isSlotPast(slot)"
                         @click="toggleBookingForm(slot.id)"
                     >
@@ -272,26 +272,26 @@
                   </div>
 
                   <!-- Booking success card (replaces form after booking) -->
-                  <div v-if="bookedSlotId === slot.id" class="mt-4 rounded-xl border border-emerald-200 bg-emerald-50 p-5">
+                  <div v-if="bookedSlotId === slot.id" class="mt-4 rounded-xl border border-success-border bg-success-soft p-5">
                     <div class="flex items-start gap-3">
-                      <div class="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-emerald-100">
-                        <CheckCircle2 class="h-5 w-5 text-emerald-600" />
+                      <div class="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-success-soft">
+                        <CheckCircle2 class="h-5 w-5 text-success" />
                       </div>
                       <div class="min-w-0 flex-1">
-                        <p class="font-semibold text-emerald-800">{{ t('publicMentorProfile.bookingSuccessTitle') }}</p>
-                        <p class="mt-1 text-sm text-emerald-700">
+                        <p class="font-semibold text-success">{{ t('publicMentorProfile.bookingSuccessTitle') }}</p>
+                        <p class="mt-1 text-sm text-success">
                           {{ t('publicMentorProfile.bookingSuccessDesc', { mentor: mentorName, date: formatDateTime(slot.startAt, slot.timezone) }) }}
                         </p>
                         <div class="mt-4 flex flex-wrap gap-3">
                           <RouterLink
                               to="/student/bookings"
-                              class="rounded-lg bg-emerald-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-emerald-700"
+                              class="rounded-lg bg-success-soft px-4 py-2 text-sm font-semibold text-white transition hover:bg-success-soft"
                           >
                             {{ t('publicMentorProfile.goToBookings') }}
                           </RouterLink>
                           <button
                               type="button"
-                              class="rounded-lg border border-emerald-300 px-4 py-2 text-sm font-medium text-emerald-700 transition hover:bg-emerald-100"
+                              class="rounded-lg border border-success-border px-4 py-2 text-sm font-medium text-success transition hover:bg-success-soft"
                               @click="bookedSlotId = null"
                           >
                             {{ t('publicMentorProfile.backToSlots') }}
@@ -313,7 +313,7 @@
                     <div class="mt-3 flex flex-col gap-3 sm:flex-row sm:items-center">
                       <button
                           type="button"
-                          class="rounded-xl bg-brand px-5 py-3 text-sm font-semibold text-white transition hover:bg-brand-hover active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50"
+                          class="rounded-xl bg-brand px-5 py-3 text-sm font-semibold text-on-brand transition hover:bg-brand-hover active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50"
                           :disabled="bookingLoadingId === slot.id"
                           @click="bookSlot(slot.id)"
                       >
@@ -338,7 +338,7 @@ import { useRoute, useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { getPublicMentorProfile, getPublicMentorReviews, getPublicMentorSlots } from '@/shared/api/mentorPublicApi'
 import { createStudentBooking } from '@/shared/api/bookingApi'
-import { useToastStore } from '@/shared/lib/getApiErrorMessage'
+import { useToastStore } from '@/shared/model/toastStore'
 import { getApiErrorMessage } from '@/shared/lib/getApiErrorMessage'
 import { fromZonedTime } from 'date-fns-tz'
 import { formatDateTimeForDisplay, formatSlotTime } from '@/shared/lib/dateFormatter'

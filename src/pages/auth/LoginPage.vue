@@ -11,13 +11,15 @@
     </template>
 
     <!-- Form -->
-    <h1 class="text-2xl font-bold text-text-primary sm:text-3xl">{{ t('auth.loginTitle') }}</h1>
+    <h2 class="text-xl font-semibold tracking-tight text-text-primary sm:text-2xl">{{ t('auth.loginTitle') }}</h2>
     <p class="mt-2 text-sm text-text-secondary">{{ t('auth.loginSubtitle') }}</p>
 
     <form class="mt-8 space-y-2" @submit.prevent="handleLogin">
-      <AppField :label="t('auth.email')" :error="showValidation ? emailError : ''">
+      <AppField :label="t('auth.email')" :error="showValidation ? emailError : ''" v-slot="f">
         <AppInput
             v-model.trim="email"
+            :id="f.id"
+            :aria-describedby="f.describedBy"
             type="email"
             autocomplete="email"
             class="text-text-primary"
@@ -26,10 +28,12 @@
         />
       </AppField>
 
-      <AppField :label="t('auth.password')" :error="showValidation ? passwordError : ''">
+      <AppField :label="t('auth.password')" :error="showValidation ? passwordError : ''" v-slot="f">
         <div class="relative">
           <AppInput
               v-model="password"
+              :id="f.id"
+              :aria-describedby="f.describedBy"
               :type="showPassword ? 'text' : 'password'"
               autocomplete="current-password"
               class="pr-24 text-text-primary"
@@ -38,6 +42,7 @@
           />
           <button
               type="button"
+              :aria-pressed="showPassword"
               class="absolute right-3 top-1/2 -translate-y-1/2 rounded-xl px-3 py-1.5 text-sm font-medium text-text-muted transition-colors hover:bg-surface-secondary hover:text-text-primary"
               @click="showPassword = !showPassword"
           >
@@ -48,7 +53,7 @@
 
       <AppErrorState
           v-if="errorMessage"
-          class="!bg-red-500/10 !border-red-500/20"
+          class="!bg-danger-soft !border-danger-border"
           :title="t('auth.loginFailed')"
           :description="errorMessage"
       />
@@ -56,7 +61,7 @@
       <div class="text-right pb-4">
         <RouterLink
             to="/forgot-password"
-            class="text-sm font-medium text-brand-soft transition hover:text-brand-hover hover:underline"
+            class="text-sm font-medium text-brand transition hover:text-brand-hover hover:underline"
         >
           {{ t('auth.forgotPassword') }}
         </RouterLink>
@@ -71,7 +76,7 @@
         <p class="font-medium text-text-primary">{{ t('auth.loginNeedVerify') }}</p>
         <p class="mt-1 text-text-secondary">{{ t('auth.loginNeedVerifyDesc') }}</p>
         <RouterLink
-            class="mt-3 inline-flex rounded-xl bg-brand px-4 py-2.5 text-sm font-semibold text-text-primary shadow-[0_0_15px_rgba(108,92,231,0.4)] transition hover:bg-brand-hover hover:-translate-y-0.5"
+            class="mt-3 inline-flex rounded-xl bg-brand px-4 py-2.5 text-sm font-semibold text-on-brand shadow-sm transition hover:bg-brand-hover hover:-translate-y-0.5"
             :to="{ path: '/verify-email', query: { email } }"
         >
           {{ t('auth.loginGoVerify') }}
@@ -82,7 +87,7 @@
           type="submit"
           size="lg"
           :loading="loading"
-          class="w-full shadow-[0_0_20px_rgba(108,92,231,0.4)] transition-all hover:shadow-[0_4px_25px_rgba(108,92,231,0.6)]"
+          class="w-full shadow-md transition-all hover:shadow-md"
       >
         {{ loading ? t('auth.loginLoading') : t('auth.loginSubmit') }}
       </AppButton>
@@ -92,7 +97,7 @@
       </div>
       <p class="pt-6 text-center text-sm text-text-secondary">
         {{ t('auth.noAccount') }}
-        <RouterLink :to="registerLink" class="font-semibold text-brand-soft transition hover:text-brand-hover hover:underline">
+        <RouterLink :to="registerLink" class="font-semibold text-brand transition hover:text-brand-hover hover:underline">
           {{ t('auth.registerSubmit') }}
         </RouterLink>
       </p>
@@ -108,7 +113,7 @@ import { isAxiosError } from 'axios'
 import { useAuthStore } from '@/entities/auth/model/authStore'
 import { useErrorHandler } from '@/shared/composables/useErrorHandler'
 import { useAuth } from '@/shared/composables/useAuth'
-import { useToastStore } from '@/shared/lib/getApiErrorMessage'
+import { useToastStore } from '@/shared/model/toastStore'
 import { ErrorCodes } from '@/constants/errorCodes'
 import AuthSplitShell from '@/shared/ui/AuthSplitShell.vue'
 import AuthHeroCards from '@/shared/ui/AuthHeroCards.vue'

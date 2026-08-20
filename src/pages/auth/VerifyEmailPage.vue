@@ -51,7 +51,7 @@
           size="lg"
           :loading="verifying"
           :disabled="resending"
-          class="w-full shadow-[0_0_20px_rgba(108,92,231,0.4)] transition-all hover:shadow-[0_4px_25px_rgba(108,92,231,0.6)]"
+          class="w-full shadow-md transition-all hover:shadow-md"
       >
         {{ verifying ? t('auth.verifyLoading') : t('auth.verifySubmit') }}
       </AppButton>
@@ -77,7 +77,7 @@
         <span v-else>{{ t('auth.verifyResend') }}</span>
       </AppButton>
 
-      <p v-if="resendMessage" class="mt-3 text-sm text-emerald-600">
+      <p v-if="resendMessage" class="mt-3 text-sm text-success">
         {{ resendMessage }}
       </p>
     </InfoPanel>
@@ -86,7 +86,7 @@
     <template #footer>
       <p class="text-center text-sm text-text-secondary">
         {{ t('auth.verifyAlreadyDone') }}
-        <RouterLink :to="loginLink" class="font-semibold text-brand-soft transition hover:text-brand-hover hover:underline">
+        <RouterLink :to="loginLink" class="font-semibold text-brand transition hover:text-brand-hover hover:underline">
           {{ t('auth.loginSubmit') }}
         </RouterLink>
       </p>
@@ -99,7 +99,7 @@ import { computed, onBeforeUnmount, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { http } from '@/shared/api/http'
-import { useToastStore } from '@/shared/lib/getApiErrorMessage'
+import { useToastStore } from '@/shared/model/toastStore'
 import { useErrorHandler } from '@/shared/composables/useErrorHandler'
 import { useFormErrors } from '@/shared/composables/useFormErrors'
 import AuthSplitShell from '@/shared/ui/AuthSplitShell.vue'

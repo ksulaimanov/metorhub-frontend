@@ -45,7 +45,7 @@
           <AppCard padding="none" radius="lg">
             <table class="w-full text-left text-sm">
               <thead>
-                <tr class="border-b border-border-brand text-xs uppercase tracking-wide text-slate-400">
+                <tr class="border-b border-border-brand text-xs uppercase tracking-wide text-text-secondary">
                   <th class="px-5 py-3 font-medium">{{ t('admin.applications.colName') }}</th>
                   <th class="px-5 py-3 font-medium">{{ t('admin.applications.colEmail') }}</th>
                   <th class="px-5 py-3 font-medium">{{ t('admin.applications.colSpecializations') }}</th>

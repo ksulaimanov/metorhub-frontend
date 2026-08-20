@@ -59,7 +59,7 @@
 
       <AppErrorState
           v-if="errorMessage"
-          class="!bg-red-500/10 !border-red-500/20"
+          class="!bg-danger-soft !border-danger-border"
           :title="t('auth.registerFailed')"
           :description="errorMessage"
       />
@@ -69,7 +69,7 @@
             type="submit"
             size="lg"
             :loading="loading"
-            class="w-full shadow-[0_0_20px_rgba(108,92,231,0.4)] transition-all hover:shadow-[0_4px_25px_rgba(108,92,231,0.6)]"
+            class="w-full shadow-md transition-all hover:shadow-md"
         >
           {{ loading ? t('auth.registerLoading') : t('auth.registerSubmit') }}
         </AppButton>
@@ -80,7 +80,7 @@
       </div>
       <p class="pt-6 text-center text-sm text-text-secondary">
         {{ t('auth.hasAccount') }}
-        <RouterLink :to="loginLink" class="font-semibold text-brand-soft transition hover:text-brand-hover hover:underline">
+        <RouterLink :to="loginLink" class="font-semibold text-brand transition hover:text-brand-hover hover:underline">
           {{ t('auth.loginSubmit') }}
         </RouterLink>
       </p>
@@ -93,7 +93,7 @@ import { computed, ref } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { http } from '@/shared/api/http'
-import { useToastStore } from '@/shared/lib/getApiErrorMessage'
+import { useToastStore } from '@/shared/model/toastStore'
 import { useErrorHandler } from '@/shared/composables/useErrorHandler'
 import { useFormErrors } from '@/shared/composables/useFormErrors'
 import AuthSplitShell from '@/shared/ui/AuthSplitShell.vue'

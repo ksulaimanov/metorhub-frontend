@@ -1,22 +1,22 @@
 <template>
   <PrivateLayout>
-    <div class="relative space-y-8 rounded-2xl p-6 bg-white/5 backdrop-blur-xl shadow-[0_8px_30px_rgba(0,0,0,0.12)] border border-white/10 overflow-hidden">
+    <div class="relative space-y-8 rounded-2xl p-6 bg-surface shadow-md border border-white/10 overflow-hidden">
       <KyrgyzOrnamentPattern :opacity="0.08" :scale="1.2" />
       <KyrgyzCornerOrnament position="top-right" :opacity="0.1" />
 
       <div class="relative">
         <h1 class="text-3xl font-bold text-white">{{ t('mentorDashboard.title') }}</h1>
-        <p class="mt-2 text-slate-400">{{ t('mentorDashboard.subtitle') }}</p>
+        <p class="mt-2 text-text-secondary">{{ t('mentorDashboard.subtitle') }}</p>
       </div>
 
       <div class="relative grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <AppCard>
           <div class="flex items-start gap-4">
-            <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white/10 text-brand-soft shadow-[0_0_15px_rgba(108,92,231,0.2)] border border-white/5">
+            <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-surface text-brand shadow-sm border border-white/5">
               <Calendar class="h-5 w-5" />
             </div>
             <div class="min-w-0">
-              <p class="text-sm text-slate-400">{{ t('mentorDashboard.totalBookings') }}</p>
+              <p class="text-sm text-text-secondary">{{ t('mentorDashboard.totalBookings') }}</p>
               <p class="mt-1 text-3xl font-bold text-white">{{ dashboardData?.totalBookings ?? 0 }}</p>
             </div>
           </div>
@@ -24,12 +24,12 @@
 
         <AppCard>
           <div class="flex items-start gap-4">
-            <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-emerald-50 text-emerald-600">
+            <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-success-soft text-success">
               <Clock class="h-5 w-5" />
             </div>
             <div class="min-w-0">
               <p class="text-sm text-text-secondary">{{ t('mentorDashboard.upcoming') }}</p>
-              <p class="mt-1 text-3xl font-bold text-emerald-600">
+              <p class="mt-1 text-3xl font-bold text-success">
                 {{ dashboardData?.upcomingEvents?.length ?? 0 }}
               </p>
             </div>
@@ -50,13 +50,13 @@
 
         <AppCard>
           <div class="flex items-start gap-4">
-            <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-amber-50 text-amber-500">
+            <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-warning-soft text-warning">
               <Star class="h-5 w-5" />
             </div>
             <div class="min-w-0">
               <p class="text-sm text-text-secondary">{{ t('mentorDashboard.rating') }}</p>
               <div class="mt-1 flex items-baseline gap-2">
-                <p class="text-3xl font-bold text-amber-500">
+                <p class="text-3xl font-bold text-warning">
                   {{ dashboardData?.averageRating ? dashboardData.averageRating.toFixed(1) : '—' }}
                 </p>
                 <span class="text-sm text-text-secondary">/ 5.0</span>

@@ -43,7 +43,7 @@
               :placeholder="t('mentorSlots.capacityPlaceholder')"
           />
 
-          <div class="rounded-2xl bg-white/5 backdrop-blur-xl-secondary px-4 py-3 text-sm text-slate-400 ring-1 ring-border-brand">
+          <div class="rounded-2xl bg-surface-secondary px-4 py-3 text-sm text-text-secondary ring-1 ring-border-brand">
             {{ t('mentorSlots.capacityHint') }}
           </div>
 
@@ -59,16 +59,16 @@
               :placeholder="t('mentorSlots.addressPlaceholder')"
           />
 
-          <div v-if="createError" class="md:col-span-2 text-sm font-medium text-red-600">
+          <div v-if="createError" class="md:col-span-2 text-sm font-medium text-danger">
             {{ createError }}
           </div>
 
-          <div v-if="createMessage" class="md:col-span-2 text-sm font-medium text-emerald-600">
+          <div v-if="createMessage" class="md:col-span-2 text-sm font-medium text-success">
             {{ createMessage }}
           </div>
 
           <button
-              class="rounded-2xl bg-brand px-4 py-3 font-semibold text-white transition hover:bg-brand-hover md:col-span-2 disabled:cursor-not-allowed disabled:opacity-50"
+              class="rounded-2xl bg-brand px-4 py-3 font-semibold text-on-brand transition hover:bg-brand-hover md:col-span-2 disabled:cursor-not-allowed disabled:opacity-50"
               :disabled="creating"
           >
             {{ creating ? t('mentorSlots.creating') : t('mentorSlots.createSlot') }}
@@ -164,11 +164,11 @@
                 <input v-model="editForm.meetingLink" class="rounded-2xl border border-border-brand px-4 py-3 text-sm outline-none transition focus:border-brand focus:ring-2 focus:ring-brand-soft md:col-span-2" :placeholder="t('mentorSlots.meetingLinkPlaceholder')" />
                 <input v-model="editForm.addressText" class="rounded-2xl border border-border-brand px-4 py-3 text-sm outline-none transition focus:border-brand focus:ring-2 focus:ring-brand-soft md:col-span-2" :placeholder="t('mentorSlots.addressPlaceholder')" />
 
-                <div v-if="editError" class="md:col-span-2 text-sm font-medium text-red-600">{{ editError }}</div>
-                <div v-if="editMessage" class="md:col-span-2 text-sm font-medium text-emerald-600">{{ editMessage }}</div>
+                <div v-if="editError" class="md:col-span-2 text-sm font-medium text-danger">{{ editError }}</div>
+                <div v-if="editMessage" class="md:col-span-2 text-sm font-medium text-success">{{ editMessage }}</div>
 
                 <button
-                    class="rounded-2xl bg-brand px-4 py-3 font-semibold text-white transition hover:bg-brand-hover md:col-span-2 disabled:cursor-not-allowed disabled:opacity-50"
+                    class="rounded-2xl bg-brand px-4 py-3 font-semibold text-on-brand transition hover:bg-brand-hover md:col-span-2 disabled:cursor-not-allowed disabled:opacity-50"
                     :disabled="updatingId === slot.id"
                 >
                   {{ updatingId === slot.id ? t('mentorSlots.saving') : t('mentorSlots.saveChanges') }}
@@ -186,7 +186,7 @@
 import { onMounted, reactive, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { http } from '@/shared/api/http'
-import { useToastStore } from '@/shared/lib/getApiErrorMessage'
+import { useToastStore } from '@/shared/model/toastStore'
 import { useErrorHandler } from '@/shared/composables/useErrorHandler'
 import { formatDateTimeForDisplay } from '@/shared/lib/dateFormatter'
 import PrivateLayout from '@/widgets/layout/PrivateLayout.vue'

@@ -69,7 +69,7 @@
 import { onMounted, reactive, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { http } from '@/shared/api/http'
-import { useToastStore } from '@/shared/lib/getApiErrorMessage'
+import { useToastStore } from '@/shared/model/toastStore'
 import { useErrorHandler } from '@/shared/composables/useErrorHandler'
 import { useFormErrors } from '@/shared/composables/useFormErrors'
 import PrivateLayout from '@/widgets/layout/PrivateLayout.vue'

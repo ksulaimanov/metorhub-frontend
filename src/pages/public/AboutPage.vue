@@ -7,15 +7,15 @@
         <div class="space-y-12">
           <!-- Header -->
           <div class="text-center">
-            <p class="inline-flex rounded-full border border-brand/30 bg-brand/20 px-4 py-2 text-sm font-medium text-brand-soft">
+            <p class="inline-flex rounded-full border border-brand/30 bg-brand/20 px-4 py-2 text-sm font-medium text-brand">
               {{ t('about.badge') }}
             </p>
 
-            <h1 class="mt-5 text-4xl font-bold leading-tight text-white md:text-5xl">
+            <h1 class="mt-5 font-display text-4xl font-medium leading-tight tracking-tight text-text-primary md:text-5xl">
               {{ t('about.title') }}
             </h1>
 
-            <p class="mx-auto mt-6 max-w-2xl text-lg leading-8 text-slate-300">
+            <p class="mx-auto mt-6 max-w-2xl text-lg leading-8 text-text-secondary">
               {{ t('about.subtitle') }}
             </p>
           </div>
@@ -25,35 +25,35 @@
 
           <!-- Features -->
           <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-            <div v-for="i in 6" :key="i" class="rounded-2xl border border-white/10 bg-white/5 p-6 shadow-sm backdrop-blur-xl">
+            <div v-for="i in 6" :key="i" class="rounded-2xl border border-white/10 bg-surface p-6 shadow-sm">
               <div class="flex items-center gap-3">
                 <div class="flex h-12 w-12 items-center justify-center rounded-2xl bg-brand/20">
-                  <svg class="h-6 w-6 text-brand-soft" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg class="h-6 w-6 text-brand" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" :d="featureIcons[i - 1]" />
                   </svg>
                 </div>
-                <h3 class="text-lg font-semibold text-white">{{ t(`about.feat${i}Title`) }}</h3>
+                <h3 class="text-lg font-semibold text-text-primary">{{ t(`about.feat${i}Title`) }}</h3>
               </div>
-              <p class="mt-3 text-slate-300">{{ t(`about.feat${i}Desc`) }}</p>
+              <p class="mt-3 text-text-secondary">{{ t(`about.feat${i}Desc`) }}</p>
             </div>
           </div>
 
           <!-- CTA -->
-          <div class="rounded-2xl border border-brand/30 bg-gradient-to-r from-brand to-brand-hover p-8 text-center text-white shadow-[0_0_35px_rgba(108,92,231,0.35)]">
+          <div class="rounded-2xl border border-brand/30 bg-gradient-to-r from-brand to-brand-hover p-8 text-center text-on-brand shadow-sm">
             <h2 class="text-3xl font-bold">{{ t('about.ctaTitle') }}</h2>
-            <p class="mt-3 text-white/80">{{ t('about.ctaSubtitle') }}</p>
+            <p class="mt-3 text-on-brand/80">{{ t('about.ctaSubtitle') }}</p>
 
             <div class="mt-6 flex flex-wrap items-center justify-center gap-4">
               <RouterLink
                   to="/mentors"
-                  class="rounded-2xl bg-white px-6 py-3 text-base font-semibold text-brand transition hover:bg-white/90"
+                  class="rounded-2xl bg-on-brand px-6 py-3 text-base font-semibold text-brand transition hover:opacity-90"
               >
                 {{ t('about.ctaFindMentor') }}
               </RouterLink>
 
               <RouterLink
                   to="/register"
-                  class="rounded-2xl border border-white/40 px-6 py-3 text-base font-semibold text-white transition hover:bg-white/10"
+                  class="rounded-2xl border border-border-default px-6 py-3 text-base font-semibold text-text-primary transition hover:bg-surface-hover"
               >
                 {{ t('about.ctaRegister') }}
               </RouterLink>
