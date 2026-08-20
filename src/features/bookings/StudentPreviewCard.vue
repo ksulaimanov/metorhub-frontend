@@ -1,5 +1,5 @@
 <template>
-  <div class="h-full flex flex-col bg-white/5 backdrop-blur-xl border border-white/10 shadow-[0_8px_30px_rgba(0,0,0,0.12)] overflow-hidden rounded-2xl ring-1 ring-border-brand/50 shadow-xl relative">
+  <div class="h-full flex flex-col bg-surface border border-white/10 shadow-md overflow-hidden rounded-2xl ring-1 ring-border-brand/50 shadow-xl relative">
     <div class="absolute top-0 inset-x-0 h-24 bg-gradient-to-b from-brand/10 to-transparent pointer-events-none" />
 
     <div class="relative z-10 flex flex-col items-center p-6 text-center border-b border-border-subtle">
@@ -21,7 +21,7 @@
           <Target class="h-4 w-4" />
           Learning Goals
         </h4>
-        <p class="text-sm text-slate-400 leading-relaxed">
+        <p class="text-sm text-text-secondary leading-relaxed">
           {{ student.learningGoals || 'Student hasn\'t specified their goals yet, this is a great topic to discuss during your first call!' }}
         </p>
       </div>
@@ -35,11 +35,11 @@
         <div class="grid grid-cols-2 gap-3">
           <div class="bg-surface-secondary rounded-xl p-3 text-center">
             <span class="block text-2xl font-bold text-text-primary">{{ student.completedLessons || 0 }}</span>
-            <span class="block text-xs font-medium text-slate-400 mt-1">Lessons Done</span>
+            <span class="block text-xs font-medium text-text-secondary mt-1">Lessons Done</span>
           </div>
           <div class="bg-surface-secondary rounded-xl p-3 text-center">
             <span class="block text-2xl font-bold text-brand">{{ student.activeCourses || 0 }}</span>
-            <span class="block text-xs font-medium text-slate-400 mt-1">Active Courses</span>
+            <span class="block text-xs font-medium text-text-secondary mt-1">Active Courses</span>
           </div>
         </div>
       </div>

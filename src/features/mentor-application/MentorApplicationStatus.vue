@@ -40,17 +40,17 @@
         <AppBadge :variant="statusVariant">{{ statusLabel }}</AppBadge>
       </div>
 
-      <p class="text-sm text-slate-400">{{ statusDescription }}</p>
+      <p class="text-sm text-text-secondary">{{ statusDescription }}</p>
 
       <div class="grid gap-3 text-sm">
         <div class="rounded-2xl bg-brand-soft/40 p-4 ring-1 ring-border-brand/60">
           <p class="font-medium text-white">{{ t('mentorApplication.statusSubmittedAt') }}</p>
-          <p class="mt-1 text-slate-400">{{ formatDate(statusData.submittedAt) }}</p>
+          <p class="mt-1 text-text-secondary">{{ formatDate(statusData.submittedAt) }}</p>
         </div>
 
         <div v-if="statusData.reviewedAt" class="rounded-2xl bg-brand-soft/40 p-4 ring-1 ring-border-brand/60">
           <p class="font-medium text-text-primary">{{ t('mentorApplication.statusReviewedAt') }}</p>
-          <p class="mt-1 text-slate-400">{{ formatDate(statusData.reviewedAt) }}</p>
+          <p class="mt-1 text-text-secondary">{{ formatDate(statusData.reviewedAt) }}</p>
         </div>
 
         <div v-if="statusData.reviewComment" class="rounded-2xl bg-brand-soft/40 p-4 ring-1 ring-border-brand/60">

@@ -20,7 +20,7 @@
 
             <div class="min-w-0 pb-1">
               <h2 class="text-2xl font-bold text-white">{{ displayName }}</h2>
-              <p class="mt-1 text-sm text-slate-400">
+              <p class="mt-1 text-sm text-text-secondary">
                 {{ profile.headline || t('mentorProfile.viewHeadlineNotSet') }}
               </p>
               <div class="mt-3 flex flex-wrap items-center gap-2">
@@ -51,11 +51,11 @@
     <div class="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
       <AppCard>
         <div class="flex items-start gap-3">
-          <div class="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-amber-50 text-amber-500">
+          <div class="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-warning-soft text-warning">
             <StarIcon class="h-4 w-4" />
           </div>
           <div class="min-w-0">
-            <p class="text-sm text-slate-400">{{ t('mentorProfile.statRating') }}</p>
+            <p class="text-sm text-text-secondary">{{ t('mentorProfile.statRating') }}</p>
             <div class="mt-1">
               <StarRating :rating="profile.averageRating" class="text-xl" />
             </div>
@@ -65,11 +65,11 @@
 
       <AppCard>
         <div class="flex items-start gap-3">
-          <div class="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-white/10 text-brand-soft shadow-[0_0_15px_rgba(108,92,231,0.2)] border border-white/5">
+          <div class="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-surface text-brand shadow-sm border border-white/5">
             <BookOpenIcon class="h-4 w-4" />
           </div>
           <div class="min-w-0">
-            <p class="text-sm text-slate-400">{{ t('mentorProfile.statLessons') }}</p>
+            <p class="text-sm text-text-secondary">{{ t('mentorProfile.statLessons') }}</p>
             <p class="mt-1 text-2xl font-bold text-text-primary">{{ profile.lessonsCompleted }}</p>
           </div>
         </div>
@@ -91,7 +91,7 @@
 
       <AppCard>
         <div class="flex items-start gap-3">
-          <div class="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-emerald-50 text-emerald-600">
+          <div class="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-success-soft text-success">
             <ClockIcon class="h-4 w-4" />
           </div>
           <div class="min-w-0">

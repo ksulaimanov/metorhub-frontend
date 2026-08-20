@@ -6,7 +6,7 @@
     @update:model-value="emit('update:modelValue', $event)"
   >
     <template #icon>
-      <CheckCircle class="h-7 w-7 text-emerald-600" />
+      <CheckCircle class="h-7 w-7 text-success" />
     </template>
 
     <template #actions>

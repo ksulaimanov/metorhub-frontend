@@ -16,7 +16,7 @@
 
     <!-- Loading -->
     <div v-if="loading" class="mt-4 space-y-3">
-      <div v-for="i in 3" :key="i" class="animate-pulse rounded-2xl bg-white/5 backdrop-blur-xl border border-white/10 shadow-[0_8px_30px_rgba(0,0,0,0.12)] p-5 ring-1 ring-border-brand/80">
+      <div v-for="i in 3" :key="i" class="animate-pulse rounded-2xl bg-surface border border-white/10 shadow-md p-5 ring-1 ring-border-brand/80">
         <div class="flex items-center gap-3">
           <div class="h-10 w-10 rounded-full bg-brand-soft" />
           <div class="flex-1 space-y-2">
@@ -30,7 +30,7 @@
     </div>
 
     <!-- Error -->
-    <p v-else-if="error" class="mt-4 text-sm text-red-600">{{ error }}</p>
+    <p v-else-if="error" class="mt-4 text-sm text-danger">{{ error }}</p>
 
     <!-- Empty -->
     <div v-else-if="reviews.length === 0" class="mt-4 rounded-2xl bg-surface-secondary p-8 text-center ring-1 ring-border-brand/60">
@@ -38,7 +38,7 @@
         <MessageSquare class="h-5 w-5 text-brand" />
       </div>
       <p class="mt-3 text-sm font-medium text-text-primary">{{ t('publicMentorProfile.noReviewsTitle') }}</p>
-      <p class="mt-1 text-xs text-slate-400">{{ t('publicMentorProfile.noReviewsHint') }}</p>
+      <p class="mt-1 text-xs text-text-secondary">{{ t('publicMentorProfile.noReviewsHint') }}</p>
     </div>
 
     <!-- Reviews -->

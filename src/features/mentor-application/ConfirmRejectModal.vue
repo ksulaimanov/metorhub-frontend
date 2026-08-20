@@ -6,7 +6,7 @@
     @update:model-value="onClose"
   >
     <template #icon>
-      <XCircle class="h-7 w-7 text-red-600" />
+      <XCircle class="h-7 w-7 text-danger" />
     </template>
 
     <template #default>
@@ -19,7 +19,7 @@
           :placeholder="t('admin.applications.rejectReasonPlaceholder')"
           rows="3"
         />
-        <p v-if="validationError" class="text-sm text-red-600">
+        <p v-if="validationError" class="text-sm text-danger">
           {{ validationError }}
         </p>
       </div>

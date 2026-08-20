@@ -5,7 +5,7 @@
         <p class="text-base font-semibold text-white">
           {{ formatDateTime(slot.startAt, slot.timezone) }} — {{ formatDateTime(slot.endAt, slot.timezone) }}
         </p>
-        <div class="mt-2 flex flex-wrap items-center gap-2 text-sm text-slate-400">
+        <div class="mt-2 flex flex-wrap items-center gap-2 text-sm text-text-secondary">
           <AppBadge>{{ t(`common.lessonFormat.${slot.lessonFormat}`, slot.lessonFormat) }}</AppBadge>
           <SlotStatusBadge :active="slot.active" :booked-count="slot.bookedCount" :capacity="slot.capacity" />
           <span v-if="slot.meetingLink" class="truncate">🔗 {{ t('availability.hasLink') }}</span>

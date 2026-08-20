@@ -1,11 +1,11 @@
 <template>
-  <div class="grid gap-2 rounded-xl bg-white/5 backdrop-blur-xl border border-white/10 shadow-[0_8px_30px_rgba(0,0,0,0.12)]-secondary p-3.5 text-sm sm:grid-cols-2">
+  <div class="grid gap-2 rounded-xl bg-surface border border-white/10 shadow-md-secondary p-3.5 text-sm sm:grid-cols-2">
     <div>
-      <p class="text-xs text-slate-400">{{ t('bookings.startLabel') }}</p>
+      <p class="text-xs text-text-secondary">{{ t('bookings.startLabel') }}</p>
       <p class="mt-0.5 font-medium text-white">{{ formatDateTime(startAt, timezone) }}</p>
     </div>
     <div>
-      <p class="text-xs text-slate-400">{{ t('bookings.endLabel') }}</p>
+      <p class="text-xs text-text-secondary">{{ t('bookings.endLabel') }}</p>
       <p class="mt-0.5 font-medium text-text-primary">{{ formatDateTime(endAt, timezone) }}</p>
     </div>
   </div>

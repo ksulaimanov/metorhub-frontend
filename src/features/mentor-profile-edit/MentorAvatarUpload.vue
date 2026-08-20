@@ -1,7 +1,7 @@
 <template>
   <div class="flex flex-col gap-3 sm:flex-row">
     <label
-        class="inline-flex cursor-pointer items-center justify-center rounded-2xl border border-border-brand bg-white/5 backdrop-blur-xl border border-white/10 shadow-[0_8px_30px_rgba(0,0,0,0.12)] px-4 py-3 text-sm font-semibold text-white transition hover:bg-brand-soft disabled:cursor-not-allowed disabled:opacity-50"
+        class="inline-flex cursor-pointer items-center justify-center rounded-2xl border border-border-default bg-surface shadow-xs px-4 py-3 text-sm font-semibold text-text-primary transition hover:bg-surface-hover disabled:cursor-not-allowed disabled:opacity-50"
     >
       <input
           type="file"
@@ -24,8 +24,8 @@
     </AppButton>
   </div>
 
-  <p v-if="message" class="mt-3 text-sm font-medium text-emerald-600">{{ message }}</p>
-  <p v-if="error" class="mt-3 text-sm font-medium text-red-600">{{ error }}</p>
+  <p v-if="message" class="mt-3 text-sm font-medium text-success">{{ message }}</p>
+  <p v-if="error" class="mt-3 text-sm font-medium text-danger">{{ error }}</p>
 </template>
 
 <script setup lang="ts">
@@ -33,7 +33,7 @@ import { ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { http } from '@/shared/api/http'
 import { useErrorHandler } from '@/shared/composables/useErrorHandler'
-import { useToastStore } from '@/shared/lib/getApiErrorMessage'
+import { useToastStore } from '@/shared/model/toastStore'
 import AppButton from '@/shared/ui/AppButton.vue'
 
 const { t } = useI18n()

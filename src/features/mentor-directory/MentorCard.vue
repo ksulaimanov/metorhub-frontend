@@ -1,7 +1,7 @@
 <template>
   <RouterLink
       :to="`/mentors/${mentor.id}`"
-      class="group flex flex-col rounded-2xl bg-surface backdrop-blur-xl p-5 shadow-[0_8px_30px_rgba(0,0,0,0.12)] border border-border-brand transition-all hover:shadow-[0_8px_30px_rgba(108,92,231,0.2)] hover:border-brand/40 hover:-translate-y-1"
+      class="group flex flex-col rounded-2xl bg-surface p-5 shadow-md border border-border-brand transition-all hover:shadow-md hover:border-brand/40 hover:-translate-y-1"
   >
     <!-- Top: Avatar + Name + Badge -->
     <div class="flex items-start gap-4">
@@ -10,13 +10,13 @@
         :first-name="mentor.firstName"
         :last-name="mentor.lastName"
         size="md"
-        class="h-14 w-14 ring-1 ring-white/20 shadow-[0_0_15px_rgba(108,92,231,0.2)]"
+        class="h-14 w-14 ring-1 ring-white/20 shadow-sm"
       />
 
       <div class="min-w-0 flex-1">
         <div class="flex items-start justify-between gap-2">
           <div class="min-w-0">
-            <h3 class="truncate text-lg font-semibold text-text-primary group-hover:text-brand-soft transition-colors">
+            <h3 class="truncate text-lg font-semibold text-text-primary group-hover:text-brand transition-colors">
               {{ name }}
             </h3>
             <p class="mt-0.5 truncate text-sm text-text-secondary">
@@ -26,7 +26,7 @@
 
           <div
               v-if="mentor.averageRating"
-              class="flex shrink-0 items-center justify-center rounded-xl bg-amber-400/10 px-2 py-1 text-sm font-bold text-amber-500 shadow-[0_0_10px_rgba(251,191,36,0.2)]"
+              class="flex shrink-0 items-center justify-center rounded-xl bg-warning-soft px-2 py-1 text-sm font-bold text-warning"
           >
             <MentorRating :rating="mentor.averageRating" :reviewsCount="mentor.reviewsCount || 0" />
           </div>
@@ -102,7 +102,7 @@
     <!-- CTA footer -->
     <div class="mt-4 flex items-center justify-between">
       <span class="text-sm text-text-muted">{{ t('mentorDirectory.detailsLink') }}</span>
-      <span class="rounded-xl bg-brand px-4 py-2 text-sm font-semibold text-text-primary transition group-hover:bg-brand-hover">
+      <span class="rounded-xl bg-brand px-4 py-2 text-sm font-semibold text-on-brand transition group-hover:bg-brand-hover">
         {{ t('mentorDirectory.open') }}
       </span>
     </div>
