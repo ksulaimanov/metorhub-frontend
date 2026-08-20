@@ -1,128 +1,339 @@
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Newsreader:opsz,wght@6..72,400;6..72,500;6..72,600&display=swap');
 @import "tailwindcss";
 
+/* ============================================================
+   MentorHub design tokens
+   ------------------------------------------------------------
+   Brand is the original JaiMentorship deep violet (#6b21a8).
+   Neutrals are tinted cool/lavender so they sit under it, and
+   the sidebar keeps its deep-violet ground.
+
+   Two layers, on purpose:
+     1. --theme-*  raw per-theme values (light / dark)
+     2. --color-*  semantic Tailwind tokens that point at layer 1
+
+   Components must only ever use layer 2 (bg-surface, text-text-primary,
+   border-border-subtle, ...). Never hardcode a hex in a component.
+   ============================================================ */
+
 @theme {
-    --animate-aurora: aurora 60s linear infinite;
+    /* ---- Typography -------------------------------------- */
+    --font-sans: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+    --font-display: 'Newsreader', Georgia, 'Times New Roman', serif;
 
-    @keyframes aurora {
-      from {
-        background-position: 50% 50%, 50% 50%;
-      }
-      to {
-        background-position: 350% 50%, 350% 50%;
-      }
-    }
+    /* ---- Brand: deep violet ------------------------------- */
+    --color-brand: var(--theme-brand);
+    --color-brand-hover: var(--theme-brand-hover);
+    --color-brand-active: var(--theme-brand-active);
+    --color-brand-soft: var(--theme-brand-soft);
+    --color-brand-border: var(--theme-brand-border);
+    /* Text/icon colour that sits ON a brand-filled surface.
+       Flips per theme so the pairing always clears WCAG AA. */
+    --color-on-brand: var(--theme-on-brand);
+    --color-accent: var(--theme-accent);
 
-    --animate-fade-in-up: fade-in-up 0.8s ease-out;
-
-    @keyframes fade-in-up {
-      0% {
-        opacity: 0;
-        transform: translateY(40px);
-      }
-      100% {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
-    --color-brand: #6b21a8; /* Deep purple */
-    --color-brand-hover: #581c87;
-    --color-brand-active: #4c1d95;
-    --color-brand-soft: #faf5ff;
-    --color-accent: #8b5cf6;
-
+    /* ---- Surfaces ----------------------------------------- */
     --color-bg: var(--theme-bg);
     --color-surface: var(--theme-surface);
     --color-surface-secondary: var(--theme-surface-secondary);
+    --color-surface-sunken: var(--theme-surface-sunken);
+    --color-surface-hover: var(--theme-surface-hover);
 
+    /* ---- Text --------------------------------------------- */
     --color-text-primary: var(--theme-text-primary);
     --color-text-secondary: var(--theme-text-secondary);
     --color-text-muted: var(--theme-text-muted);
 
-    --color-border-brand: var(--theme-border-brand);
+    /* ---- Borders ------------------------------------------ */
     --color-border-subtle: var(--theme-border-subtle);
+    --color-border-brand: var(--theme-border-default);
+    --color-border-default: var(--theme-border-default);
+    --color-border-strong: var(--theme-border-strong);
 
-    --color-sidebar-bg: #2E1065; /* Elegant deep violet, not pure black */
-    --color-sidebar-hover: #4C1D95;
-    --color-sidebar-active: #5B21B6;
-    --color-sidebar-text: #DDD6FE;
-    --color-sidebar-text-active: #FFFFFF;
-}
+    /* ---- Status ------------------------------------------- */
+    --color-success: var(--theme-success);
+    --color-success-soft: var(--theme-success-soft);
+    --color-success-border: var(--theme-success-border);
+    --color-danger: var(--theme-danger);
+    --color-danger-soft: var(--theme-danger-soft);
+    --color-danger-border: var(--theme-danger-border);
+    --color-warning: var(--theme-warning);
+    --color-warning-soft: var(--theme-warning-soft);
+    --color-warning-border: var(--theme-warning-border);
+    --color-info: var(--theme-info);
+    --color-info-soft: var(--theme-info-soft);
+    --color-info-border: var(--theme-info-border);
 
-:root {
-    --theme-bg: transparent;
-    --theme-surface: rgba(255, 255, 255, 0.05); /* Glass surface */
-    --theme-surface-secondary: rgba(0, 0, 0, 0.2); /* Deeper glass */
-    --theme-text-primary: #FFFFFF; /* Pure white headings */
-    --theme-text-secondary: #94A3B8; /* Slate-400 equivalent */
-    --theme-text-muted: #64748B;
-    --theme-border-brand: rgba(255, 255, 255, 0.1); /* Glass border */
-    --theme-border-subtle: rgba(255, 255, 255, 0.05);
-}
+    /* ---- Sidebar (deep violet ground) --------------------- */
+    --color-sidebar-bg: var(--theme-sidebar-bg);
+    --color-sidebar-hover: var(--theme-sidebar-hover);
+    --color-sidebar-active: var(--theme-sidebar-active);
+    --color-sidebar-text: var(--theme-sidebar-text);
+    --color-sidebar-text-active: var(--theme-sidebar-text-active);
+    --color-sidebar-border: var(--theme-sidebar-border);
 
-/* Base dark mode variable overrides */
-@media (prefers-color-scheme: dark) {
-    :root {
-        --theme-bg: transparent;
-        --theme-surface: rgba(255, 255, 255, 0.05);
-        --theme-surface-secondary: rgba(0, 0, 0, 0.2);
-        --theme-text-primary: #FFFFFF;
-        --theme-text-secondary: #94A3B8;
-        --theme-text-muted: #64748B;
-        --theme-border-brand: rgba(255, 255, 255, 0.1);
-        --theme-border-subtle: rgba(255, 255, 255, 0.05);
+    /* ---- Elevation: soft, violet-tinted, never black ------ */
+    --shadow-xs: 0 1px 2px rgba(22, 21, 29, 0.05);
+    --shadow-sm: 0 1px 3px rgba(22, 21, 29, 0.07), 0 1px 2px rgba(22, 21, 29, 0.05);
+    --shadow-md: 0 4px 12px rgba(22, 21, 29, 0.08), 0 1px 3px rgba(22, 21, 29, 0.05);
+    --shadow-lg: 0 12px 32px rgba(22, 21, 29, 0.10), 0 2px 6px rgba(22, 21, 29, 0.05);
+
+    /* ---- Motion: quick, never showy ----------------------- */
+    --animate-fade-in-up: fade-in-up 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+    --animate-fade-in: fade-in 0.3s ease-out;
+    --animate-aurora: aurora 60s linear infinite;
+
+    @keyframes fade-in-up {
+        0%   { opacity: 0; transform: translateY(12px); }
+        100% { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fade-in {
+        0%   { opacity: 0; }
+        100% { opacity: 1; }
+    }
+    @keyframes aurora {
+        from { background-position: 50% 50%, 50% 50%; }
+        to   { background-position: 350% 50%, 350% 50%; }
     }
 }
-html.dark {
-    --theme-bg: transparent;
-    --theme-surface: rgba(255, 255, 255, 0.05);
-    --theme-surface-secondary: rgba(0, 0, 0, 0.2);
-    --theme-text-primary: #FFFFFF;
-    --theme-text-secondary: #94A3B8;
-    --theme-text-muted: #64748B;
-    --theme-border-brand: rgba(255, 255, 255, 0.1);
-    --theme-border-subtle: rgba(255, 255, 255, 0.05);
+
+/* ============================================================
+   Light theme (default)
+   ============================================================ */
+:root {
+    /* Brand ramp — the original identity, unchanged. */
+    --theme-brand: #6b21a8;
+    --theme-brand-hover: #581c87;
+    --theme-brand-active: #4c1d95;
+    --theme-brand-soft: #faf5ff;
+    --theme-brand-border: #E9D5FF;
+    --theme-accent: #8b5cf6;
+    /* #6b21a8 on white = 8.7:1 */
+    --theme-on-brand: #FFFFFF;
+
+    --theme-bg: #F8F8FC;
+    --theme-surface: #FFFFFF;
+    --theme-surface-secondary: #F3F2F9;
+    --theme-surface-sunken: #EDEBF5;
+    --theme-surface-hover: #F1EFF8;
+
+    --theme-text-primary: #16151D;
+    --theme-text-secondary: #5E5A6B;
+    --theme-text-muted: #6F6B7D;
+
+    --theme-border-subtle: #EFEDF7;
+    --theme-border-default: #E6E2F3;
+    --theme-border-strong: #D4CDE8;
+
+    --theme-success: #16a34a;
+    --theme-success-soft: #f0fdf4;
+    --theme-success-border: #bbf7d0;
+    --theme-danger: #dc2626;
+    --theme-danger-soft: #fef2f2;
+    --theme-danger-border: #fecaca;
+    --theme-warning: #d97706;
+    --theme-warning-soft: #fffbeb;
+    --theme-warning-border: #fde68a;
+    --theme-info: #2563eb;
+    --theme-info-soft: #eff6ff;
+    --theme-info-border: #bfdbfe;
+
+    --theme-sidebar-bg: #2E1065;
+    --theme-sidebar-hover: #4C1D95;
+    --theme-sidebar-active: #5B21B6;
+    --theme-sidebar-text: #DDD6FE;
+    --theme-sidebar-text-active: #FFFFFF;
+    --theme-sidebar-border: #3C1A7E;
+
+    color-scheme: light;
 }
 
+/* ============================================================
+   Dark theme
+   Applies on OS preference unless the user forced light,
+   and always when html.dark is set.
+   ============================================================ */
+@media (prefers-color-scheme: dark) {
+    :root:not(.light) {
+        /* Violet lifted to purple-500 so it reads on a dark ground;
+           on-brand flips to ink to keep the pairing at AA. */
+        --theme-brand: #A855F7;
+        --theme-brand-hover: #B975F9;
+        --theme-brand-active: #9333EA;
+        --theme-brand-soft: #241A33;
+        --theme-brand-border: #3F2E5C;
+        --theme-accent: #C4B5FD;
+        --theme-on-brand: #16151D;
+
+        --theme-bg: #131218;
+        --theme-surface: #1B1A21;
+        --theme-surface-secondary: #22212A;
+        --theme-surface-sunken: #0E0D12;
+        --theme-surface-hover: #292733;
+
+        --theme-text-primary: #F3F2F8;
+        --theme-text-secondary: #A9A5B8;
+        --theme-text-muted: #8D8899;
+
+        --theme-border-subtle: #262530;
+        --theme-border-default: #33303E;
+        --theme-border-strong: #454154;
+
+        --theme-success: #4ADE80;
+        --theme-success-soft: #132A1B;
+        --theme-success-border: #1F4D2E;
+        --theme-danger: #F87171;
+        --theme-danger-soft: #2D1517;
+        --theme-danger-border: #5A2225;
+        --theme-warning: #FBBF24;
+        --theme-warning-soft: #2C2109;
+        --theme-warning-border: #573F13;
+        --theme-info: #60A5FA;
+        --theme-info-soft: #111E2E;
+        --theme-info-border: #1E3A5F;
+
+        --theme-sidebar-bg: #1A0B3D;
+        --theme-sidebar-hover: #2E1065;
+        --theme-sidebar-active: #4C1D95;
+        --theme-sidebar-text: #C4B5FD;
+        --theme-sidebar-text-active: #FFFFFF;
+        --theme-sidebar-border: #2A1259;
+
+        color-scheme: dark;
+    }
+}
+
+html.dark {
+    --theme-brand: #A855F7;
+    --theme-brand-hover: #B975F9;
+    --theme-brand-active: #9333EA;
+    --theme-brand-soft: #241A33;
+    --theme-brand-border: #3F2E5C;
+    --theme-accent: #C4B5FD;
+    --theme-on-brand: #16151D;
+
+    --theme-bg: #131218;
+    --theme-surface: #1B1A21;
+    --theme-surface-secondary: #22212A;
+    --theme-surface-sunken: #0E0D12;
+    --theme-surface-hover: #292733;
+
+    --theme-text-primary: #F3F2F8;
+    --theme-text-secondary: #A9A5B8;
+    --theme-text-muted: #8D8899;
+
+    --theme-border-subtle: #262530;
+    --theme-border-default: #33303E;
+    --theme-border-strong: #454154;
+
+    --theme-success: #4ADE80;
+    --theme-success-soft: #132A1B;
+    --theme-success-border: #1F4D2E;
+    --theme-danger: #F87171;
+    --theme-danger-soft: #2D1517;
+    --theme-danger-border: #5A2225;
+    --theme-warning: #FBBF24;
+    --theme-warning-soft: #2C2109;
+    --theme-warning-border: #573F13;
+    --theme-info: #60A5FA;
+    --theme-info-soft: #111E2E;
+    --theme-info-border: #1E3A5F;
+
+    --theme-sidebar-bg: #1A0B3D;
+    --theme-sidebar-hover: #2E1065;
+    --theme-sidebar-active: #4C1D95;
+    --theme-sidebar-text: #C4B5FD;
+    --theme-sidebar-text-active: #FFFFFF;
+    --theme-sidebar-border: #2A1259;
+
+    color-scheme: dark;
+}
+
+/* ============================================================
+   Base
+   ============================================================ */
 html, body, #app {
     margin: 0;
     min-height: 100%;
-    font-family: Inter, system-ui, sans-serif;
 }
 
-/* Smooth transitions for sidebar */
+body {
+    background-color: var(--theme-bg);
+    color: var(--theme-text-primary);
+    font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+}
+
+/* One visible, consistent focus ring for keyboard users everywhere.
+   Components must not remove this without providing an equivalent. */
+:focus-visible {
+    outline: 2px solid var(--theme-brand);
+    outline-offset: 2px;
+    border-radius: 4px;
+}
+
+::selection {
+    background-color: var(--theme-brand);
+    color: #FFFFFF;
+}
+
+/* Unobtrusive scrollbars */
+* {
+    scrollbar-width: thin;
+    scrollbar-color: var(--theme-border-strong) transparent;
+}
+*::-webkit-scrollbar { width: 10px; height: 10px; }
+*::-webkit-scrollbar-track { background: transparent; }
+*::-webkit-scrollbar-thumb {
+    background-color: var(--theme-border-strong);
+    border-radius: 999px;
+    border: 3px solid transparent;
+    background-clip: content-box;
+}
+
+/* Respect users who ask for less motion. */
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+}
+
+/* Prevent iOS zoom-on-focus without shrinking desktop type. */
+@media screen and (max-width: 768px) {
+    input, select, textarea { font-size: 16px; }
+}
+
+/* ============================================================
+   Utilities
+   ============================================================ */
 .sidebar-transition {
-    transition: width 200ms ease, padding 200ms ease;
+    transition: width 200ms cubic-bezier(0.16, 1, 0.3, 1), padding 200ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-/* Kyrgyz ornament pattern */
+/* Kyrgyz ornament motifs — kept as restrained accents.
+   currentColor so they inherit whatever text colour the caller sets. */
 .ornament-divider {
-    background-image: url("data:image/svg+xml,%3Csvg width='120' height='12' viewBox='0 0 120 12' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 6h10l5-5 5 5h10l5 5 5-5h10l5 5 5-5h10l5 5 5-5h10l5 5 5-5h10l5 5 5-5h10l5 5 5-5h10l5 5 5-5h10l5 5 5-5h10l5 5 5-5h10' stroke='%236B21A8' stroke-width='1' fill='none' opacity='0.18'/%3E%3C/svg%3E");
+    background-image: url("data:image/svg+xml,%3Csvg width='120' height='12' viewBox='0 0 120 12' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 6h10l5-5 5 5h10l5 5 5-5h10l5 5 5-5h10l5 5 5-5h10l5 5 5-5h10l5 5 5-5h10l5 5 5-5h10l5 5 5-5h10l5 5 5-5h10' stroke='%238b5cf6' stroke-width='1' fill='none' opacity='0.28'/%3E%3C/svg%3E");
     background-repeat: repeat-x;
     background-position: center;
     height: 12px;
 }
 
-/* Subtle ornament background */
 .ornament-bg {
-    background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 5l5 10h10l-8 6 3 10-10-7-10 7 3-10-8-6h10z' fill='%236B21A8' opacity='0.04'/%3E%3C/svg%3E");
+    background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 5l5 10h10l-8 6 3 10-10-7-10 7 3-10-8-6h10z' fill='%238b5cf6' opacity='0.05'/%3E%3C/svg%3E");
     background-repeat: repeat;
 }
 
-/* Prevent zoom on mobile inputs */
-@media screen and (max-width: 768px) {
-    input, select, textarea {
-        font-size: 16px !important;
-    }
-}
-
-/* Auth-card transition for auth page navigation */
+/* Auth card route transition */
 .auth-card-enter-active,
 .auth-card-leave-active {
-    transition: opacity 240ms ease, transform 280ms ease;
+    transition: opacity 240ms ease, transform 280ms cubic-bezier(0.16, 1, 0.3, 1);
 }
-
 .auth-card-enter-from,
 .auth-card-leave-to {
     opacity: 0;
